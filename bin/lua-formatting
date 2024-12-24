@@ -1,0 +1,12 @@
+# this script uses lua-format
+# https://github.com/Koihik/LuaFormatter
+
+
+list=$(find ./ -name "*.lua")
+
+for x in $list ; do
+
+	echo $x
+	lua-format  --tab-width=8 -i $x
+
+done
