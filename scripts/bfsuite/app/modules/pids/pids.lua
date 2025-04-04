@@ -2,7 +2,8 @@ local activateWakeup = false
 
 local mspapi = {
     api = {
-        [1] = 'PID_TUNING',
+        [1] = 'PID',
+        [2] = 'PID_ADVANCED'
     },
     formdata = {
         labels = {
@@ -15,30 +16,31 @@ local mspapi = {
         cols = {
             bfsuite.i18n.get("app.modules.pids.p"),
             bfsuite.i18n.get("app.modules.pids.i"),
+            bfsuite.i18n.get("app.modules.pids.dmax"),
             bfsuite.i18n.get("app.modules.pids.d"),
             bfsuite.i18n.get("app.modules.pids.f"),
-            bfsuite.i18n.get("app.modules.pids.o"),
-            bfsuite.i18n.get("app.modules.pids.b")
         },
         fields = {
             -- P
             {row = 1, col = 1, mspapi = 1, apikey = "pid_0_P"},
             {row = 2, col = 1, mspapi = 1, apikey = "pid_1_P"},
             {row = 3, col = 1, mspapi = 1, apikey = "pid_2_P"},
+
             {row = 1, col = 2, mspapi = 1, apikey = "pid_0_I"},
             {row = 2, col = 2, mspapi = 1, apikey = "pid_1_I"},
             {row = 3, col = 2, mspapi = 1, apikey = "pid_2_I"},
-            {row = 1, col = 3, mspapi = 1, apikey = "pid_0_D"},
-            {row = 2, col = 3, mspapi = 1, apikey = "pid_1_D"},
-            {row = 3, col = 3, mspapi = 1, apikey = "pid_2_D"},
-            {row = 1, col = 4, mspapi = 1, apikey = "pid_0_F"},
-            {row = 2, col = 4, mspapi = 1, apikey = "pid_1_F"},
-            {row = 3, col = 4, mspapi = 1, apikey = "pid_2_F"},
-            {row = 1, col = 5, mspapi = 1, apikey = "pid_0_O"},
-            {row = 2, col = 5, mspapi = 1, apikey = "pid_1_O"},
-            {row = 1, col = 6, mspapi = 1, apikey = "pid_0_B"},
-            {row = 2, col = 6, mspapi = 1, apikey = "pid_1_B"},
-            {row = 3, col = 6, mspapi = 1, apikey = "pid_2_B"}
+
+            {row = 1, col = 3, mspapi = 1, apikey = "d_max_roll"},
+            {row = 2, col = 3, mspapi = 1, apikey = "d_max_pitch"},
+            {row = 3, col = 3, mspapi = 1, apikey = "d_max_yaw"},
+
+            {row = 1, col = 4, mspapi = 1, apikey = "pid_0_D"},
+            {row = 2, col = 4, mspapi = 1, apikey = "pid_1_D"},
+            {row = 3, col = 4, mspapi = 1, apikey = "pid_2_D"},
+            
+            {row = 1, col = 5, mspapi = 2, apikey = "pid_roll_F"},
+            {row = 2, col = 5, mspapi = 2, apikey = "pid_pitch_F"},
+            {row = 3, col = 5, mspapi = 2, apikey = "pid_yaw_F"},
         }
     }                 
 }
@@ -73,7 +75,7 @@ local function openPage(idx, title, script)
     if bfsuite.app.Page.cols ~= nil then
         numCols = #bfsuite.app.Page.cols
     else
-        numCols = 6
+        numCols = 5
     end
     local screenWidth = bfsuite.session.lcdWidth - 10
     local padding = 10
@@ -101,8 +103,12 @@ local function openPage(idx, title, script)
     local c = 1
     while loc > 0 do
         local colLabel = bfsuite.app.Page.cols[loc]
-        pos = {x = posX, y = posY, w = w, h = h}
+
+        local label_w,label_h = lcd.getTextSize(colLabel)
+        pos = {x = (posX - label_w) + paddingRight/2, y = posY, w = w, h = h}
         form.addStaticText(line, pos, colLabel)
+
+
         positions[loc] = posX - w + paddingRight
         positions_r[c] = posX - w + paddingRight
         posX = math.floor(posX - w)
