@@ -151,6 +151,9 @@ end
 -- you MUST set it to nil after you get it!
 function utils.getCurrentProfile()
 
+    return
+    
+    --[[
     if (bfsuite.tasks.telemetry.getSensorSource("pid_profile") ~= nil and bfsuite.tasks.telemetry.getSensorSource("rate_profile") ~= nil) then
 
         bfsuite.session.activeProfileLast = bfsuite.session.activeProfile
@@ -173,7 +176,7 @@ function utils.getCurrentProfile()
         -- msp call to get data
         
                 local message = {
-                    command = 101, -- MSP_SERVO_CONFIGURATIONS
+                    command = 101, -- 
                     uuid = "getProfile",
                     processReply = function(self, buf)
 
@@ -192,12 +195,13 @@ function utils.getCurrentProfile()
 
                         end
                     end,
-                    simulatorResponse = {240, 1, 124, 0, 35, 0, 0, 0, 0, 0, 0, 224, 1, 10, 1, 0, 26, 0, 0, 0, 0, 0, 2, 0, 6, 0, 6, 1, 4, 1}
+                    simulatorResponse = {108, 2  , 0  , 0  , 33 , 0  , 0  , 0  , 0  , 0  , 0  , 11 , 0  , 0  , 0  , 0  ,  26 , 0  , 0  , 1  , 0  , 0  , 62 , 0  }
 
                 }
                 bfsuite.tasks.msp.mspQueue:add(message)
 
     end
+    ]]
 end
 
 -- Function to compare the current system version with a target version

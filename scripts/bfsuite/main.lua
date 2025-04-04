@@ -30,8 +30,8 @@ config.icon_logtool = lcd.loadMask("app/gfx/icon_logtool.png")      -- icon
 config.icon_unsupported = lcd.loadMask("app/gfx/unsupported.png")   -- icon
 config.Version = "1.0.0"                                            -- version number of this software replace
 config.ethosVersion = {1, 6, 2}                                     -- min version of ethos supported by this script                                                     
-config.supportedMspApiVersion = {"1.45"}                            -- supported msp versions
-config.simulatorApiVersionResponse = {0, 1, 45}                      -- version of api return by simulator
+config.supportedMspApiVersion = {"1.46"}                            -- supported msp versions
+config.simulatorApiVersionResponse = {0, 1, 46}                      -- version of api return by simulator
 config.baseDir = "bfsuite"                                          -- base directory for the suite. This is only used by msp api to ensure correct path
 config.logLevel= "info"                                             -- off | info | debug [default = info]
 config.logToFile = false                                            -- log to file [default = false] (log file is in /scripts/bfsuite/logs)

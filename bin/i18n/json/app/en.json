@@ -679,6 +679,10 @@
         "english":"D",
         "translation":"D"
       },
+      "dmax":{
+        "english":"Dm",
+        "translation":"Dm"
+      },
       "b":{
         "english":"B",
         "translation":"B"
