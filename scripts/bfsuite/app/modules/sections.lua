@@ -21,6 +21,6 @@
 local sections = {}
 
 sections[#sections + 1] = {title = bfsuite.i18n.get("app.menu_section_flight_tuning"), id = "flight_tuning"}
-
+sections[#sections + 1] = {title = bfsuite.i18n.get("app.menu_section_advanced"), id = "advanced"}
 
 return sections

@@ -172,4 +172,11 @@ return {
     openPage = openPage,
     wakeup = wakeup,
     API = {},
+    navButtons = {
+        menu = true,
+        save = true,
+        reload = true,
+        tool = false,
+        help = false
+    },
 }

@@ -1895,6 +1895,22 @@
       }
     },
     "rates_advanced":{
+      "throttle_mid":{
+        "english":"Throttle Mid",
+        "translation":"Throttle Mid"
+      },
+      "throttle_expo":{
+        "english":"Throttle Expo",
+        "translation":"Throttle Expo"
+      },
+      "throttle_limit_type":{
+        "english":"Throttle Limit Type",
+        "translation":"Throttle Limit Type"
+      },
+      "throttle_limit_percentage":{
+        "english":"Throttle Limit %",
+        "translation":"Throttle Limit %"
+      },      
       "dyn_ceiling_gain":{
         "english":"Dynamic ceiling gain",
         "translation":"Dynamic ceiling gain"
