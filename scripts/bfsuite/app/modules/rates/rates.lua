@@ -3,13 +3,11 @@ local tables = {}
 
 local activateWakeup = false
 
-
-tables[0] = "app/modules/rates/ratetables/none.lua"
-tables[1] = "app/modules/rates/ratetables/betaflight.lua"
-tables[2] = "app/modules/rates/ratetables/raceflight.lua"
-tables[3] = "app/modules/rates/ratetables/kiss.lua"
-tables[4] = "app/modules/rates/ratetables/actual.lua"
-tables[5] = "app/modules/rates/ratetables/quick.lua"
+tables[0] = "app/modules/rates/ratetables/betaflight.lua"
+tables[1] = "app/modules/rates/ratetables/raceflight.lua"
+tables[2] = "app/modules/rates/ratetables/kiss.lua"
+tables[3] = "app/modules/rates/ratetables/actual.lua"
+tables[4] = "app/modules/rates/ratetables/quick.lua"
 
 if bfsuite.session.activeRateTable == nil then 
     bfsuite.session.activeRateTable = bfsuite.preferences.defaultRateProfile 
