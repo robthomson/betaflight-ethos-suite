@@ -151,9 +151,7 @@ end
 -- you MUST set it to nil after you get it!
 function utils.getCurrentProfile()
 
-    return
-    
-    --[[
+
     if (bfsuite.tasks.telemetry.getSensorSource("pid_profile") ~= nil and bfsuite.tasks.telemetry.getSensorSource("rate_profile") ~= nil) then
 
         bfsuite.session.activeProfileLast = bfsuite.session.activeProfile
@@ -176,15 +174,15 @@ function utils.getCurrentProfile()
         -- msp call to get data
         
                 local message = {
-                    command = 101, -- 
+                    command = 150, --101, -- 
                     uuid = "getProfile",
                     processReply = function(self, buf)
 
-                        if #buf >= 30 then
+                        if #buf >= 20 then
 
-                            buf.offset = 24
+                            buf.offset = 11
                             local activeProfile = bfsuite.tasks.msp.mspHelper.readU8(buf)
-                            buf.offset = 26
+                            buf.offset = 15
                             local activeRate = bfsuite.tasks.msp.mspHelper.readU8(buf)
 
                             bfsuite.session.activeProfileLast = bfsuite.session.activeProfile
@@ -193,15 +191,17 @@ function utils.getCurrentProfile()
                             bfsuite.session.activeProfile = activeProfile + 1
                             bfsuite.session.activeRateProfile = activeRate + 1
 
+                            bfsuite.utils.log("Active Rate Profile: " .. bfsuite.session.activeRateProfile, "info")
+
                         end
                     end,
-                    simulatorResponse = {108, 2  , 0  , 0  , 33 , 0  , 0  , 0  , 0  , 0  , 0  , 11 , 0  , 0  , 0  , 0  ,  26 , 0  , 0  , 1  , 0  , 0  , 62 , 0  }
+                    simulatorResponse = {106, 2  , 0  , 0  , 33 , 0  , 0  , 0  , 0  , 0  , 0  , 11 , 0  , 0  , 0  , 0  ,  26 , 128, 0  , 0  , 0  , 0  , 33 , 0  }
 
                 }
                 bfsuite.tasks.msp.mspQueue:add(message)
 
     end
-    ]]
+
 end
 
 -- Function to compare the current system version with a target version
