@@ -262,17 +262,6 @@ local function init()
         close = bfsuite.app.close
     })
 
-    -- Registers the log tool with the specified configuration.
-    -- This tool handles events, creation, wakeup, painting, and closing.
-    system.registerSystemTool({
-        event = bfsuite.app.event,
-        name = config.toolName,
-        icon = config.icon_logtool,
-        create = bfsuite.app.create_logtool,
-        wakeup = bfsuite.app.wakeup,
-        paint = bfsuite.app.paint,
-        close = bfsuite.app.close
-    })
 
     -- Registers a background task with the specified configuration.
     -- This task handles wakeup and event processing.
