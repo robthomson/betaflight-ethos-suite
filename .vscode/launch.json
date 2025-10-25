@@ -1,101 +1,203 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-    
-        {
-            "name": "SIM: Deploy",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${workspaceFolder}/bin/deploy/vscode/deploy-sim.py",
-            "args": [
-                "--src", "${workspaceFolder}",
-                "--destfolders","${env:FRSKY_SIM_SRC}"
-            ],
-            "console": "integratedTerminal",
-            "justMyCode": true,
-        },
-        {
-            "name": "SIM: Deploy & Launch",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${workspaceFolder}/bin/deploy/vscode/deploy-sim.py",
-            "args": [
-                "--src", "${workspaceFolder}",
-                "--sim", "${env:FRSKY_SIM_BIN}",
-                "--destfolders","${env:FRSKY_SIM_SRC}"
-            ],
-            "console": "integratedTerminal",
-            "justMyCode": true,
-        },
-        {
-            "name": "Radio: Deploy (Fast)",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${workspaceFolder}/bin/deploy/vscode/deploy-sim.py",
-            "args": [
-                "--src", "${workspaceFolder}",
-                "--destfolders","${env:FRSKY_REMOTE_SRC}",
-                "--radio",
-                "--fileext","fast"
-            ],
-            "console": "integratedTerminal",
-            "justMyCode": true,
-        },
-        {
-            "name": "Radio: Deploy & Debug (Fast)",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${workspaceFolder}/bin/deploy/vscode/deploy-sim.py",
-            "args": [
-                "--src", "${workspaceFolder}",
-                "--destfolders","${env:FRSKY_REMOTE_SRC}",
-                "--radio",
-                "--radioDebug",
-                "--fileext","fast"
-            ],
-            "console": "integratedTerminal",
-            "justMyCode": true,
-        },
-        {
-            "name": "Radio: Deploy (All)",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${workspaceFolder}/bin/deploy/vscode/deploy-sim.py",
-            "args": [
-                "--src", "${workspaceFolder}",
-                "--destfolders","${env:FRSKY_REMOTE_SRC}",
-                "--radio"
-            ],
-            "console": "integratedTerminal",
-            "justMyCode": true,
-        },
-        {
-            "name": "Radio: Deploy & Debug (All)",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${workspaceFolder}/bin/deploy/vscode/deploy-sim.py",
-            "args": [
-                "--src", "${workspaceFolder}",
-                "--destfolders","${env:FRSKY_REMOTE_SRC}",
-                "--radio",
-                "--radioDebug"
-            ],
-            "console": "integratedTerminal",
-            "justMyCode": true,
-        },
-        {
-            "name": "Radio: Debug",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${workspaceFolder}/bin/deploy/vscode/deploy-sim.py",
-            "args": [
-                "--radio",
-                "--radioDebug",
-                "--radioDebugOnly"
-            ],
-            "console": "integratedTerminal",
-            "justMyCode": true,
-        },
-    ]
-  }
-  
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Deploy & Launch",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/.vscode/scripts/deploy.py",
+      "args": [
+        "--config-env", "BFSUITE_CONFIG",
+        "--launch",
+        "--lang", "en",
+      ],
+      "console": "integratedTerminal",
+      "subProcess": false, // prevents auto-attach to child procs
+      "justMyCode": true,
+      "stopOnEntry": false,     
+    },
+    {
+      "name": "Deploy & Launch [Fast]",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/.vscode/scripts/deploy.py",
+      "args": [
+        "--config-env", "BFSUITE_CONFIG",
+        "--fileext", "fast",
+        "--launch",
+        "--lang", "en",
+      ],
+      "console": "integratedTerminal",
+      "subProcess": false,
+      "justMyCode": true,
+      "stopOnEntry": false,
+    },   
+    {
+      "name": "Deploy & Choose",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/.vscode/scripts/deploy.py",
+      "args": [
+        "--config-env", "BFSUITE_CONFIG",
+        "--choose",
+        "--launch",
+        "--lang", "en",
+      ],
+      "console": "integratedTerminal",
+      "subProcess": false,
+      "justMyCode": true,
+      "stopOnEntry": false,
+    },
+    {
+      "name": "Deploy & Choose [Fast]",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/.vscode/scripts/deploy.py",
+      "args": [
+        "--config-env", "BFSUITE_CONFIG",
+        "--fileext", "fast",
+        "--choose",
+        "--launch",
+        "--lang", "en",
+      ],
+      "console": "integratedTerminal",
+      "subProcess": false,
+      "justMyCode": true,
+      "stopOnEntry": false,
+    },
+    {
+      "name": "Deploy & Launch [choose lang]",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/.vscode/scripts/deploy.py",
+      "args": [
+        "--config-env", "BFSUITE_CONFIG",
+        "--launch",
+        "--lang", "${input:i18nLocale}",
+      ],
+      "console": "integratedTerminal",
+      "subProcess": false, // prevents auto-attach to child procs
+      "justMyCode": true,
+      "stopOnEntry": false,
+    },
+    {
+      "name": "Deploy & Choose [choose lang]",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/.vscode/scripts/deploy.py",
+      "args": [
+        "--config-env", "BFSUITE_CONFIG",
+        "--choose",
+        "--launch",
+        "--lang", "${input:i18nLocale}",
+      ],
+      "console": "integratedTerminal",
+      "subProcess": false,
+      "justMyCode": true,
+      "stopOnEntry": false,
+    },         
+    {
+      "name": "Deploy Radio",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/.vscode/scripts/deploy.py",
+      "args": [
+        "--config-env", "BFSUITE_CONFIG",
+        "--radio",
+        "--lang", "en",
+      ],
+      "console": "integratedTerminal",
+      "subProcess": false,
+      "justMyCode": true,
+      "stopOnEntry": false,
+    },
+    {
+      "name": "Deploy Radio [Fast]",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/.vscode/scripts/deploy.py",
+      "args": [
+        "--config-env", "BFSUITE_CONFIG",
+        "--fileext", "fast",
+        "--radio",
+        "--lang", "en",
+      ],
+      "console": "integratedTerminal",
+      "subProcess": false,
+      "justMyCode": true,
+      "stopOnEntry": false,
+    },
+    {
+      "name": "Deploy Radio + Serial Debug",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/.vscode/scripts/deploy.py",
+      "args": [
+        "--config-env", "BFSUITE_CONFIG",
+        "--radio",
+        "--radio-debug",
+        "--lang", "en",
+      ],
+      "console": "integratedTerminal",
+      "subProcess": false,
+      "justMyCode": true,
+      "stopOnEntry": false,
+    },
+    {
+      "name": "Deploy Radio + Serial Debug [Fast]",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/.vscode/scripts/deploy.py",
+      "args": [
+        "--config-env", "BFSUITE_CONFIG",
+        "--fileext", "fast",
+        "--radio",
+        "--radio-debug",
+        "--lang", "en",
+      ],
+      "console": "integratedTerminal",
+      "subProcess": false,
+      "justMyCode": true,
+      "stopOnEntry": false,
+    },
+    {
+      "name": "Radio: Serial Debug",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/.vscode/scripts/deploy.py",
+      "args": [
+        "--config-env", "BFSUITE_CONFIG",
+        "--radio",
+        "--connect-only",
+        "--lang", "en",
+      ],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Clear locks",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/.vscode/scripts/deploy.py",
+      "args": ["--config-env", "BFSUITE_CONFIG", "--clear-lock"],
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "noDebug": true
+    } 
+  ],
+  "inputs": [
+    {
+      "id": "i18nLocale",
+      "type": "pickString",
+      "description": "Choose language",
+      "options": [
+        "en",
+        "de",
+        "fr",
+        "es",
+        "it",
+        "nl",
+      ],
+      "default": "en"
+    }
+  ]
+}

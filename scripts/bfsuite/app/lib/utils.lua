@@ -1,37 +1,31 @@
 --[[
-
- * Copyright (C) Rob Thomson
- *
- *
- * License GPLv3: https://www.gnu.org/licenses/gpl-3.0.en.html
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 3 as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- 
- * Note.  Some icons have been sourced from https://www.flaticon.com/
- * 
-
+  Copyright (C) 2025 Rob Thomson
+  GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
+
+local bfsuite = require("bfsuite")
+
 local utils = {}
+local app = bfsuite.app
+local session = bfsuite.session
+local rfutils = bfsuite.utils
+local tasks = bfsuite.tasks
 
 local arg = {...}
 local config = arg[1]
 
+function utils.getRSSI()
+    if bfsuite.simevent.rflink == 1 then return 0 end
 
---[[
-    Converts a table of values into a table of tables, where each inner table contains the original value and an incremented index.
+    if app.offlineMode == true then return 100 end
 
-    @param tbl (table) The input table of values.
-    @param inc (number) Optional increment to add to each index. Defaults to 0 if not provided.
+    if session.telemetryState then
+        return 100
+    else
+        return 0
+    end
+end
 
-    @return (table) A new table where each entry is a table containing the original value and the incremented index.
-]]
 function utils.convertPageValueTable(tbl, inc)
     local thetable = {}
 
@@ -42,6 +36,7 @@ function utils.convertPageValueTable(tbl, inc)
         thetable[0][1] = tbl[0]
         thetable[0][2] = 0
     end
+
     for idx, value in ipairs(tbl) do
         thetable[idx] = {}
         thetable[idx][1] = value
@@ -51,57 +46,27 @@ function utils.convertPageValueTable(tbl, inc)
     return thetable
 end
 
-
---[[
-    Retrieves the value of a field, applying optional transformations.
-
-    @param f (table) The field table containing the value and optional transformation parameters:
-        - value (number) The base value of the field.
-        - decimals (number, optional) The number of decimal places to consider.
-        - offset (number, optional) A value to add to the base value.
-        - mult (number, optional) A multiplier to apply to the value.
-
-    @return (number) The transformed field value.
-]]
 function utils.getFieldValue(f)
     local v = f.value or 0
 
-    if f.decimals then
-        v = bfsuite.utils.round(v * bfsuite.app.utils.decimalInc(f.decimals),2)
-    end
+    if f.decimals then v = rfutils.round(v * app.utils.decimalInc(f.decimals), 2) end
 
-    if f.offset then
-        v = v + f.offset
-    end
+    if f.offset then v = v + f.offset end
 
-    if f.mult then
-        v = math.floor(v * f.mult + 0.5)
-    end
+    if f.mult then v = math.floor(v * f.mult + 0.5) end
 
     return v
 end
 
---[[
-    Saves the given value to the specified field after applying necessary transformations.
-
-    @param f (table) The field to save the value to. Expected to have the following optional properties:
-        - offset (number): A value to subtract from the input value before saving.
-        - decimals (number): The number of decimal places to consider for the value.
-        - postEdit (function): A function to call after the value is saved.
-        - mult (number): A multiplier to divide the final value by before returning.
-    @param value (number) The value to save to the field.
-
-    @return (number) The final value saved to the field.
-]]
 function utils.saveFieldValue(f, value)
     if value then
         if f.offset then value = value - f.offset end
         if f.decimals then
-            f.value = value / bfsuite.app.utils.decimalInc(f.decimals)
+            f.value = value / app.utils.decimalInc(f.decimals)
         else
             f.value = value
         end
-        if f.postEdit then f.postEdit(bfsuite.app.Page) end
+        if f.postEdit then f.postEdit(app.Page) end
     end
 
     if f.mult then f.value = f.value / f.mult end
@@ -109,108 +74,122 @@ function utils.saveFieldValue(f, value)
     return f.value
 end
 
--- Scales a given value based on the provided factor.
--- @param value The value to be scaled.
--- @param f A table containing scaling parameters:
---   - decimals: The number of decimal places to consider.
---   - scale: (optional) A scaling factor to divide the value by.
--- @return The scaled value, rounded to the nearest integer, or nil if the input value is nil.
 function utils.scaleValue(value, f)
     if not value then return nil end
-    local v = value * bfsuite.app.utils.decimalInc(f.decimals)
+    local v = value * app.utils.decimalInc(f.decimals)
     if f.scale then v = v / f.scale end
-    return bfsuite.utils.round(v)
+    return rfutils.round(v)
 end
 
-
--- Increments the decimal place value.
--- @param dec The current decimal place value (1 for 10, 2 for 100, etc.).
--- @return The next decimal place value or 1 if the input is nil or 0.
 function utils.decimalInc(dec)
     if dec == nil then
         return 1
     elseif dec > 0 and dec <= 10 then
-        return 10 ^ dec  -- Use dynamic exponentiation
+        return 10 ^ dec
     else
-        return nil  -- Return nil for invalid inputs (optional, you can adjust behavior)
+        return nil
     end
 end
 
+function utils.getInlinePositions(f)
 
---[[
-    Computes the positions for inline elements on the LCD screen.
+    local lPage = bfsuite.app.Page.apidata.formdata
 
-    @param f (table) - A table containing the label and inline properties.
-        - label (string) - The label text.
-        - inline (number) - The inline multiplier (1 to 5).
-        - t (string) - Optional text to display.
-    @param lPage (number) - The page number for inline size calculation.
+    local function getInlineSize(id)
+        if not id then return 13.6 end
+        for i = 1, #lPage.labels do if lPage.labels[i].label == id then return lPage.labels[i].inline_size or 13.6 end end
+        return 13.6
+    end
 
-    @return (table) - A table containing the positions for text and field elements.
-        - posText (table) - Position and size of the text element.
-            - x (number) - X-coordinate of the text.
-            - y (number) - Y-coordinate of the text.
-            - w (number) - Width of the text.
-            - h (number) - Height of the text.
-        - posField (table) - Position and size of the field element.
-            - x (number) - X-coordinate of the field.
-            - y (number) - Y-coordinate of the field.
-            - w (number) - Width of the field.
-            - h (number) - Height of the field.
-]]
-function utils.getInlinePositions(f, lPage)
-    -- Compute inline size in one step.
-    local inline_size = utils.getInlineSize(f.label, lPage) * bfsuite.app.radio.inlinesize_mult
+    local inline_size = getInlineSize(f.label) * app.radio.inlinesize_mult
 
-    -- Get LCD dimensions.
-    local w, h = bfsuite.utils.getWindowSize()
+    local w, h = lcd.getWindowSize()
 
     local padding = 5
     local fieldW = (w * inline_size) / 100
     local eW = fieldW - padding
-    local eH = bfsuite.app.radio.navbuttonHeight
-    local eY = bfsuite.app.radio.linePaddingTop
+    local eH = app.radio.navbuttonHeight
+    local eY = app.radio.linePaddingTop
 
-    -- Set default text and compute its dimensions.
     f.t = f.t or ""
     lcd.font(FONT_STD)
     local tsizeW, tsizeH = lcd.getTextSize(f.t)
 
-    -- Map inline values to multipliers.
-    local multipliers = { [1] = 1, [2] = 3, [3] = 5, [4] = 7, [5] = 9 }
+    local multipliers = {[1] = 1, [2] = 3, [3] = 5, [4] = 7, [5] = 9}
     local m = multipliers[f.inline] or 1
 
-    -- For inline==1, extra padding is applied to the text.
     local textPadding = (f.inline == 1) and (2 * padding) or padding
 
     local posTextX = w - fieldW * m - tsizeW - textPadding
     local posFieldX = w - fieldW * m - ((f.inline == 1) and padding or 0)
 
-    local posText = { x = posTextX, y = eY, w = tsizeW, h = eH }
-    local posField = { x = posFieldX, y = eY, w = eW, h = eH }
+    local posText = {x = posTextX, y = eY, w = tsizeW, h = eH}
+    local posField = {x = posFieldX, y = eY, w = eW, h = eH}
 
-    return { posText = posText, posField = posField }
+    return {posText = posText, posField = posField}
 end
 
+function utils.getCurrentProfile()
+    local pidProfile = tasks.telemetry.getSensor("pid_profile")
+    local rateProfile = tasks.telemetry.getSensor("rate_profile")
 
+    if (pidProfile ~= nil and rateProfile ~= nil) then
+        session.activeProfileLast = session.activeProfile
+        local p = pidProfile
+        if p ~= nil then
+            session.activeProfile = math.floor(p)
+        else
+            session.activeProfile = nil
+        end
 
---[[
-    Retrieves the inline size for a given label ID from the provided page.
-
-    @param id (string|nil) The ID of the label to find the inline size for. If nil, a default size is returned.
-    @param lPage (table) The page object containing labels with their respective inline sizes.
-
-    @return (number) The inline size of the label if found, otherwise returns a default size of 13.6.
-]]
-function utils.getInlineSize(id, lPage)
-    if not id then return 13.6 end  -- Prevent nil size issues
-    for i = 1, #lPage.labels do
-        if lPage.labels[i].label == id then
-            return lPage.labels[i].inline_size or 13.6
+        session.activeRateProfileLast = session.activeRateProfile
+        local r = rateProfile
+        if r ~= nil then
+            session.activeRateProfile = math.floor(r)
+        else
+            session.activeRateProfile = nil
         end
     end
-    return 13.6  -- Use default if label is missing
+end
+
+function utils.titleCase(str) return str:gsub("(%a)([%w_']*)", function(first, rest) return first:upper() .. rest:lower() end) end
+
+function utils.settingsSaved()
+
+    local mspEepromWrite = {
+        command = 250,
+        processReply = function(self, buf)
+            app.triggers.closeSave = true
+            if app.Page.postEepromWrite then app.Page.postEepromWrite() end
+            if app.Page.reboot then
+                app.ui.rebootFc()
+            else
+                app.utils.invalidatePages()
+            end
+        end,
+        errorHandler = function(self) app.triggers.closeSave = true end,
+        simulatorResponse = {}
+    }
+
+    if app.Page and app.Page.eepromWrite then
+        if app.pageState ~= app.pageStatus.eepromWrite then
+            app.pageState = app.pageStatus.eepromWrite
+            app.triggers.closeSave = true
+            if session.isArmed then app.triggers.showSaveArmedWarning = true end
+            tasks.msp.mspQueue:add(mspEepromWrite)
+        end
+    elseif app.pageState ~= app.pageStatus.eepromWrite then
+        app.utils.invalidatePages()
+        app.triggers.closeSave = true
+    end
+
+end
+
+function utils.invalidatePages()
+    app.Page = nil
+    app.pageState = app.pageStatus.display
+    app.saveTS = 0
+
 end
 
 return utils
-

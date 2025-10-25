@@ -1,24 +1,25 @@
+local bfsuite = require("bfsuite")
 local activateWakeup = false
 
-local mspapi = {
+local apidata = {
     api = {
         [1] = 'PID',
-        [2] = 'PID_ADVANCED'
+        [2] = 'PID_ADVANCED',
     },
     formdata = {
         labels = {
         },
         rows = {
-            bfsuite.i18n.get("app.modules.pids.roll"),
-            bfsuite.i18n.get("app.modules.pids.pitch"),
-            bfsuite.i18n.get("app.modules.pids.yaw")
+            "@i18n(app.modules.pids.roll)@",
+            "@i18n(app.modules.pids.pitch)@",
+            "@i18n(app.modules.pids.yaw)@"
         },
         cols = {
-            bfsuite.i18n.get("app.modules.pids.p"),
-            bfsuite.i18n.get("app.modules.pids.i"),
-            bfsuite.i18n.get("app.modules.pids.dmax"),
-            bfsuite.i18n.get("app.modules.pids.d"),
-            bfsuite.i18n.get("app.modules.pids.f"),
+            "@i18n(app.modules.pids.p)@",
+            "@i18n(app.modules.pids.i)@",
+            "@i18n(app.modules.pids.dmax)@",
+            "@i18n(app.modules.pids.d)@",
+            "@i18n(app.modules.pids.f)@",
         },
         fields = {
             -- P
@@ -57,7 +58,6 @@ local function openPage(idx, title, script)
     bfsuite.app.triggers.isReady = false
 
     bfsuite.app.Page = assert(loadfile("app/modules/" .. script))()
-    -- collectgarbage()
 
     bfsuite.app.lastIdx = idx
     bfsuite.app.lastTitle = title
@@ -66,18 +66,18 @@ local function openPage(idx, title, script)
 
     bfsuite.app.uiState = bfsuite.app.uiStatus.pages
 
-    longPage = false
+    local longPage = false
 
     form.clear()
 
     bfsuite.app.ui.fieldHeader(title)
     local numCols
-    if bfsuite.app.Page.cols ~= nil then
-        numCols = #bfsuite.app.Page.cols
+    if bfsuite.app.Page.apidata.formdata.cols ~= nil then
+        numCols = #bfsuite.app.Page.apidata.formdata.cols
     else
-        numCols = 5
+        numCols = 6
     end
-    local screenWidth = bfsuite.session.lcdWidth - 10
+    local screenWidth = bfsuite.app.lcdWidth - 10
     local padding = 10
     local paddingTop = bfsuite.app.radio.linePaddingTop
     local h = bfsuite.app.radio.navbuttonHeight
@@ -87,28 +87,17 @@ local function openPage(idx, title, script)
     local positions_r = {}
     local pos
 
-    line = form.addLine("")
+    local line = form.addLine("")
 
     local loc = numCols
     local posX = screenWidth - paddingRight
     local posY = paddingTop
 
-
-    bfsuite.utils.log("Merging form data from mspapi","debug")
-    bfsuite.app.Page.fields = bfsuite.app.Page.mspapi.formdata.fields
-    bfsuite.app.Page.labels = bfsuite.app.Page.mspapi.formdata.labels
-    bfsuite.app.Page.rows = bfsuite.app.Page.mspapi.formdata.rows
-    bfsuite.app.Page.cols = bfsuite.app.Page.mspapi.formdata.cols
-
     local c = 1
     while loc > 0 do
-        local colLabel = bfsuite.app.Page.cols[loc]
-
-        local label_w,label_h = lcd.getTextSize(colLabel)
-        pos = {x = (posX - label_w) + paddingRight/2, y = posY, w = w, h = h}
+        local colLabel = bfsuite.app.Page.apidata.formdata.cols[loc]
+        pos = {x = posX, y = posY, w = w, h = h}
         form.addStaticText(line, pos, colLabel)
-
-
         positions[loc] = posX - w + paddingRight
         positions_r[c] = posX - w + paddingRight
         posX = math.floor(posX - w)
@@ -116,13 +105,12 @@ local function openPage(idx, title, script)
         c = c + 1
     end
 
-    -- display each row
     local pidRows = {}
-    for ri, rv in ipairs(bfsuite.app.Page.rows) do pidRows[ri] = form.addLine(rv) end
+    for ri, rv in ipairs(bfsuite.app.Page.apidata.formdata.rows) do pidRows[ri] = form.addLine(rv) end
 
-    for i = 1, #bfsuite.app.Page.fields do
-        local f = bfsuite.app.Page.fields[i]
-        local l = bfsuite.app.Page.labels
+    for i = 1, #bfsuite.app.Page.apidata.formdata.fields do
+        local f = bfsuite.app.Page.apidata.formdata.fields[i]
+        local l = bfsuite.app.Page.apidata.formdata.labels
         local pageIdx = i
         local currentField = i
 
@@ -131,52 +119,23 @@ local function openPage(idx, title, script)
         pos = {x = posX + padding, y = posY, w = w - padding, h = h}
 
         bfsuite.app.formFields[i] = form.addNumberField(pidRows[f.row], pos, 0, 0, function()
-            if bfsuite.app.Page.fields == nil or bfsuite.app.Page.fields[i] == nil then
+            if bfsuite.app.Page.apidata.formdata.fields == nil or bfsuite.app.Page.apidata.formdata.fields[i] == nil then
                 ui.disableAllFields()
                 ui.disableAllNavigationFields()
                 ui.enableNavigationField('menu')
                 return nil
             end
-            return bfsuite.app.utils.getFieldValue(bfsuite.app.Page.fields[i])
+            return bfsuite.app.utils.getFieldValue(bfsuite.app.Page.apidata.formdata.fields[i])
         end, function(value)
             if f.postEdit then f.postEdit(bfsuite.app.Page) end
             if f.onChange then f.onChange(bfsuite.app.Page) end
-    
-            f.value = bfsuite.app.utils.saveFieldValue(bfsuite.app.Page.fields[i], value)
+
+            f.value = bfsuite.app.utils.saveFieldValue(bfsuite.app.Page.apidata.formdata.fields[i], value)
         end)
     end
-    
-end
-
-local function wakeup()
-
-    if activateWakeup == true and bfsuite.tasks.msp.mspQueue:isProcessed() then
-
-        -- update active profile
-        -- the check happens in postLoad          
-        if bfsuite.session.activeProfile ~= nil then
-            bfsuite.app.formFields['title']:value(bfsuite.app.Page.title .. " #" .. bfsuite.session.activeProfile)
-        end
-
-    end
 
 end
 
-return {
-    mspapi = mspapi,
-    title = bfsuite.i18n.get("app.modules.pids.name"),
-    reboot = false,
-    eepromWrite = true,
-    refreshOnProfileChange = true,
-    postLoad = postLoad,
-    openPage = openPage,
-    wakeup = wakeup,
-    API = {},
-    navButtons = {
-        menu = true,
-        save = true,
-        reload = true,
-        tool = false,
-        help = false
-    },
-}
+local function wakeup() if activateWakeup == true and bfsuite.tasks.msp.mspQueue:isProcessed() then if bfsuite.session.activeProfile ~= nil then bfsuite.app.formFields['title']:value(bfsuite.app.Page.title .. " #" .. bfsuite.session.activeProfile) end end end
+
+return {apidata = apidata, title = "@i18n(app.modules.pids.name)@", reboot = false, eepromWrite = true, refreshOnProfileChange = true, postLoad = postLoad, openPage = openPage, wakeup = wakeup, API = {}}

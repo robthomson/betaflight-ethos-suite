@@ -1,234 +1,228 @@
 --[[
- * Copyright (C) Rob Thomson
- * License GPLv3: https://www.gnu.org/licenses/gpl-3.0.en.html
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 3.
- *
- * Note: Some icons have been sourced from https://www.flaticon.com/
+  Copyright (C) 2025 Rob Thomson Project
+  GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
--- MspQueueController class
+
+local bfsuite = require("bfsuite")
+
 local MspQueueController = {}
 MspQueueController.__index = MspQueueController
 
---[[
-    Creates a new instance of MspQueueController.
-    
-    @return A new MspQueueController instance.
-    
-    Fields:
-    - messageQueue: A table to hold the messages in the queue.
-    - currentMessage: The current message being processed.
-    - lastTimeCommandSent: The timestamp of the last command sent.
-    - retryCount: The number of retries attempted for the current message.
-    - maxRetries: The maximum number of retries allowed for a message.
-    - timeout: The timeout duration for a message (default is 2.0 seconds).
-    - uuid: A unique identifier for the controller instance.
-]]
-function MspQueueController.new()
-    local DEFAULT_TIMEOUT = 2.0
+local lastQueueCount = 0
+
+local function newQueue() return {first = 1, last = 0, data = {}} end
+
+local function qpush(q, v)
+    q.last = q.last + 1
+    q.data[q.last] = v
+end
+
+local function qpop(q)
+    if q.first > q.last then return nil end
+    local v = q.data[q.first]
+    q.data[q.first] = nil
+    q.first = q.first + 1
+    return v
+end
+
+local function qcount(q) return q.last - q.first + 1 end
+
+local function cloneArray(src)
+    local dst = {}
+    for i = 1, #src do dst[i] = src[i] end
+    return setmetatable(dst, getmetatable(src))
+end
+
+local function shallowClone(src)
+    local dst = {}
+    for k, v in pairs(src) do dst[k] = v end
+    return setmetatable(dst, getmetatable(src))
+end
+
+local function cloneMessage(msg)
+    local out = {}
+    for k, v in pairs(msg) do
+        if k == "payload" and type(v) == "table" then
+            out[k] = cloneArray(v)
+        elseif k == "simulatorResponse" then
+            out[k] = v
+        elseif type(v) == "table" then
+            out[k] = shallowClone(v)
+        else
+            out[k] = v
+        end
+    end
+    return setmetatable(out, getmetatable(msg))
+end
+
+local function LOG_ENABLED_MSP() return bfsuite and bfsuite.preferences and bfsuite.preferences.developer and bfsuite.preferences.developer.logmsp end
+
+local function LOG_ENABLED_MSP_QUEUE() return bfsuite and bfsuite.preferences and bfsuite.preferences.developer and bfsuite.preferences.developer.logmspQueue end
+
+function MspQueueController.new(opts)
+    opts = opts or {}
     local self = setmetatable({}, MspQueueController)
-    self.messageQueue = {}
+
+    self.queue = newQueue()
     self.currentMessage = nil
+    self.currentMessageStartTime = nil
+
     self.lastTimeCommandSent = nil
     self.retryCount = 0
-    self.maxRetries = 3
-    self.timeout = DEFAULT_TIMEOUT
+    self.maxRetries = opts.maxRetries or 3
+    self.timeout = opts.timeout or 2.0
+
     self.uuid = nil
+
+    self.loopInterval = opts.loopInterval or 0
+    self._nextProcessAt = 0
+
+    self.copyOnAdd = opts.copyOnAdd == true
+
+    self.mspBusyStart = nil
+
     return self
 end
 
---[[
-Checks if the MSP queue has been processed.
-@return boolean True if there are no current messages and the message queue is empty, false otherwise.
-]]
-function MspQueueController:isProcessed()
-    return not self.currentMessage and #self.messageQueue == 0
-end
+function MspQueueController:queueCount() return qcount(self.queue) end
 
---[[
-    Removes and returns the first element from the given table.
+function MspQueueController:isProcessed() return (self.currentMessage == nil) and (self:queueCount() == 0) end
 
-    @param tbl (table): The table from which the first element will be removed.
-    @return (any): The first element of the table, or nil if the table is empty.
-]]
-local function popFirstElement(tbl)
-    return table.remove(tbl, 1)
-end
-
---[[
-    Processes the MSP (Multiwii Serial Protocol) message queue.
-    
-    This function handles the processing of messages in the MSP queue. It checks if the queue is already processed,
-    manages the busy state, handles RSSI sensor muting, sends commands, processes replies, and handles timeouts and retries.
-    
-    Usage:
-    - Call this function to process the next message in the MSP queue.
-    - It will handle sending the command, waiting for a response, and processing the response or handling errors.
-    
-    Key Operations:
-    - Checks if the queue is already processed and sets the busy state.
-    - Mutes the RSSI sensor if available.
-    - Sends the next command in the queue if the time interval has passed.
-    - Processes the response or handles timeouts and retries.
-    - Logs relevant information for debugging purposes.
-    
-    Note:
-    - This function is part of the MspQueueController class.
-    - It interacts with various components of the bfsuite application.
-]]
 function MspQueueController:processQueue()
+
+    if self.loopInterval and self.loopInterval > 0 then
+        local now = os.clock()
+        if now < self._nextProcessAt then return end
+        self._nextProcessAt = now + self.loopInterval
+    end
+
+    local mspBusyTimeout = 5.0
+    self.mspBusyStart = self.mspBusyStart or os.clock()
+
+    if LOG_ENABLED_MSP_QUEUE() then
+        local count = self:queueCount()
+        if count ~= lastQueueCount then
+            bfsuite.utils.log("MSP Queue: " .. count .. " messages in queue", "info")
+            lastQueueCount = count
+        end
+    end
+
     if self:isProcessed() then
-        bfsuite.app.triggers.mspBusy = false
+        bfsuite.session.mspBusy = false
+        self.mspBusyStart = nil
         return
     end
-    bfsuite.app.triggers.mspBusy = true
 
-    if bfsuite.session.telemetrySensor then
-        local module = model.getModule(bfsuite.session.telemetrySensor:module())
-        if module and module.muteSensorLost then module:muteSensorLost(2.0) end
+    if self.mspBusyStart and (os.clock() - self.mspBusyStart) > mspBusyTimeout then
+        bfsuite.utils.log("MSP blocked for more than " .. mspBusyTimeout .. " seconds", "info")
+        bfsuite.utils.log(" - Unblocking by setting bfsuite.session.mspBusy = false", "info")
+        bfsuite.session.mspBusy = false
+        self.mspBusyStart = nil
+        return
     end
+
+    bfsuite.session.mspBusy = true
+
+    bfsuite.utils.muteSensorLostWarnings()
 
     if not self.currentMessage then
         self.currentMessageStartTime = os.clock()
-        self.currentMessage = popFirstElement(self.messageQueue)
+        self.currentMessage = qpop(self.queue)
         self.retryCount = 0
     end
 
-    local lastTimeInterval = bfsuite.tasks.msp.protocol.mspIntervalOveride or 1
+    local cmd, buf, err
+
+    local lastTimeInterval = bfsuite.tasks.msp.protocol.mspIntervalOveride or 0.25
     if lastTimeInterval == nil then lastTimeInterval = 1 end
 
     if not system:getVersion().simulation then
-        -- we process on the actual radio
-        if not self.lastTimeCommandSent or self.lastTimeCommandSent + lastTimeInterval < os.clock() then
-            bfsuite.tasks.msp.protocol.mspWrite(self.currentMessage.command, self.currentMessage.payload or {})
-            self.lastTimeCommandSent = os.clock()
-            self.currentMessageStartTime = os.clock()
-            self.retryCount = self.retryCount + 1
 
-            if bfsuite.app.Page and bfsuite.app.Page.mspRetry then bfsuite.app.Page.mspRetry(self) end
+        if (not self.lastTimeCommandSent) or (self.lastTimeCommandSent + lastTimeInterval < os.clock()) then
+            if self.currentMessage then
+                bfsuite.tasks.msp.protocol.mspWrite(self.currentMessage.command, self.currentMessage.payload or {})
+                self.lastTimeCommandSent = os.clock()
+                self.currentMessageStartTime = self.lastTimeCommandSent
+                self.retryCount = self.retryCount + 1
+                if bfsuite.app.Page and bfsuite.app.Page.mspRetry then bfsuite.app.Page.mspRetry(self) end
+            end    
         end
 
-        mspProcessTxQ()
-        -- return the radio response
+        bfsuite.tasks.msp.common.mspProcessTxQ()
         cmd, buf, err = bfsuite.tasks.msp.common.mspPollReply()
 
-        -- we dont log here - but later as this is 'polling'
-        -- look further down in the script where we process the 
-        -- cmd, buf, err commands
-
     else
+
         if not self.currentMessage.simulatorResponse then
-            bfsuite.utils.log("No simulator response for command " .. tostring(self.currentMessage.command),"debug")
+            if LOG_ENABLED_MSP() then bfsuite.utils.log("No simulator response for command " .. tostring(self.currentMessage.command), "debug") end
             self.currentMessage = nil
-            self.uuid = nil -- Clear UUID after processing
+            self.uuid = nil
             return
         end
-
-
-        -- return the simulator response
         cmd, buf, err = self.currentMessage.command, self.currentMessage.simulatorResponse, nil
-
         if cmd then
-            -- find state
             local rwState = (self.currentMessage.payload and #self.currentMessage.payload > 0) and "WRITE" or "READ"
-
-            bfsuite.utils.logMsp(cmd, rwState, self.currentMessage.payload or buf, err)      
-        end    
+            if LOG_ENABLED_MSP() then bfsuite.utils.logMsp(cmd, rwState, self.currentMessage.payload or buf, err) end
+        end
     end
 
-    if self.currentMessage and os.clock() - self.currentMessageStartTime > (self.currentMessage.timeout or self.timeout) then
-        if self.currentMessage.errorHandler then self.currentMessage:errorHandler() end
-        bfsuite.utils.log("Message timeout exceeded. Flushing queue.","debug")
-        self:clear()
+    if self.currentMessage and (os.clock() - self.currentMessageStartTime) > (self.currentMessage.timeout or self.timeout) then
+        if self.currentMessage.setErrorHandler then self.currentMessage:setErrorHandler() end
+        if LOG_ENABLED_MSP() then bfsuite.utils.log("Message timeout exceeded. Flushing queue.", "debug") end
+        self.currentMessage = nil
+        self.uuid = nil
         return
     end
 
-    if cmd then
-        self.lastTimeCommandSent = nil
-    end
+    if cmd then self.lastTimeCommandSent = nil end
 
     if (cmd == self.currentMessage.command and not err) or (self.currentMessage.command == 68 and self.retryCount == 2) or (self.currentMessage.command == 217 and err and self.retryCount == 2) then
 
-        if self.currentMessage.processReply then 
-            self.currentMessage:processReply(buf) 
-            if cmd then
-                -- we can do logging etc here as payload is now complete (real)
+        if self.currentMessage.processReply then
+            self.currentMessage:processReply(buf)
+            if cmd and LOG_ENABLED_MSP() then
                 local rwState = (self.currentMessage.payload and #self.currentMessage.payload > 0) and "WRITE" or "READ"
                 bfsuite.utils.logMsp(cmd, rwState, self.currentMessage.payload or buf, err)
             end
         end
         self.currentMessage = nil
-        self.uuid = nil -- Clear UUID after successful processing
-
+        self.uuid = nil
         if bfsuite.app.Page and bfsuite.app.Page.mspSuccess then bfsuite.app.Page.mspSuccess() end
     elseif self.retryCount > self.maxRetries then
-        self.messageQueue = {}
-        if self.currentMessage.errorHandler then self.currentMessage:errorHandler() end
-        self:clear()
 
+        self:clear()
+        if self.currentMessage and self.currentMessage.setErrorHandler then self.currentMessage:setErrorHandler() end
         if bfsuite.app.Page and bfsuite.app.Page.mspTimeout then bfsuite.app.Page.mspTimeout() end
     end
 end
 
---[[
-    Clears the message queue and resets the current message and UUID.
-    Also clears the MSP transmission buffer.
-]]
 function MspQueueController:clear()
-    self.messageQueue = {}
+    bfsuite.session.mspBusy = false
+    self.mspBusyStart = nil
+
+    self.queue = newQueue()
     self.currentMessage = nil
-    self.uuid = nil -- Ensure UUID is cleared when queue is cleared
+    self.uuid = nil
     bfsuite.tasks.msp.common.mspClearTxBuf()
 end
 
---[[
-    Function: deepCopy
-    Creates a deep copy of a given table. If the input is not a table, it returns the input as is.
-    
-    Parameters:
-    original - The table to be deep copied.
-    
-    Returns:
-    A new table that is a deep copy of the original table, or the original value if it is not a table.
-]]
-local function deepCopy(original)
-    if type(original) == "table" then
-        local copy = {}
-        for key, value in next, original, nil do copy[key] = deepCopy(value) end
-        return setmetatable(copy, getmetatable(original))
-    else
-        return original
-    end
-end
-
---[[
-    Adds a message to the MSP queue if telemetry is active and the message is not a duplicate.
-    
-    @param message (table) The message to be added to the queue. The message should contain a 'command' field and optionally a 'uuid' field.
-    
-    @return (MspQueueController) Returns the MspQueueController instance if the message is successfully added to the queue.
-    
-    Logs:
-    - "Skipping duplicate message with UUID <uuid>" if the message is a duplicate.
-    - "Queueing command <command> at position <position>" when a message is successfully added to the queue.
-    - "Unable to queue - nil message." if the message is nil.
-]]
 function MspQueueController:add(message)
     if not bfsuite.session.telemetryState then return end
-    if message then
-        if message.uuid and self.uuid == message.uuid then
-            bfsuite.utils.log("Skipping duplicate message with UUID " .. message.uuid,"debug")
-            return
-        end
-        message = deepCopy(message)
-        if message.uuid then self.uuid = message.uuid end
-        --bfsuite.utils.log("Queueing command " .. message.command .. " at position " .. #self.messageQueue + 1,"info")
-        self.messageQueue[#self.messageQueue + 1] = message
-        return self
-    else
-        bfsuite.utils.log("Unable to queue - nil message.","debug")
+    if not message then
+        if LOG_ENABLED_MSP() then bfsuite.utils.log("Unable to queue - nil message.", "debug") end
+        return
     end
+
+    if message.uuid and self.uuid == message.uuid then
+        if LOG_ENABLED_MSP() then bfsuite.utils.log("Skipping duplicate message with UUID " .. message.uuid, "debug") end
+        return
+    end
+
+    if message.uuid then self.uuid = message.uuid end
+
+    local toQueue = self.copyOnAdd and cloneMessage(message) or message
+    qpush(self.queue, toQueue)
+    return self
 end
 
 return MspQueueController.new()
