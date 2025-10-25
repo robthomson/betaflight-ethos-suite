@@ -29,7 +29,7 @@ src\
 
 Before running the app or building, set the following environment variables:
 
-### `FRSKY_bfsuite_GIT_SRC`
+### `FRSKY_BFSUITE_GIT_SRC`
 - Path to the root of the Betaflight bfsuite source repo.
 - Must contain:
   - `scripts\bfsuite\tasks\telemetry\telemetry.lua`
@@ -42,7 +42,7 @@ Before running the app or building, set the following environment variables:
 
 **Example:**
 ```bat
-set FRSKY_bfsuite_GIT_SRC=C:\GitHub\betaflight-lua-ethos-suite
+set FRSKY_BFSUITE_GIT_SRC=C:\GitHub\betaflight-lua-ethos-suite
 set FRSKY_SIM_SRC=C:\GitHub\betaflight-lua-ethos-suite\output
 ```
 

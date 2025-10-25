@@ -310,7 +310,7 @@ def main():
 
     # Header options
     parser.add_argument("--no-header", action="store_true", help="Disable final header injection")
-    parser.add_argument("--header-holder", default="betaflight", help="Header holder name (default: betaflight)")
+    parser.add_argument("--header-holder", default="betaflight", help="Header holder name (default: Rob Thomson)")
     parser.add_argument("--header-year", type=int, default=datetime.now().year, help="Header year (default: current year)")
 
     args = parser.parse_args()
