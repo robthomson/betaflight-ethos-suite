@@ -1,30 +1,184 @@
 --[[
-
- * Copyright (C) Rob Thomson
- *
- *
- * License GPLv3: https://www.gnu.org/licenses/gpl-3.0.en.html
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 3 as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- 
- * Note.  Some icons have been sourced from https://www.flaticon.com/
- * 
-
+  Copyright (C) 2025 Betaflight Project
+  GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
+
+local bfsuite = require("bfsuite")
+
 local utils = {}
 
 local arg = {...}
 local config = arg[1]
 
-function utils.createCacheFile(tbl, path, options)
+function utils.session()
+    bfsuite.session = {
 
+        tailMode = nil,
+        swashMode = nil,
+        rateProfile = nil,
+        governorMode = nil,
+
+        activeProfile = nil,
+        activeRateProfile = nil,
+        activeProfileLast = nil,
+        activeRateLast = nil,
+
+        servoCount = nil,
+        servoOverride = nil,
+
+        apiVersion = nil,
+        apiVersionInvalid = nil,
+        fcVersion = nil,
+        rfVersion = nil,
+        ethosRunningVersion = nil,
+        mspSignature = nil,
+        mcu_id = nil,
+
+        isConnected = false,
+        isConnectedHigh = false,
+        isConnectedMedium = false,
+        isConnectedLow = false,
+        isArmed = false,
+
+        telemetryState = nil,
+        telemetryType = nil,
+        telemetryTypeChanged = nil,
+        telemetrySensor = nil,
+        telemetryModule = nil,
+        telemetryModelChanged = nil,
+        telemetryConfig = nil,
+
+        mspBusy = false,
+
+        repairSensors = false,
+
+        batteryConfig = nil,
+
+        locale = system.getLocale(),
+        lastMemoryUsage = nil,
+        bblSize = nil,
+        bblUsed = nil,
+
+        timer = {start = nil, live = nil, lifetime = nil, session = 0},
+        flightCounted = false,
+
+        onConnect = {tasks = {}, high = false, medium = false, low = false},
+
+        rx = {map = {}, values = {}},
+
+        modelPreferences = nil,
+        modelPreferencesFile = nil,
+
+        clockSet = nil,
+        resetMSP = nil
+    }
+
+end
+
+function utils.rxmapReady()
+    if bfsuite.session.rx and bfsuite.session.rx.map and (bfsuite.session.rx.map.collective or bfsuite.session.rx.map.elevator or bfsuite.session.rx.map.throttle or bfsuite.session.rx.map.rudder) then return true end
+    return false
+end
+
+function utils.inFlight()
+    if bfsuite.flightmode.current == "inflight" then return true end
+    return false
+end
+
+function utils.msp_version_array_to_indexed()
+    local arr = {}
+    local tbl = bfsuite.config.supportedMspApiVersion or {"2.04", "2.05"}
+    for i, v in ipairs(tbl) do arr[#arr + 1] = {v, i} end
+    return arr
+end
+
+function utils.armingDisableFlagsToString(flags)
+
+    local ARMING_DISABLE_FLAG_TAG = {
+        [0] = "@i18n(app.modules.fblstatus.arming_disable_flag_0):upper()@",
+        [1] = "@i18n(app.modules.fblstatus.arming_disable_flag_1):upper()@",
+        [2] = "@i18n(app.modules.fblstatus.arming_disable_flag_2):upper()@",
+        [3] = "@i18n(app.modules.fblstatus.arming_disable_flag_3):upper()@",
+        [4] = "@i18n(app.modules.fblstatus.arming_disable_flag_4):upper()@",
+        [5] = "@i18n(app.modules.fblstatus.arming_disable_flag_5):upper()@",
+        [6] = "@i18n(app.modules.fblstatus.arming_disable_flag_6):upper()@",
+        [7] = "@i18n(app.modules.fblstatus.arming_disable_flag_7):upper()@",
+        [8] = "@i18n(app.modules.fblstatus.arming_disable_flag_8):upper()@",
+        [9] = "@i18n(app.modules.fblstatus.arming_disable_flag_9):upper()@",
+        [10] = "@i18n(app.modules.fblstatus.arming_disable_flag_10):upper()@",
+        [11] = "@i18n(app.modules.fblstatus.arming_disable_flag_11):upper()@",
+        [12] = "@i18n(app.modules.fblstatus.arming_disable_flag_12):upper()@",
+        [13] = "@i18n(app.modules.fblstatus.arming_disable_flag_13):upper()@",
+        [14] = "@i18n(app.modules.fblstatus.arming_disable_flag_14):upper()@",
+        [15] = "@i18n(app.modules.fblstatus.arming_disable_flag_15):upper()@",
+        [16] = "@i18n(app.modules.fblstatus.arming_disable_flag_16):upper()@",
+        [17] = "@i18n(app.modules.fblstatus.arming_disable_flag_17):upper()@",
+        [18] = "@i18n(app.modules.fblstatus.arming_disable_flag_18):upper()@",
+        [19] = "@i18n(app.modules.fblstatus.arming_disable_flag_19):upper()@",
+        [20] = "@i18n(app.modules.fblstatus.arming_disable_flag_20):upper()@",
+        [21] = "@i18n(app.modules.fblstatus.arming_disable_flag_21):upper()@",
+        [22] = "@i18n(app.modules.fblstatus.arming_disable_flag_22):upper()@",
+        [23] = "@i18n(app.modules.fblstatus.arming_disable_flag_23):upper()@",
+        [24] = "@i18n(app.modules.fblstatus.arming_disable_flag_24):upper()@",
+        [25] = "@i18n(app.modules.fblstatus.arming_disable_flag_25):upper()@"
+    }
+
+    if flags == nil or flags == 0 then return "@i18n(app.modules.fblstatus.ok):upper()@" end
+
+    local names = {}
+    for i = 0, 25 do
+        if (flags & (1 << i)) ~= 0 then
+            local name = ARMING_DISABLE_FLAG_TAG[i]
+            if name and name ~= "" then names[#names + 1] = name end
+        end
+    end
+
+    if #names == 0 then return "@i18n(app.modules.fblstatus.ok):upper()@" end
+
+    return table.concat(names, ", ")
+end
+
+function utils.getGovernorState(value)
+    local returnvalue
+
+    if not bfsuite.tasks.telemetry then return "@i18n(widgets.governor.UNKNOWN)@" end
+
+    local map = {
+        [0] = "@i18n(widgets.governor.OFF):upper()@",
+        [1] = "@i18n(widgets.governor.IDLE):upper()@",
+        [2] = "@i18n(widgets.governor.SPOOLUP):upper()@",
+        [3] = "@i18n(widgets.governor.RECOVERY):upper()@",
+        [4] = "@i18n(widgets.governor.ACTIVE):upper()@",
+        [5] = "@i18n(widgets.governor.THROFF):upper()@",
+        [6] = "@i18n(widgets.governor.LOSTHS):upper()@",
+        [7] = "@i18n(widgets.governor.AUTOROT):upper()@",
+        [8] = "@i18n(widgets.governor.BAILOUT):upper()@",
+        [100] = "@i18n(widgets.governor.DISABLED):upper()@",
+        [101] = "@i18n(widgets.governor.DISARMED):upper()@"
+    }
+
+    if bfsuite.session and bfsuite.session.apiVersion and bfsuite.utils.apiVersionCompare(">", "12.07") then
+        local armflags = bfsuite.tasks.telemetry.getSensor("armflags")
+        if armflags == 0 or armflags == 2 then value = 101 end
+    end
+
+    if map[value] then
+        returnvalue = map[value]
+    else
+        returnvalue = "@i18n(widgets.governor.UNKNOWN):upper()@"
+    end
+
+    local armdisableflags = bfsuite.tasks.telemetry.getSensor("armdisableflags")
+    if armdisableflags ~= nil then
+        armdisableflags = math.floor(armdisableflags)
+        local armstring = utils.armingDisableFlagsToString(armdisableflags)
+        if armstring ~= "OK" then returnvalue = armstring end
+    end
+
+    return returnvalue
+end
+
+function utils.createCacheFile(tbl, path, options)
     os.mkdir("cache")
 
     path = "cache/" .. path
@@ -65,262 +219,128 @@ function utils.createCacheFile(tbl, path, options)
     f:close()
 end
 
+local directoryExistenceCache = {}
+local fileExistenceCache = {}
 
-
-function utils.logBetaflightBanner()
-    local version = bfsuite.config.Version or "Unknown Version"
-
-    local banner = {
-        "===============================================",
-        "    Betaflight bfsuite - Version: " .. version,
-        "===============================================",
-        "               .-~~~-.                         ",
-        "             /        }                        ",
-        "           /      .-~                          ",
-        "           |        }                          ",
-        "       ___\\.~~-.-~|     .-~_                   ",
-        "      { O  |  ` .-~.   ; ~-.__                 ",
-        "         ~--~/-|_\\|  :   : .-~                 ",
-        "        /  |  \\~ - - ~                         ",      
-        "       /   |   \\                               ",
-        "===============================================",
-        "  Betaflight is free software licensed under",
-        "  the GNU General Public License version 3.0",
-        "  https://www.gnu.org/licenses/gpl-3.0.en.html",
-        "                                              ",
-        " For more information, visit Betaflight.org",
-        "==============================================="
-    }
-
-    for _, line in ipairs(banner) do
-        bfsuite.utils.log(line, "info")
-    end
-end
-
-function utils.sanitize_filename(str)
-    if not str then return nil end
-    return str:match("^%s*(.-)%s*$"):gsub('[\\/:"*?<>|]', '')
-end
-
-function utils.dir_exists(base, name)
+function utils.dir_exists(base, name, noCache)
     base = base or "./"
-    local list = system.listFiles(base)
-    if list == nil then return false end
-    for i = 1, #list do
-        if list[i] == name then
-            return true
-        end
+    if not name then return false end
+
+    local targetPath = base .. name
+
+    if not noCache and directoryExistenceCache[targetPath] then return true end
+
+    local exists = os.stat(targetPath)
+    if exists then
+        if not noCache then directoryExistenceCache[targetPath] = true end
+        return true
     end
+
     return false
 end
 
-function utils.file_exists(name)
-    local f = io.open(name, "r")
-    if f then
-        io.close(f)
+function utils.file_exists(path, noCache)
+    if not path then return false end
+
+    if not noCache and fileExistenceCache[path] then return true end
+
+    local stat = os.stat(path)
+    if stat then
+        if not noCache then fileExistenceCache[path] = true end
         return true
     end
+
     return false
 end
 
 function utils.playFile(pkg, file)
-    -- Get and clean audio voice path
+
     local av = system.getAudioVoice():gsub("SD:", ""):gsub("RADIO:", ""):gsub("AUDIO:", ""):gsub("VOICE[1-4]:", ""):gsub("audio/", "")
-    
-    
-    -- Ensure av does not start with a slash
-    if av:sub(1, 1) == "/" then
-        av = av:sub(2)
-    end
 
-    -- Construct file paths
-    local wavLocale = "audio/" .. av .. "/" .. pkg .. "/" .. file
-    local wavDefault = "audio/en/default/" .. pkg .. "/" .. file
+    if av:sub(1, 1) == "/" then av = av:sub(2) end
 
-    -- Check if locale file exists, else use the default
-    system.playFile(bfsuite.utils.file_exists(wavLocale) and wavLocale or wavDefault)
-end
+    local wavUser = "SCRIPTS:/bfsuite.user/audio/user/" .. pkg .. "/" .. file
+    local wavLocale = "SCRIPTS:/bfsuite.user/audio/" .. av .. "/" .. pkg .. "/" .. file
+    local wavDefault = "SCRIPTS:/bfsuite/audio/en/default/" .. pkg .. "/" .. file
 
-function utils.playFileCommon(file)
-    system.playFile("audio/" .. file)
-end
-
-
--- this is used in multiple places - just gives easy way
--- to grab activeProfile or activeRateProfile in tmp var
--- you MUST set it to nil after you get it!
-function utils.getCurrentProfile()
-
-
-    if (bfsuite.tasks.telemetry.getSensorSource("pid_profile") ~= nil and bfsuite.tasks.telemetry.getSensorSource("rate_profile") ~= nil) then
-
-        bfsuite.session.activeProfileLast = bfsuite.session.activeProfile
-        local p = bfsuite.tasks.telemetry.getSensorSource("pid_profile"):value()
-        if p ~= nil then
-            bfsuite.session.activeProfile = math.floor(p)
-        else
-            bfsuite.session.activeProfile = nil
-        end
-
-        bfsuite.session.activeRateProfileLast = bfsuite.session.activeRateProfile
-        local r = bfsuite.tasks.telemetry.getSensorSource("rate_profile"):value()
-        if r ~= nil then
-            bfsuite.session.activeRateProfile = math.floor(r)
-        else
-            bfsuite.session.activeRateProfile = nil
-        end
-
+    local path
+    if bfsuite.utils.file_exists(wavUser) then
+        path = wavUser
+    elseif bfsuite.utils.file_exists(wavLocale) then
+        path = wavLocale
     else
-        -- msp call to get data
-        
-                local message = {
-                    command = 150, --101, -- 
-                    uuid = "getProfile",
-                    processReply = function(self, buf)
-
-                        if #buf >= 20 then
-
-                            buf.offset = 11
-                            local activeProfile = bfsuite.tasks.msp.mspHelper.readU8(buf)
-                            buf.offset = 15
-                            local activeRate = bfsuite.tasks.msp.mspHelper.readU8(buf)
-
-                            bfsuite.session.activeProfileLast = bfsuite.session.activeProfile
-                            bfsuite.session.activeRateProfileLast = bfsuite.session.activeRateProfile
-
-                            bfsuite.session.activeProfile = activeProfile + 1
-                            bfsuite.session.activeRateProfile = activeRate + 1
-
-                            bfsuite.utils.log("Active Rate Profile: " .. bfsuite.session.activeRateProfile, "info")
-
-                        end
-                    end,
-                    simulatorResponse = {106, 2  , 0  , 0  , 33 , 0  , 0  , 0  , 0  , 0  , 0  , 11 , 0  , 0  , 0  , 0  ,  26 , 128, 0  , 0  , 0  , 0  , 33 , 0  }
-
-                }
-                bfsuite.tasks.msp.mspQueue:add(message)
-
+        path = wavDefault
     end
 
+    system.playFile(path)
 end
 
--- Function to compare the current system version with a target version
--- Function to compare the current system version with a target version
+function utils.playFileCommon(file) system.playFile("audio/" .. file) end
+
 function utils.ethosVersionAtLeast(targetVersion)
     local env = system.getVersion()
     local currentVersion = {env.major, env.minor, env.revision}
 
-    -- Fallback to default config if targetVersion is not provided
-    if targetVersion == nil then 
+    if targetVersion == nil then
         if bfsuite and bfsuite.config and bfsuite.config.ethosVersion then
             targetVersion = bfsuite.config.ethosVersion
         else
-            -- Fail-safe: if no targetVersion is provided and config is missing
+
             return false
         end
     elseif type(targetVersion) == "number" then
-        bfsuite.utils.log("WARNING: utils.ethosVersionAtLeast() called with a number instead of a table (" .. targetVersion .. ")",2)
-        return false    
+        bfsuite.utils.log("WARNING: utils.ethosVersionAtLeast() called with a number instead of a table (" .. targetVersion .. ")", 2)
+        return false
     end
 
-    -- Ensure the targetVersion has three components (major, minor, revision)
-    for i = 1, 3 do
-        targetVersion[i] = targetVersion[i] or 0  -- Default to 0 if not provided
-    end
+    for i = 1, 3 do targetVersion[i] = targetVersion[i] or 0 end
 
-    -- Compare major, minor, and revision explicitly
     for i = 1, 3 do
         if currentVersion[i] > targetVersion[i] then
-            return true  -- Current version is higher
+            return true
         elseif currentVersion[i] < targetVersion[i] then
-            return false -- Current version is lower
+            return false
         end
     end
 
-    return true  -- Versions are equal (>= condition met)
-end
-
-function utils.titleCase(str)
-    return str:gsub("(%a)([%w_']*)", function(first, rest)
-        return first:upper() .. rest:lower()
-    end)
-end
-
-function utils.stringInArray(array, s)
-    for i, value in ipairs(array) do if value == s then return true end end
-    return false
+    return true
 end
 
 function utils.round(num, places)
-    if num == nil then 
-        return nil 
-    end
+    if num == nil then return nil end
 
     local places = places or 2
     if places == 0 then
-        return math.floor(num + 0.5)  -- return integer (no .0)
+        return math.floor(num + 0.5)
     else
-        local mult = 10^places
+        local mult = 10 ^ places
         return math.floor(num * mult + 0.5) / mult
     end
-end
-
-
-function utils.roughlyEqual(a, b, tolerance)
-    return math.abs(a - b) < (tolerance or 0.0001)  -- Allows a tiny margin of error
-end
-
--- return current window size
-function utils.getWindowSize()
-    return lcd.getWindowSize()
 end
 
 function utils.joinTableItems(tbl, delimiter)
     if not tbl or #tbl == 0 then return "" end
 
     delimiter = delimiter or ""
-    local startIndex = tbl[0] and 0 or 1
+    local sIdx = tbl[0] and 0 or 1
 
-    -- Pre-pad all fields once before joining
-    local paddedTable = {}
-    for i = startIndex, #tbl do
-        paddedTable[i] = tostring(tbl[i]) .. string.rep(" ", math.max(0, 3 - #tostring(tbl[i])))
-    end
+    local padded = {}
+    for i = sIdx, #tbl do padded[i] = tostring(tbl[i]) .. string.rep(" ", math.max(0, 3 - #tostring(tbl[i]))) end
 
-    -- Join the padded table items
-    return table.concat(paddedTable, delimiter, startIndex, #tbl)
+    return table.concat(padded, delimiter, sIdx, #tbl)
 end
 
---[[
-    Logs a message with a specified log level.
-    
-    @param msg string: The message to log.
-    @param level string (optional): The log level (e.g., "debug", "info", "warn", "error"). Defaults to "debug".
-]]
-function utils.log(msg, level)
-    bfsuite.log.log(msg, level or "debug")
-end
+function utils.log(msg, level) if bfsuite.tasks and bfsuite.tasks.logger then bfsuite.tasks.logger.add(msg, level or "debug") end end
 
--- Function to print a table to the debug console in a readable format.
--- @param node The table to be printed.
--- @param maxDepth (optional) The maximum depth to traverse the table. Default is 5.
--- @param currentDepth (optional) The current depth of traversal. Default is 0.
--- @return A string representation of the table.
--- print a table out to debug console
 function utils.print_r(node, maxDepth, currentDepth)
-    maxDepth = maxDepth or 5  -- Reasonable depth limit to avoid runaway recursion
+    maxDepth = maxDepth or 5
     currentDepth = currentDepth or 0
 
-    if currentDepth > maxDepth then
-        return "{...} -- Max Depth Reached"
-    end
+    if currentDepth > maxDepth then return "{...} -- Max Depth Reached" end
 
-    if type(node) ~= "table" then
-        return tostring(node) .. " (" .. type(node) .. ")"
-    end
+    if type(node) ~= "table" then return tostring(node) .. " (" .. type(node) .. ")" end
 
     local result = {}
-
     table.insert(result, "{")
 
     for k, v in pairs(node) do
@@ -331,217 +351,123 @@ function utils.print_r(node, maxDepth, currentDepth)
             value = utils.print_r(v, maxDepth, currentDepth + 1)
         else
             value = tostring(v)
-            if type(v) == "string" then
-                value = '"' .. value .. '"'
-            end
+            if type(v) == "string" then value = '"' .. value .. '"' end
         end
 
         table.insert(result, key .. " = " .. value .. ",")
     end
 
     table.insert(result, "}")
-
-    return table.concat(result, " ")
+    print(table.concat(result, " "))
 end
 
-
---[[
-    Finds and loads modules from the specified directory.
-
-    This function scans the "app/modules/" directory for subdirectories containing an "init.lua" file.
-    It attempts to load each "init.lua" file as a Lua chunk and expects it to return a table with a "script" field.
-    If the "init.lua" file is successfully loaded and returns a valid configuration table, the module is added to the modules list.
-
-    @return table A list of loaded module configurations. Each configuration is a table containing the module's details.
-]]
 function utils.findModules()
     local modulesList = {}
-
     local moduledir = "app/modules/"
     local modules_path = moduledir
 
     for _, v in pairs(system.listFiles(modules_path)) do
-
-        if v ~= ".." then
+        if v ~= ".." and v ~= "." and not v:match("%.%a+$") then
             local init_path = modules_path .. v .. '/init.lua'
 
-            local f = io.open(init_path, "r")
-            if f then
-                io.close(f)
-                local func, err = loadfile(init_path)
-                if err then
-                    bfsuite.utils.log("Error loading " .. init_path, "info")
-                    bfsuite.utils.log(err, "info")
-                end
-                if func then
-                    local mconfig = func()
-                    if type(mconfig) ~= "table" or not mconfig.script then
-                        bfsuite.utils.log("Invalid configuration in " .. init_path,"info")
-                    else
-                        bfsuite.utils.log("Loading module " .. v, "debug")
-                        mconfig['folder'] = v
-                        table.insert(modulesList, mconfig)
-                    end
+            local func, err = loadfile(init_path)
+            if not func then
+                bfsuite.utils.log("Failed to load module init " .. init_path .. ": " .. err, "info")
+            else
+                local ok, mconfig = pcall(func)
+                if not ok then
+                    bfsuite.utils.log("Error executing " .. init_path .. ": " .. mconfig, "info")
+                elseif type(mconfig) ~= "table" or not mconfig.script then
+                    bfsuite.utils.log("Invalid configuration in " .. init_path, "info")
                 else
-                    bfsuite.utils.log("Error loading " .. init_path, "info")    
-                end 
+                    bfsuite.utils.log("Loading module " .. v, "debug")
+                    mconfig.folder = v
+                    table.insert(modulesList, mconfig)
+                end
             end
-        end    
+        end
     end
 
     return modulesList
 end
 
---[[
-    Finds and loads widget configurations from the "widgets/" directory.
-
-    This function scans the "widgets/" directory for subdirectories containing an "init.lua" file.
-    It attempts to load each "init.lua" file as a Lua chunk and expects it to return a table with widget configuration.
-    The configuration table must contain a "key" field to be considered valid.
-    If valid, the configuration table is added to the widgets list with an additional "folder" field indicating the widget's directory.
-
-    @return table A list of valid widget configuration tables.
-]]
 function utils.findWidgets()
     local widgetsList = {}
-
     local widgetdir = "widgets/"
     local widgets_path = widgetdir
 
     for _, v in pairs(system.listFiles(widgets_path)) do
-
-        if v ~= ".." then
+        if v ~= ".." and v ~= "." and not v:match("%.%a+$") then
             local init_path = widgets_path .. v .. '/init.lua'
-            local f = io.open(init_path, "r")
-            if f then
-                io.close(f)
 
-                local func, err = loadfile(init_path)
-
-                if func then
-                    local wconfig = func()
-                    if type(wconfig) ~= "table" or not wconfig.key then
-                        bfsuite.utils.log("Invalid configuration in " .. init_path,"debug")
-                    else
-                        wconfig['folder'] = v
-                        table.insert(widgetsList, wconfig)
-                    end
+            local func, err = loadfile(init_path)
+            if not func then
+                bfsuite.utils.log("Failed to load widget init " .. init_path .. ": " .. err, "debug")
+            else
+                local ok, wconfig = pcall(func)
+                if not ok then
+                    bfsuite.utils.log("Error executing widget init " .. init_path .. ": " .. wconfig, "debug")
+                elseif type(wconfig) ~= "table" or not wconfig.key then
+                    bfsuite.utils.log("Invalid configuration in " .. init_path, "debug")
+                else
+                    wconfig.folder = v
+                    table.insert(widgetsList, wconfig)
                 end
             end
-        end    
+        end
     end
 
     return widgetsList
 end
 
---[[
-    utils.loadImage(image1, image2, image3)
+utils._imagePathCache = {}
+utils._imageBitmapCache = {}
 
-    This function attempts to load an image from a list of provided image paths or Bitmap objects.
-    It checks for the existence of the image in multiple directories and supports both PNG and BMP formats.
-
-    Parameters:
-        image1 (string|Bitmap): The primary image path or Bitmap object to load.
-        image2 (string|Bitmap): The secondary image path or Bitmap object to load if the primary is not found.
-        image3 (string|Bitmap): The tertiary image path or Bitmap object to load if neither the primary nor secondary are found.
-
-    Returns:
-        Bitmap: The loaded Bitmap object if an image path is found and successfully loaded.
-        Bitmap: The first existing Bitmap object from the provided parameters if no image path is found.
-        nil: If no valid image path or Bitmap object is found.
-
-    Helper Functions:
-        find_image_in_directories(img):
-            Checks if the image file exists in different directories and returns the valid path if found.
-
-        resolve_image(image):
-            Resolves the image path by checking its existence and attempting to switch between PNG and BMP formats if necessary.
---]]
 function utils.loadImage(image1, image2, image3)
-    -- Helper function to check file in different locations
-    local function find_image_in_directories(img)
-        if bfsuite.utils.file_exists(img) then
-            return img
-        elseif bfsuite.utils.file_exists("BITMAPS:" .. img) then
-            return "BITMAPS:" .. img
-        elseif bfsuite.utils.file_exists("SYSTEM:" .. img) then
-            return "SYSTEM:" .. img
-        else
-            return nil
-        end
-    end
 
-    -- Function to check and return a valid image path
-    local function resolve_image(image)
-        if type(image) == "string" then
-            local image_path = find_image_in_directories(image)
-            if not image_path then
-                if image:match("%.png$") then
-                    image_path = find_image_in_directories(image:gsub("%.png$", ".bmp"))
-                elseif image:match("%.bmp$") then
-                    image_path = find_image_in_directories(image:gsub("%.bmp$", ".png"))
+    local function getCachedBitmap(key, tryPaths)
+        if not key then return nil end
+        if utils._imageBitmapCache[key] then return utils._imageBitmapCache[key] end
+
+        local path = utils._imagePathCache[key]
+        if not path then
+            for _, p in ipairs(tryPaths) do
+                if bfsuite.utils.file_exists(p) then
+                    path = p
+                    break
                 end
             end
-            return image_path
+            utils._imagePathCache[key] = path
         end
-        return nil
+
+        if not path then return nil end
+        local bmp = lcd.loadBitmap(path)
+        utils._imageBitmapCache[key] = bmp
+        return bmp
     end
 
-    -- Resolve images in order of precedence
-    local image_path = resolve_image(image1) or resolve_image(image2) or resolve_image(image3)
+    local function candidates(img)
+        if type(img) ~= "string" then return {} end
+        local out = {img, "BITMAPS:" .. img, "SYSTEM:" .. img}
+        if img:match("%.png$") then
+            out[#out + 1] = img:gsub("%.png$", ".bmp")
+        elseif img:match("%.bmp$") then
+            out[#out + 1] = img:gsub("%.bmp$", ".png")
+        end
+        return out
+    end
 
-    -- If an image path is found, load and return the bitmap
-    if image_path then return lcd.loadBitmap(image_path) end
-
-    -- If no valid image path was found, return the first existing Bitmap in order
-    if type(image1) == "Bitmap" then return image1 end
-    if type(image2) == "Bitmap" then return image2 end
-    if type(image3) == "Bitmap" then return image3 end
-
-    -- If nothing was found, return nil
-    return nil
+    return getCachedBitmap(image1, candidates(image1)) or getCachedBitmap(image2, candidates(image2)) or getCachedBitmap(image3, candidates(image3))
 end
 
---[[
-    Function: utils.simSensors
-
-    Loads and executes a telemetry Lua script based on the provided ID.
-
-    Parameters:
-        id (string): The identifier for the telemetry script to load.
-
-    Returns:
-        number: The result of the executed telemetry script, or 0 if an error occurs.
-
-    Description:
-        This function attempts to load a telemetry Lua script from two possible paths:
-        1. "LOGS:/bfsuite/sensors/<id>.lua"
-        2. "lib/sim/sensors/<id>.lua"
-        
-        It first checks if the file exists at the local path. If not, it checks the fallback path.
-        If the file is found, it attempts to load and execute the script. If any error occurs
-        during loading or execution, it prints an error message and returns 0.
---]]
 function utils.simSensors(id)
-
     os.mkdir("LOGS:")
     os.mkdir("LOGS:/bfsuite")
     os.mkdir("LOGS:/bfsuite/sensors")
 
     if id == nil then return 0 end
 
-    local localPath = "LOGS:/bfsuite/sensors/" .. id .. ".lua"
-    local fallbackPath = "sim/sensors/" .. id .. ".lua"
-
-    local filepath
-
-    if bfsuite.utils.file_exists(localPath) then
-        filepath = localPath
-    elseif bfsuite.utils.file_exists(fallbackPath) then
-        filepath = fallbackPath
-    else
-        return 0
-    end
+    local filepath = "sim/sensors/" .. id .. ".lua"
 
     local chunk, err = loadfile(filepath)
     if not chunk then
@@ -550,7 +476,6 @@ function utils.simSensors(id)
     end
 
     local success, result = pcall(chunk)
-
     if not success then
         print("Error executing telemetry file: " .. result)
         return 0
@@ -559,103 +484,120 @@ function utils.simSensors(id)
     return result
 end
 
--- Splits a given string into a table of substrings based on a specified separator.
--- @param input The string to be split.
--- @param sep The separator used to split the string.
--- @return A table containing the substrings.
-function utils.splitString(input, sep)
-    local result = {}
-
-    -- Lua's gmatch needs plain `sep`, so if you want to handle "%s*" or patterns, use this
-    for item in input:gmatch("([^" .. sep .. "]+)") do
-        table.insert(result, item)
-    end
-
-    return result
-end
-
-
---- Logs MSP (Multiwii Serial Protocol) commands if logging is enabled in the configuration.
--- @param cmd The MSP command to log.
--- @param rwState The read/write state of the command.
--- @param buf The buffer containing the command data.
--- @param err Any error associated with the command.
--- @usage
--- utils.logMsp("MSP_STATUS", "read", {0x01, 0x02, 0x03}, nil)
 function utils.logMsp(cmd, rwState, buf, err)
-    if bfsuite.config.logMSP then
+    if bfsuite.preferences.developer.logmsp then
         local payload = bfsuite.utils.joinTableItems(buf, ", ")
-        bfsuite.utils.log(rwState .. " [" .. cmd .. "]" .. " {" .. payload .. "}", "info")
-        if err then
-            bfsuite.utils.log("Error: " .. err, "info")
+        bfsuite.utils.log(rwState .. " [" .. cmd .. "]{" .. payload .. "}", "info")
+        if err then bfsuite.utils.log("Error: " .. err, "info") end
+    end
+end
+
+utils._memProfile = utils._memProfile or {}
+
+function utils.reportMemoryUsage(location, phase)
+    if not bfsuite.preferences.developer.memstats then return end
+    location = location or "Unknown"
+
+    local cpuInfo = (bfsuite.performance and bfsuite.performance.cpuload) or 0
+    local ramFree = (bfsuite.performance and bfsuite.performance.freeram) or 0
+    local ramUsed = (bfsuite.performance and bfsuite.performance.usedram) or 0
+    local memInfo = system.getMemoryUsage() or {}
+
+    local snapshot = {cpu = cpuInfo, free = ramFree, used = ramUsed, main = (memInfo.mainStackAvailable or 0) / 1024, ram = (memInfo.ramAvailable or 0) / 1024, lua = (memInfo.luaRamAvailable or 0) / 1024, bmp = (memInfo.luaBitmapsRamAvailable or 0) / 1024, time = os.clock()}
+
+    if phase == "start" then
+        utils._memProfile[location] = snapshot
+        bfsuite.utils.log(string.format("[%s] Profiling started", location), "info")
+        return
+    elseif phase == "end" then
+        local startSnap = utils._memProfile[location]
+        if startSnap then
+            local dt = snapshot.time - startSnap.time
+            utils.log(string.format("[%s] Profiling ended (%.3fs)", location, dt), "info")
+            utils.log(string.format("[%s] CPU diff: %.0f -> %.0f", location, startSnap.cpu, snapshot.cpu), "info")
+            utils.log(string.format("[%s] RAM Used diff: %.0f -> %.0f kB", location, startSnap.used, snapshot.used), "info")
+            utils.log(string.format("[%s] Lua RAM diff: %.2f -> %.2f KB", location, startSnap.lua, snapshot.lua), "info")
+
+            utils._memProfile[location] = nil
+        else
+            utils.log(string.format("[%s] Profiling 'end' without a 'start'", location), "warn")
         end
-    end
-end
-
-
-function utils.truncateText(str, maxWidth)
-    lcd.font(bestFont)
-    local tsizeW, _ = lcd.getTextSize(str)
-
-    if tsizeW <= maxWidth then
-        return str  -- Fits, no need to truncate
-    end
-
-    -- Start truncating
-    local ellipsis = "..."
-    local truncatedStr = str
-    while tsizeW > maxWidth and #truncatedStr > 1 do
-        truncatedStr = string.sub(truncatedStr, 1, #truncatedStr - 1)
-        tsizeW, _ = lcd.getTextSize(truncatedStr .. ellipsis)
-    end
-    return truncatedStr .. ellipsis
-end
-
-function utils.reportMemoryUsage(location)
-
-    if config.logMemoryUsage == false then
         return
     end
 
-    -- Get current memory usage in bytes and convert to KB
-    local currentMemoryUsage = system.getMemoryUsage().luaRamAvailable / 1024
-
-    -- Retrieve the last memory usage from the session (convert it to KB if it exists)
-    local lastMemoryUsage = bfsuite.session.lastMemoryUsage
-
-    -- Ensure location is not nil or empty
-    location = location or "Unknown"
-
-    -- Construct the log message
-    local logMessage
-
-    if lastMemoryUsage then
-        lastMemoryUsage = lastMemoryUsage / 1024  -- Convert last recorded memory to KB
-        local difference = currentMemoryUsage - lastMemoryUsage
-        if difference > 0 then
-            logMessage = string.format("[%s] Memory usage decreased by %.2f KB (Current: %.2f KB)", location, difference, currentMemoryUsage)
-        elseif difference < 0 then
-            logMessage = string.format("[%s] Memory usage increased by %.2f KB (Current: %.2f KB)", location, -difference, currentMemoryUsage)
-        else
-            logMessage = string.format("[%s] Memory usage unchanged (Current: %.2f KB)", location, currentMemoryUsage)
-        end
-    else
-        logMessage = string.format("[%s] Initial memory usage: %.2f KB", location, currentMemoryUsage)
-    end
-
-    -- Log the message
-    bfsuite.utils.log(logMessage, "info")
-
-    -- Store the current memory usage in bytes for future calls (convert back to bytes)
-    bfsuite.session.lastMemoryUsage = system.getMemoryUsage().luaRamAvailable
+    bfsuite.utils.log(string.format("[%s] CPU Load: %d%%", location, bfsuite.utils.round(snapshot.cpu, 0)), "info")
+    bfsuite.utils.log(string.format("[%s] RAM Free: %d kB", location, bfsuite.utils.round(snapshot.free, 0)), "info")
+    bfsuite.utils.log(string.format("[%s] RAM Used: %d kB", location, bfsuite.utils.round(snapshot.used, 0)), "info")
+    bfsuite.utils.log(string.format("[%s] Main stack available: %.2f KB", location, snapshot.main), "info")
+    bfsuite.utils.log(string.format("[%s] System RAM available: %.2f KB", location, snapshot.ram), "info")
+    bfsuite.utils.log(string.format("[%s] Lua RAM available: %.2f KB", location, snapshot.lua), "info")
+    bfsuite.utils.log(string.format("[%s] Lua Bitmap RAM available: %.2f KB", location, snapshot.bmp), "info")
 end
 
-
 function utils.onReboot()
+    bfsuite.utils.log("utils.onReboot called", "info")
     bfsuite.session.resetSensors = true
     bfsuite.session.resetTelemetry = true
     bfsuite.session.resetMSP = true
+    bfsuite.session.resetMSPSensors = true
 end
 
+function utils.splitVersionStringToNumbers(versionString)
+    if not versionString then return nil end
+
+    local parts = {0}
+    for num in versionString:gmatch("%d+") do table.insert(parts, tonumber(num)) end
+    return parts
+end
+
+function utils.keys(tbl)
+    local keys = {}
+    for k in pairs(tbl) do table.insert(keys, k) end
+    return keys
+end
+
+function utils.apiVersionCompare(op, req)
+
+    local function parts(x)
+        local t = {}
+        for n in tostring(x):gmatch("(%d+)") do t[#t + 1] = tonumber(n) end
+        return t
+    end
+
+    local a, b = parts(bfsuite.session.apiVersion or 2.04), parts(req)
+    if #a == 0 or #b == 0 then return false end
+
+    local len = math.max(#a, #b)
+    local cmp = 0
+    for i = 1, len do
+        local ai = a[i] or 0
+        local bi = b[i] or 0
+        if ai ~= bi then
+            cmp = (ai > bi) and 1 or -1
+            break
+        end
+    end
+
+    if op == ">" then return cmp == 1 end
+    if op == "<" then return cmp == -1 end
+    if op == ">=" then return cmp >= 0 end
+    if op == "<=" then return cmp <= 0 end
+    if op == "==" then return cmp == 0 end
+    if op == "!=" or op == "~=" then return cmp ~= 0 end
+
+    return false
+end
+
+function utils.muteSensorLostWarnings()
+    if bfsuite.session.telemetryModule then
+        local module = bfsuite.session.telemetryModule
+        if module and module.muteSensorLost then module:muteSensorLost(2.0) end
+    end
+end
+
+function utils.stringInArray(array, s)
+    for i, value in ipairs(array) do if value == s then return true end end
+    return false
+end
 
 return utils

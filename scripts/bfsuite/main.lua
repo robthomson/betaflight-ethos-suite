@@ -1,361 +1,193 @@
 --[[
-
- * Copyright (C) Rob Thomson
- *
- *
- * License GPLv3: https://www.gnu.org/licenses/gpl-3.0.en.html
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 3 as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- 
- * Note.  Some icons have been sourced from https://www.flaticon.com/
- * 
-
+  Copyright (C) 2025 Betaflight Project
+  GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
--- Betaflight + ETHOS LUA configuration
-local config = {}
+
+local bfsuite = {session = {}}
+package.loaded.bfsuite = bfsuite
+
+local _ENV = setmetatable({bfsuite = bfsuite}, {__index = _G, __newindex = function(_, k) print("attempt to create global '" .. tostring(k) .. "'", 2) end})
+
+if not FONT_STD then FONT_STD = FONT_STD end
 
 -- LuaFormatter off
-
--- Configuration settings for the Betaflight Lua Ethos Suite
-config.toolName = "Betaflight"                                     -- name of the tool 
-config.icon = lcd.loadMask("app/gfx/icon.png")                      -- icon
-config.icon_logtool = lcd.loadMask("app/gfx/icon_logtool.png")      -- icon
-config.icon_unsupported = lcd.loadMask("app/gfx/unsupported.png")   -- icon
-config.Version = "1.0.0"                                            -- version number of this software replace
-config.ethosVersion = {1, 6, 2}                                     -- min version of ethos supported by this script                                                     
-config.supportedMspApiVersion = {"1.46"}                            -- supported msp versions
-config.simulatorApiVersionResponse = {0, 1, 46}                      -- version of api return by simulator
-config.baseDir = "bfsuite"                                          -- base directory for the suite. This is only used by msp api to ensure correct path
-config.logLevel= "info"                                             -- off | info | debug [default = info]
-config.logToFile = false                                            -- log to file [default = false] (log file is in /scripts/bfsuite/logs)
-config.logMSP = true                                               -- log msp messages [default =  false]
-config.logMemoryUsage = false                                       -- log memory usage [default = false]
-config.developerMode = false                                        -- show developer tools on main menu [default = false]
-
-
--- Betaflight + ETHOS LUA preferences
-local preferences = {}
-
--- Configuration options that adjust behavior of the script (will be moved to a settings menu in the future)
-preferences.flightLog = true                                        -- will write a flight log into /scripts/bfsuite/logs/<modelname>/*.log
-preferences.reloadOnSave = false                                    -- trigger a reload on save [default = false]
-preferences.internalElrsSensors = true                              -- disable the integrated elrs telemetry processing [default = true]
-preferences.internalSportSensors = true                             -- disable the integrated smart port telemetry processing [default = true]
-preferences.internalSimSensors = true                               -- disable the integrated simulator telemetry processing [default = true]
-preferences.adjFunctionAlerts = false                               -- do not alert on adjfunction telemetry.  [default = false]
-preferences.adjValueAlerts = true                                   -- play adjvalue alerts if sensor changes [default = true]  
-preferences.saveWhenArmedWarning = true                             -- do not display the save when armed warning. [default = true]
-preferences.audioAlerts = 1                                         -- 0 = all, 1 = alerts, 2 = disable [default = 1]
-preferences.profileSwitching = true                                 -- enable auto profile switching [default = true]
-preferences.iconSize = 1                                            -- 0 = text, 1 = small, 2 = large [default = 1]
-preferences.syncCraftName = false                                   -- sync the craft name with the model name [default = false]
-preferences.mspExpBytes = 8                                         -- number of bytes for msp_exp [default = 8] 
-preferences.defaultRateProfile = 4 -- ACTUAL                        -- default rate table [default = 4]
-preferences.watchdogParam = 10                                      -- watchdog timeout for progress boxes [default = 10]
-
-
--- tasks
-config.bgTaskName = config.toolName .. " [Background]"              -- background task name for msp services etc
-config.bgTaskKey = "bfbg"                                          -- key id used for msp services
-
+local config = {
+    toolName = "Betaflight",
+    icon = lcd.loadMask("app/gfx/icon.png"),
+    icon_logtool = lcd.loadMask("app/gfx/icon_logtool.png"),
+    icon_unsupported = lcd.loadMask("app/gfx/unsupported.png"),
+    version = {major = 0, minor = 0, revision = 0, suffix = "20251010"},
+    ethosVersion = {1, 6, 2},
+    supportedMspApiVersion = {"2.04", "2.05"},
+    baseDir = "bfsuite",
+    preferences = "bfsuite.user",
+    defaultRateProfile = 4,
+    watchdogParam = 10
+}
 -- LuaFormatter on
 
--- main
--- bfsuite: Main table for the Betaflight-lua-ethos-suite script.
--- bfsuite.config: Configuration table for the suite.
--- bfsuite.session: Session table for the suite.
--- bfsuite.app: Application module loaded from "app/app.lua" with the provided configuration.
-bfsuite = {}
+config.ethosVersionString = string.format("ETHOS < V%d.%d.%d", table.unpack(config.ethosVersion))
+
 bfsuite.config = config
-bfsuite.preferences = preferences
-bfsuite.session = {}
-bfsuite.app = assert(loadfile("app/app.lua"))(config)
 
--- 
--- This script initializes the logging configuration for the bfsuite module.
--- 
--- The logging configuration is loaded from the "lib/log.lua" file and is 
--- customized based on the provided configuration (`config`).
--- 
--- The log file is named using the current date and time in the format 
--- "logs/bfsuite_YYYY-MM-DD_HH-MM-SS.log".
--- 
--- The minimum print level for logging is set from `config.logLevel`.
--- 
--- The option to log to a file is set from `config.logToFile`.
--- 
--- If the system is running in simulation mode, the log print interval is 
--- set to 0.1 seconds.
--- logging
-os.mkdir("LOGS:")
-os.mkdir("LOGS:/bfsuite")
-os.mkdir("LOGS:/bfsuite/logs")
-bfsuite.log = assert(loadfile("lib/log.lua"))(config)
-bfsuite.log.config.log_file = "LOGS:/bfsuite/logs/bfsuite_" .. os.date("%Y-%m-%d_%H-%M-%S") .. ".log"
-bfsuite.log.config.min_print_level  = config.logLevel
-bfsuite.log.config.log_to_file = config.logToFile
+local performance = {cpuload = 0, freeram = 0, mainStackKB = 0, ramKB = 0, luaRamKB = 0, luaBitmapsRamKB = 0}
 
+bfsuite.performance = performance
 
--- library with utility functions used throughou the suite
-bfsuite.utils = assert(loadfile("lib/utils.lua"))(config)
+bfsuite.ini = assert(loadfile("lib/ini.lua", "t", _ENV))(config)
 
+local userpref_defaults = {
+    general = {iconsize = 2, syncname = false, gimbalsupression = 0.85, txbatt_type = 0, hs_loader = 0},
+    localizations = {temperature_unit = 0, altitude_unit = 0},
+    dashboard = {theme_preflight = "system/default", theme_inflight = "system/default", theme_postflight = "system/default"},
+    events = {armflags = true, voltage = true, governor = true, pid_profile = true, rate_profile = true, esc_temp = false, escalertvalue = 90, smartfuel = true, smartfuelcallout = 0, smartfuelrepeats = 1, smartfuelhaptic = false, adj_v = false, adj_f = false},
+    switches = {},
+    developer = {compile = true, devtools = false, logtofile = false, loglevel = "off", logmsp = false, logobjprof = false, logmspQueue = false, memstats = false, taskprofiler = false, mspexpbytes = 8, apiversion = 2, overlaystats = false, overlaygrid = false, overlaystatsadmin = false},
+    timer = {timeraudioenable = false, elapsedalertmode = 0, prealerton = false, postalerton = false, prealertinterval = 10, prealertperiod = 30, postalertinterval = 10, postalertperiod = 30},
+    menulastselected = {}
+}
 
--- Load the i18n system
-bfsuite.i18n  = assert(loadfile("lib/i18n.lua"))(config)
-bfsuite.i18n.load()     
+local prefs_dir = "SCRIPTS:/" .. bfsuite.config.preferences
+os.mkdir(prefs_dir)
+local userpref_file = prefs_dir .. "/preferences.ini"
 
--- 
--- This script initializes the `bfsuite` tasks and background task.
--- 
--- The `bfsuite.tasks` table is created to hold various tasks.
--- The `bfsuite.tasks` is assigned the result of executing the "tasks/tasks.lua" file with the `config` parameter.
--- The `loadfile` function is used to load the "tasks/tasks.lua" file, and `assert` ensures that the file is loaded successfully.
--- The loaded file is then executed with the `config` parameter, and its return value is assigned to `bfsuite.tasks`.
--- tasks
-bfsuite.tasks = assert(loadfile("tasks/tasks.lua"))(config)
+local master_ini = bfsuite.ini.load_ini_file(userpref_file) or {}
+local updated_ini = bfsuite.ini.merge_ini_tables(master_ini, userpref_defaults)
+bfsuite.preferences = updated_ini
 
--- LuaFormatter off
+if not bfsuite.ini.ini_tables_equal(master_ini, updated_ini) then bfsuite.ini.save_ini_file(userpref_file, updated_ini) end
 
+bfsuite.config.bgTaskName = bfsuite.config.toolName .. " [Background]"
+bfsuite.config.bgTaskKey = "inavbg"
 
---[[
-This script initializes various session parameters for the bfsuite application to nil.
-The parameters include:
-- tailMode: Mode for the tail rotor.
-- swashMode: Mode for the swashplate.
-- activeProfile: Currently active profile.
-- activeRateProfile: Currently active rate profile.
-- activeProfileLast: Last active profile.
-- activeRateLast: Last active rate profile.
-- servoCount: Number of servos.
-- servoOverride: Override setting for servos.
-- clockSet: Clock setting.
-- apiVersion: Version of the API.
-- lastLabel: Last label used.
-- rssiSensor: RSSI sensor value.
-- formLineCnt: Form line count.
-- rateProfile: Rate profile.
-- governorMode: Mode for the governor.
-- ethosRunningVersion: Version of the Ethos running.
-- lcdWidth: Width of the LCD.
-- lcdHeight: Height of the LCD.
-- mspSignature - uses for mostly in sim to save esc type
-- telemetryType = sport or crsf
-- repairSensors: makes the background task repair sensors
-- lastMemoryUsage.  Used to track memory usage for debugging
-- 
+bfsuite.utils = assert(loadfile("lib/utils.lua"))(bfsuite.config)
 
--- Every attempt should be made if using session vars to record them here with a nil
--- to prevent conflicts with other scripts that may use the same session vars.
-]]
-bfsuite.session.tailMode = nil
-bfsuite.session.swashMode = nil
-bfsuite.session.activeProfile = nil
-bfsuite.session.activeRateProfile = nil
-bfsuite.session.activeProfileLast = nil
-bfsuite.session.activeRateLast = nil
-bfsuite.session.servoCount = nil
-bfsuite.session.servoOverride = nil
-bfsuite.session.clockSet = nil
-bfsuite.session.apiVersion = nil
-bfsuite.session.activeProfile = nil
-bfsuite.session.activeRateProfile = nil
-bfsuite.session.activeProfileLast = nil
-bfsuite.session.activeRateLast = nil
-bfsuite.session.servoCount = nil
-bfsuite.session.servoOverride = nil
-bfsuite.session.clockSet = nil
-bfsuite.session.lastLabel = nil
-bfsuite.session.tailMode = nil
-bfsuite.session.swashMode = nil
-bfsuite.session.formLineCnt = nil
-bfsuite.session.rateProfile = nil
-bfsuite.session.governorMode = nil
-bfsuite.session.servoOverride = nil
-bfsuite.session.ethosRunningVersion = nil
-bfsuite.session.lcdWidth = nil
-bfsuite.session.lcdHeight = nil
-bfsuite.session.mspSignature = nil
-bfsuite.session.telemetryState = nil
-bfsuite.session.telemetryType = nil
-bfsuite.session.telemetryTypeChanged = nil
-bfsuite.session.telemetrySensor = nil
-bfsuite.session.repairSensors = false
-bfsuite.session.locale = system.getLocale()
-bfsuite.session.lastMemoryUsage = nil
+bfsuite.app = assert(loadfile("app/app.lua"))(bfsuite.config)
 
+bfsuite.tasks = assert(loadfile("tasks/tasks.lua"))(bfsuite.config)
 
---[[
-    Initializes the main script for the Betaflight-lua-ethos-suite.
+bfsuite.flightmode = {current = "preflight"}
+bfsuite.utils.session()
 
-    This function performs the following tasks:
-    1. Checks if the Ethos version is supported using `bfsuite.utils.ethosVersionAtLeast()`.
-       If the version is not supported, it raises an error and stops execution.
-    2. Registers system tools using `system.registerSystemTool()` with configurations from `config`.
-    3. Registers a background task using `system.registerTask()` with configurations from `config`.
-    4. Dynamically loads and registers widgets:
-       - Finds widget scripts using `bfsuite.utils.findWidgets()`.
-       - Loads each widget script dynamically using `loadfile()`.
-       - Assigns the loaded script to a variable inside the `bfsuite` table.
-       - Registers each widget with `system.registerWidget()` using the dynamically assigned module.
+bfsuite.simevent = {telemetry_state = true}
 
-    Note:
-    - Assumes `v.name` is a valid Lua identifier-like string (without spaces or special characters).
-    - Each widget script is expected to have functions like `event`, `create`, `paint`, `wakeup`, `close`, `configure`, `read`, `write`, and optionally `persistent` and `menu`.
+function bfsuite.version()
+    local v = bfsuite.config.version
+    return {version = string.format("%d.%d.%d-%s", v.major, v.minor, v.revision, v.suffix), major = v.major, minor = v.minor, revision = v.revision, suffix = v.suffix}
+end
 
-    Throws:
-    - Error if the Ethos version is not supported.
+local function unsupported_tool()
+    return {
+        name = bfsuite.config.toolName,
+        icon = bfsuite.config.icon_unsupported,
+        create = function() end,
+        wakeup = function() lcd.invalidate() end,
+        paint = function()
+            local w, h = lcd.getWindowSize()
+            lcd.color(lcd.RGB(255, 255, 255, 1))
+            lcd.font(FONT_STD)
+            local msg = bfsuite.config.ethosVersionString
+            local tw, th = lcd.getTextSize(msg)
+            lcd.drawText((w - tw) / 2, (h - th) / 2, msg)
+        end,
+        close = function() end
+    }
+end
 
-    Dependencies:
-    - `bfsuite.utils.ethosVersionAtLeast()`
-    - `system.registerSystemTool()`
-    - `system.registerTask()`
-    - `bfsuite.utils.findWidgets()`
-    - `loadfile()`
-    - `system.registerWidget()`
-]]
+local function unsupported_i18n()
+    return {
+        name = bfsuite.config.toolName,
+        icon = bfsuite.config.icon_unsupported,
+        create = function() end,
+        wakeup = function() lcd.invalidate() end,
+        paint = function()
+            local w, h = lcd.getWindowSize()
+            lcd.color(lcd.RGB(255, 255, 255, 1))
+            lcd.font(FONT_STD)
+            local msg = "i18n not compiled - download a release version"
+            local tw, th = lcd.getTextSize(msg)
+            lcd.drawText((w - tw) / 2, (h - th) / 2, msg)
+        end,
+        close = function() end
+    }
+end
+
+local function register_main_tool() system.registerSystemTool({event = bfsuite.app.event, name = bfsuite.config.toolName, icon = bfsuite.config.icon, create = bfsuite.app.create, wakeup = bfsuite.app.wakeup, paint = bfsuite.app.paint, close = bfsuite.app.close}) end
+
+local function register_bg_task() system.registerTask({name = bfsuite.config.bgTaskName, key = bfsuite.config.bgTaskKey, wakeup = bfsuite.tasks.wakeup, event = bfsuite.tasks.event, init = bfsuite.tasks.init, read = bfsuite.tasks.read, write = bfsuite.tasks.write}) end
+
+local function load_widget_cache(cachePath)
+    local loadf, loadErr = loadfile(cachePath)
+    if not loadf then
+        bfsuite.utils.log("[cache] loadfile failed: " .. tostring(loadErr), "info")
+        return nil
+    end
+    local ok, cached = pcall(loadf)
+    if not ok then
+        bfsuite.utils.log("[cache] execution failed: " .. tostring(cached), "info")
+        return nil
+    end
+    if type(cached) ~= "table" then
+        bfsuite.utils.log("[cache] unexpected content; rebuilding", "info")
+        return nil
+    end
+    bfsuite.utils.log("[cache] Loaded widget list from cache", "info")
+    return cached
+end
+
+local function build_widget_cache(widgetList, cacheFile)
+    bfsuite.utils.createCacheFile(widgetList, cacheFile, true)
+    bfsuite.utils.log("[cache] Created new widgets cache file", "info")
+end
+
+local function register_widgets(widgetList)
+    bfsuite.widgets = {}
+    local dupCount = {}
+
+    for _, v in ipairs(widgetList) do
+        if v.script then
+            local path = "widgets/" .. v.folder .. "/" .. v.script
+            local scriptModule = assert(loadfile(path))(config)
+
+            local base = v.varname or v.script:gsub("%.lua$", "")
+            if bfsuite.widgets[base] then
+                dupCount[base] = (dupCount[base] or 0) + 1
+                base = string.format("%s_dup%02d", base, dupCount[base])
+            end
+            bfsuite.widgets[base] = scriptModule
+
+            system.registerWidget({name = v.name, key = v.key, event = scriptModule.event, create = scriptModule.create, paint = scriptModule.paint, wakeup = scriptModule.wakeup, build = scriptModule.build, close = scriptModule.close, configure = scriptModule.configure, read = scriptModule.read, write = scriptModule.write, persistent = scriptModule.persistent or false, menu = scriptModule.menu, title = scriptModule.title})
+        end
+    end
+end
+
 local function init()
+    local cfg = bfsuite.config
 
-    -- prevent this even getting close to running if version is not good
     if not bfsuite.utils.ethosVersionAtLeast() then
-
-        system.registerSystemTool({
-            name = config.toolName,
-            icon = config.icon_unsupported ,
-            create = function () end,
-            wakeup = function () 
-                        lcd.invalidate()
-                        return
-                     end,
-            paint = function () 
-                        local w, h = lcd.getWindowSize()
-                        local textColor = lcd.RGB(255, 255, 255, 1) 
-                        lcd.color(textColor)
-                        lcd.font(FONT_STD)
-                        local badVersionMsg = string.format("ETHOS < V%d.%d.%d", table.unpack(config.ethosVersion))
-                        local textWidth, textHeight = lcd.getTextSize(badVersionMsg)
-                        local x = (w - textWidth) / 2
-                        local y = (h - textHeight) / 2
-                        lcd.drawText(x, y, badVersionMsg)
-                        return 
-                    end,
-            close = function () end,
-        })
+        system.registerSystemTool(unsupported_tool())
         return
     end
 
-    -- Registers the main system tool with the specified configuration.
-    -- This tool handles events, creation, wakeup, painting, and closing.
-    system.registerSystemTool({
-        event = bfsuite.app.event,
-        name = config.toolName,
-        icon = config.icon,
-        create = bfsuite.app.create,
-        wakeup = bfsuite.app.wakeup,
-        paint = bfsuite.app.paint,
-        close = bfsuite.app.close
-    })
-
-
-    -- Registers a background task with the specified configuration.
-    -- This task handles wakeup and event processing.
-    system.registerTask({
-        name = config.bgTaskName,
-        key = config.bgTaskKey,
-        wakeup = bfsuite.tasks.wakeup,
-        event = bfsuite.tasks.event
-    })
-
-    -- widgets are loaded dynamically
-    local cacheFile = "widgets.cache"
-    local cachePath = "cache/" .. cacheFile
-    local widgetList
-    
-    -- Try to load from cache if it exists
-    if io.open(cachePath, "r") then
-        local ok, cached = pcall(dofile, cachePath)
-        if ok and type(cached) == "table" then
-            widgetList = cached
-            bfsuite.utils.log("[cache] Loaded widget list from cache","info")
-        else
-            bfsuite.utils.log("[cache] Failed to load cache, rebuilding...","info")
-        end
+    local isCompiledCheck = "@i18n(iscompiledcheck)@"
+    if isCompiledCheck ~= "true" then
+        system.registerSystemTool(unsupported_i18n())
+    else
+        register_main_tool()
     end
-    
-    -- If no valid cache, build and write new one
+
+    register_bg_task()
+
+    local cacheFile = "widgets.lua"
+    local cachePath = "cache/" .. cacheFile
+    local widgetList = load_widget_cache(cachePath)
+
     if not widgetList then
         widgetList = bfsuite.utils.findWidgets()
-        bfsuite.utils.createCacheFile(widgetList, cacheFile, true)
-        bfsuite.utils.log("[cache] Created new widgets cache file","info")
+        build_widget_cache(widgetList, cacheFile)
     end
 
-    -- Iterates over the widgetList table and dynamically loads and registers widget scripts.
-    -- For each widget in the list:
-    -- 1. Checks if the widget has a script defined.
-    -- 2. Loads the script file from the specified folder and assigns it to a variable inside the bfsuite table.
-    -- 3. Uses the script name (or a provided variable name) as a key to store the loaded script module in the bfsuite table.
-    -- 4. Registers the widget with the system using the dynamically assigned module's functions and properties.
-    -- 
-    -- Parameters:
-    -- widgetList - A table containing widget definitions. Each widget should have the following fields:
-    --   - script: The filename of the widget script to load.
-    --   - folder: The folder where the widget script is located.
-    --   - name: The name of the widget.
-    --   - key: A unique key for the widget.
-    --   - varname (optional): A custom variable name to use for storing the script module in the bfsuite table.
-    -- 
-    -- The loaded script module should define the following functions and properties (if applicable):
-    --   - event: Function to handle events.
-    --   - create: Function to create the widget.
-    --   - paint: Function to paint the widget.
-    --   - wakeup: Function to handle wakeup events.
-    --   - close: Function to handle widget closure.
-    --   - configure: Function to configure the widget.
-    --   - read: Function to read data.
-    --   - write: Function to write data.
-    --   - persistent: Boolean indicating if the widget is persistent (default is false).
-    --   - menu: Menu definition for the widget.
-    --   - title: Title of the widget.
-    bfsuite.widgets = {}
-
-        for i, v in ipairs(widgetList) do
-            if v.script then
-                -- Load the script dynamically
-                local scriptModule = assert(loadfile("widgets/" .. v.folder .. "/" .. v.script))(config)
-        
-                -- Use the script filename (without .lua) as the key, or v.varname if provided
-                local varname = v.varname or v.script:gsub("%.lua$", "")
-        
-                -- Store the module inside bfsuite.widgets
-                bfsuite.widgets[varname] = scriptModule
-        
-                -- Register the widget with the system
-                system.registerWidget({
-                    name = v.name,
-                    key = v.key,
-                    event = scriptModule.event,
-                    create = scriptModule.create,
-                    paint = scriptModule.paint,
-                    wakeup = scriptModule.wakeup,
-                    close = scriptModule.close,
-                    configure = scriptModule.configure,
-                    read = scriptModule.read,
-                    write = scriptModule.write,
-                    persistent = scriptModule.persistent or false,
-                    menu = scriptModule.menu,
-                    title = scriptModule.title
-                })
-            end
-        end
-    
-end    
-
--- LuaFormatter on
+    register_widgets(widgetList)
+end
 
 return {init = init}
