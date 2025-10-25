@@ -56,7 +56,7 @@ bfsuite.preferences = updated_ini
 if not bfsuite.ini.ini_tables_equal(master_ini, updated_ini) then bfsuite.ini.save_ini_file(userpref_file, updated_ini) end
 
 bfsuite.config.bgTaskName = bfsuite.config.toolName .. " [Background]"
-bfsuite.config.bgTaskKey = "inavbg"
+bfsuite.config.bgTaskKey = "bflbg"
 
 bfsuite.utils = assert(loadfile("lib/utils.lua"))(bfsuite.config)
 

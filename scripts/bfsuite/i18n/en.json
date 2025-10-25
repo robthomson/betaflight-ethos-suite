@@ -5007,9 +5007,9 @@
           "translation": "Please select the servo you would like to configure from the list below."
         },
         "help_default_p2": {
-          "english": "Primary flight controls that use the rotorflight mixer will display in the section called 'mixer'.",
+          "english": "Primary flight controls that use the Rob Thomson mixer will display in the section called 'mixer'.",
           "needs_translation": false,
-          "translation": "Primary flight controls that use the rotorflight mixer will display in the section called 'mixer'."
+          "translation": "Primary flight controls that use the Rob Thomson mixer will display in the section called 'mixer'."
         },
         "help_default_p3": {
           "english": "Any other servos that are not controlled by the primary flight mixer will be displayed in the section called 'Other servos'.",
@@ -6881,9 +6881,9 @@
         "translation": "Link Min"
       },
       "loading": {
-        "english": "ROTORFLIGHT",
+        "english": "Rob Thomson",
         "needs_translation": false,
-        "translation": "ROTORFLIGHT"
+        "translation": "Rob Thomson"
       },
       "lq": {
         "english": "LQ",

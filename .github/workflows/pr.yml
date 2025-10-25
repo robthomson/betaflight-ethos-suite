@@ -77,14 +77,14 @@ jobs:
           grep 'config\.' "${{ env.STAGE }}/bfsuite/main.lua" || true
 
       # Zip the staged scripts (includes i18n + audio for this locale)
-      - name: Create rotorflight-lua-ethos-suite-${{ env.GIT_VER }}-${{ matrix.lang }}.zip
+      - name: Create Rob Thomson-lua-ethos-suite-${{ env.GIT_VER }}-${{ matrix.lang }}.zip
         run: |
-          ( cd "build/${{ matrix.lang }}" && zip -q -r -9 "rotorflight-lua-ethos-suite-${{ env.GIT_VER }}-${{ matrix.lang }}.zip" scripts )
-          mv "build/${{ matrix.lang }}/rotorflight-lua-ethos-suite-${{ env.GIT_VER }}-${{ matrix.lang }}.zip" .
+          ( cd "build/${{ matrix.lang }}" && zip -q -r -9 "Rob Thomson-lua-ethos-suite-${{ env.GIT_VER }}-${{ matrix.lang }}.zip" scripts )
+          mv "build/${{ matrix.lang }}/Rob Thomson-lua-ethos-suite-${{ env.GIT_VER }}-${{ matrix.lang }}.zip" .
 
       - name: Upload per-locale ZIP
         uses: actions/upload-artifact@v4
         with:
-          name: rotorflight-lua-ethos-suite-${{ env.GIT_VER }}-${{ matrix.lang }}
-          path: rotorflight-lua-ethos-suite-${{ env.GIT_VER }}-${{ matrix.lang }}.zip
+          name: Rob Thomson-lua-ethos-suite-${{ env.GIT_VER }}-${{ matrix.lang }}
+          path: Rob Thomson-lua-ethos-suite-${{ env.GIT_VER }}-${{ matrix.lang }}.zip
           if-no-files-found: error

@@ -1,23 +1,11 @@
 --[[
-  Copyright (C) 2025 Rob Thomson
+  Copyright (C) 2025 Rob Thomson Project
   GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
 
 local bfsuite = require("bfsuite")
 
 local mspHelper = {}
-
--- CRC8 DVB-S2 used by MSP v2
-function mspHelper.crc8_dvb_s2(crc, a)
-    crc = bit32 and bit32.bxor(crc, a) or (crc ~ a)
-    for _ = 1, 8 do
-        local msb = (crc & 0x80) ~= 0
-        crc = (crc << 1) & 0xFF
-        if msb then crc = (crc ~ 0xD5) & 0xFF end
-    end
-    return crc & 0xFF
-end
-
 
 mspHelper.readUInt = function(buf, numBytes, byteorder)
     local offset = buf.offset or 1

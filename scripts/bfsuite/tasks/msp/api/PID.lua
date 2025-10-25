@@ -7,7 +7,7 @@ local bfsuite = require("bfsuite")
 local core = assert(loadfile("SCRIPTS:/" .. bfsuite.config.baseDir .. "/tasks/msp/api_core.lua"))()
 
 local API_NAME = "PID"
-local MSP_API_CMD_READ = 122
+local MSP_API_CMD_READ = 112
 local MSP_API_CMD_WRITE = 202
 local MSP_REBUILD_ON_WRITE = false
 

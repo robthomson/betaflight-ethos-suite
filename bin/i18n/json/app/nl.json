@@ -3452,8 +3452,8 @@
         "needs_translation": false
       },
       "help_default_p2": {
-        "english": "Primary flight controls that use the rotorflight mixer will display in the section called 'mixer'.",
-        "translation": "Primaire vluchtbesturingen die gebruikmaken van de rotorflight-mixer worden weergegeven in het gedeelte 'mixer'.",
+        "english": "Primary flight controls that use the Rob Thomson mixer will display in the section called 'mixer'.",
+        "translation": "Primaire vluchtbesturingen die gebruikmaken van de Rob Thomson-mixer worden weergegeven in het gedeelte 'mixer'.",
         "needs_translation": false
       },
       "scale_positive": {

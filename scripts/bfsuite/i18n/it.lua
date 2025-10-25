@@ -1212,7 +1212,7 @@ return {
             ["theme_load_error"] = "Il Tuo tema non si è caricato correttamente. Ritorno al tema di default.",
             ["validate_sensors"] = "SENSORI NECESSARI MANCANTI",
             ["unsupported_resolution"] = "TROPPO PICCOLO",
-            ["loading"] = "ROTORFLIGHT",
+            ["loading"] = "Rob Thomson",
             ["waiting_for_connection"] = "CONNECTING",
             ["check_bg_task"] = "BG TASK",
             ["check_rf_module_on"] = "MODULO RF",
