@@ -1,5 +1,5 @@
 --[[
-  Copyright (C) 2025 Betaflight Project
+  Copyright (C) 2025 Rob Thomson
   GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
 
@@ -13,24 +13,24 @@ local MSP_REBUILD_ON_WRITE = false
 
 -- LuaFormatter off
 local MSP_API_STRUCTURE_READ_DATA = {
-    {field = "rescue_mode", type = "U8", apiVersion = 2.04, simResponse = {1}, min = 0, max = 1, default = 0, table = {[0] = "@i18n(api.RESCUE_PROFILE.tbl_off)@", "@i18n(api.RESCUE_PROFILE.tbl_on)@"}, help = "@i18n(api.RESCUE_PROFILE.help_rescue_mode)@"},
-    {field = "rescue_flip_mode", type = "U8", apiVersion = 2.04, simResponse = {0}, min = 0, max = 1, default = 0, table = {[0] = "@i18n(api.RESCUE_PROFILE.tbl_noflip)@", "@i18n(api.RESCUE_PROFILE.tbl_flip)@"}, help = "@i18n(api.RESCUE_PROFILE.help_rescue_flip_mode)@"},
-    {field = "rescue_flip_gain", type = "U8", apiVersion = 2.04, simResponse = {200}, min = 5, max = 250, default = 200, help = "@i18n(api.RESCUE_PROFILE.help_rescue_flip_gain)@"},
-    {field = "rescue_level_gain", type = "U8", apiVersion = 2.04, simResponse = {100}, min = 5, max = 250, default = 100, help = "@i18n(api.RESCUE_PROFILE.help_rescue_level_gain)@"},
-    {field = "rescue_pull_up_time", type = "U8", apiVersion = 2.04, simResponse = {5}, min = 0, max = 250, default = 0.3, unit = "s", decimals = 1, scale = 10, help = "@i18n(api.RESCUE_PROFILE.help_rescue_pull_up_time)@"},
-    {field = "rescue_climb_time", type = "U8", apiVersion = 2.04, simResponse = {3}, min = 0, max = 250, default = 1, unit = "s", decimals = 1, scale = 10, help = "@i18n(api.RESCUE_PROFILE.help_rescue_climb_time)@"},
-    {field = "rescue_flip_time", type = "U8", apiVersion = 2.04, simResponse = {10}, min = 0, max = 250, default = 2, unit = "s", decimals = 1, scale = 10, help = "@i18n(api.RESCUE_PROFILE.help_rescue_flip_time)@"},
-    {field = "rescue_exit_time", type = "U8", apiVersion = 2.04, simResponse = {5}, min = 0, max = 250, default = 0.5, unit = "s", decimals = 1, scale = 10, help = "@i18n(api.RESCUE_PROFILE.help_rescue_exit_time)@"},
-    {field = "rescue_pull_up_collective", type = "U16", apiVersion = 2.04, simResponse = {182, 3}, min = 0, max = 100, default = 65, unit = "%", scale = 10, help = "@i18n(api.RESCUE_PROFILE.help_rescue_pull_up_collective)@"},
-    {field = "rescue_climb_collective", type = "U16", apiVersion = 2.04, simResponse = {188, 2}, min = 0, max = 100, default = 45, unit = "%", scale = 10, help = "@i18n(api.RESCUE_PROFILE.help_rescue_climb_collective)@"},
-    {field = "rescue_hover_collective", type = "U16", apiVersion = 2.04, simResponse = {194, 1}, min = 0, max = 100, default = 35, unit = "%", scale = 10, help = "@i18n(api.RESCUE_PROFILE.help_rescue_hover_collective)@"},
-    {field = "rescue_hover_altitude", type = "U16", apiVersion = 2.04, simResponse = {244, 1}, help = "@i18n(api.RESCUE_PROFILE.help_rescue_hover_altitude)@", min = 0, max = 500, default = 20, unit = "m"},
-    {field = "rescue_alt_p_gain", type = "U16", apiVersion = 2.04, simResponse = {20, 0}, help = "@i18n(api.RESCUE_PROFILE.help_rescue_alt_p_gain)@", min = 0, max = 1000, default = 20},
-    {field = "rescue_alt_i_gain", type = "U16", apiVersion = 2.04, simResponse = {20, 0}, help = "@i18n(api.RESCUE_PROFILE.help_rescue_alt_i_gain)@", min = 0, max = 1000, default = 20},
-    {field = "rescue_alt_d_gain", type = "U16", apiVersion = 2.04, simResponse = {10, 0}, help = "@i18n(api.RESCUE_PROFILE.help_rescue_alt_d_gain)@", min = 0, max = 1000, default = 10},
-    {field = "rescue_max_collective", type = "U16", apiVersion = 2.04, simResponse = {232, 3}, help = "@i18n(api.RESCUE_PROFILE.help_rescue_max_collective)@", min = 0, max = 100, default = 90, unit = "%", scale = 10},
-    {field = "rescue_max_setpoint_rate", type = "U16", apiVersion = 2.04, simResponse = {44, 1}, min = 5, max = 1000, default = 300, unit = "°/s", help = "@i18n(api.RESCUE_PROFILE.help_rescue_max_setpoint_rate)@"},
-    {field = "rescue_max_setpoint_accel", type = "U16", apiVersion = 2.04, simResponse = {184, 11}, min = 0, max = 10000, default = 3000, unit = "°/s^2", help = "@i18n(api.RESCUE_PROFILE.help_rescue_max_setpoint_accel)@"}
+    {field = "rescue_mode", type = "U8", apiVersion = 1.46, simResponse = {1}, min = 0, max = 1, default = 0, table = {[0] = "@i18n(api.RESCUE_PROFILE.tbl_off)@", "@i18n(api.RESCUE_PROFILE.tbl_on)@"}, help = "@i18n(api.RESCUE_PROFILE.help_rescue_mode)@"},
+    {field = "rescue_flip_mode", type = "U8", apiVersion = 1.46, simResponse = {0}, min = 0, max = 1, default = 0, table = {[0] = "@i18n(api.RESCUE_PROFILE.tbl_noflip)@", "@i18n(api.RESCUE_PROFILE.tbl_flip)@"}, help = "@i18n(api.RESCUE_PROFILE.help_rescue_flip_mode)@"},
+    {field = "rescue_flip_gain", type = "U8", apiVersion = 1.46, simResponse = {200}, min = 5, max = 250, default = 200, help = "@i18n(api.RESCUE_PROFILE.help_rescue_flip_gain)@"},
+    {field = "rescue_level_gain", type = "U8", apiVersion = 1.46, simResponse = {100}, min = 5, max = 250, default = 100, help = "@i18n(api.RESCUE_PROFILE.help_rescue_level_gain)@"},
+    {field = "rescue_pull_up_time", type = "U8", apiVersion = 1.46, simResponse = {5}, min = 0, max = 250, default = 0.3, unit = "s", decimals = 1, scale = 10, help = "@i18n(api.RESCUE_PROFILE.help_rescue_pull_up_time)@"},
+    {field = "rescue_climb_time", type = "U8", apiVersion = 1.46, simResponse = {3}, min = 0, max = 250, default = 1, unit = "s", decimals = 1, scale = 10, help = "@i18n(api.RESCUE_PROFILE.help_rescue_climb_time)@"},
+    {field = "rescue_flip_time", type = "U8", apiVersion = 1.46, simResponse = {10}, min = 0, max = 250, default = 2, unit = "s", decimals = 1, scale = 10, help = "@i18n(api.RESCUE_PROFILE.help_rescue_flip_time)@"},
+    {field = "rescue_exit_time", type = "U8", apiVersion = 1.46, simResponse = {5}, min = 0, max = 250, default = 0.5, unit = "s", decimals = 1, scale = 10, help = "@i18n(api.RESCUE_PROFILE.help_rescue_exit_time)@"},
+    {field = "rescue_pull_up_collective", type = "U16", apiVersion = 1.46, simResponse = {182, 3}, min = 0, max = 100, default = 65, unit = "%", scale = 10, help = "@i18n(api.RESCUE_PROFILE.help_rescue_pull_up_collective)@"},
+    {field = "rescue_climb_collective", type = "U16", apiVersion = 1.46, simResponse = {188, 2}, min = 0, max = 100, default = 45, unit = "%", scale = 10, help = "@i18n(api.RESCUE_PROFILE.help_rescue_climb_collective)@"},
+    {field = "rescue_hover_collective", type = "U16", apiVersion = 1.46, simResponse = {194, 1}, min = 0, max = 100, default = 35, unit = "%", scale = 10, help = "@i18n(api.RESCUE_PROFILE.help_rescue_hover_collective)@"},
+    {field = "rescue_hover_altitude", type = "U16", apiVersion = 1.46, simResponse = {244, 1}, help = "@i18n(api.RESCUE_PROFILE.help_rescue_hover_altitude)@", min = 0, max = 500, default = 20, unit = "m"},
+    {field = "rescue_alt_p_gain", type = "U16", apiVersion = 1.46, simResponse = {20, 0}, help = "@i18n(api.RESCUE_PROFILE.help_rescue_alt_p_gain)@", min = 0, max = 1000, default = 20},
+    {field = "rescue_alt_i_gain", type = "U16", apiVersion = 1.46, simResponse = {20, 0}, help = "@i18n(api.RESCUE_PROFILE.help_rescue_alt_i_gain)@", min = 0, max = 1000, default = 20},
+    {field = "rescue_alt_d_gain", type = "U16", apiVersion = 1.46, simResponse = {10, 0}, help = "@i18n(api.RESCUE_PROFILE.help_rescue_alt_d_gain)@", min = 0, max = 1000, default = 10},
+    {field = "rescue_max_collective", type = "U16", apiVersion = 1.46, simResponse = {232, 3}, help = "@i18n(api.RESCUE_PROFILE.help_rescue_max_collective)@", min = 0, max = 100, default = 90, unit = "%", scale = 10},
+    {field = "rescue_max_setpoint_rate", type = "U16", apiVersion = 1.46, simResponse = {44, 1}, min = 5, max = 1000, default = 300, unit = "°/s", help = "@i18n(api.RESCUE_PROFILE.help_rescue_max_setpoint_rate)@"},
+    {field = "rescue_max_setpoint_accel", type = "U16", apiVersion = 1.46, simResponse = {184, 11}, min = 0, max = 10000, default = 3000, unit = "°/s^2", help = "@i18n(api.RESCUE_PROFILE.help_rescue_max_setpoint_accel)@"}
 }
 -- LuaFormatter on
 

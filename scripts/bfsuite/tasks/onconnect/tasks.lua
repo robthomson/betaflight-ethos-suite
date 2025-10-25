@@ -1,5 +1,5 @@
 --[[
-  Copyright (C) 2025 Betaflight Project
+  Copyright (C) 2025 Rob Thomson
   GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
 
@@ -160,6 +160,7 @@ function tasks.wakeup()
         if activeLevel == "high" then
             bfsuite.utils.playFileCommon("beep.wav")
             bfsuite.flightmode.current = "preflight"
+            --bfsuite.tasks.events.flightmode.reset()
             bfsuite.session.isConnectedHigh = true
             return
         elseif activeLevel == "medium" then

@@ -1,5 +1,5 @@
 --[[
- * Copyright (C) Rotorflight Project
+ * Copyright (C) Rob Thomson
  *
  *
  * License GPLv3: https://www.gnu.org/licenses/gpl-3.0.en.html
@@ -17,8 +17,10 @@
  * 
 
 ]] --
+
+ local bfsuite = require("bfsuite")
 local init = {
-    title = bfsuite.i18n.get("app.modules.rates.name"), -- title of the page
+    title = "@i18n(app.modules.rates.name)@", -- title of the page
     section = "flight_tuning", -- do not run if busy with msp
     script = "rates.lua", -- run this script
     image = "rates.png", -- image for the page

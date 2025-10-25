@@ -3,18 +3,18 @@ local mspapi = {
         [1] = 'RC_TUNING',
     },
     formdata = {
-        name = bfsuite.i18n.get("app.modules.rates.actual"),
+        name = "@i18n(app.modules.rates.actual)@",
         labels = {
         },
         rows = {
-            bfsuite.i18n.get("app.modules.rates.roll"),
-            bfsuite.i18n.get("app.modules.rates.pitch"),
-            bfsuite.i18n.get("app.modules.rates.yaw"),
+            "@i18n(app.modules.rates.roll)@",
+            "@i18n(app.modules.rates.pitch)@",
+            "@i18n(app.modules.rates.yaw)@",
         },
         cols = {
-            bfsuite.i18n.get("app.modules.rates.center_sensitivity"),
-            bfsuite.i18n.get("app.modules.rates.max_rate"),
-            bfsuite.i18n.get("app.modules.rates.expo")
+            "@i18n(app.modules.rates.center_sensitivity)@",
+            "@i18n(app.modules.rates.max_rate)@",
+            "@i18n(app.modules.rates.expo)@"
         },
         fields = {
             -- rc rate0

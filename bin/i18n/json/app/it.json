@@ -1424,6 +1424,11 @@
         "translation": "I",
         "needs_translation": false
       },
+      "dmax": {
+        "english": "D-Max",
+        "translation": "D-Max",
+        "needs_translation": true
+      },
       "yaw": {
         "english": "Yaw",
         "translation": "Yaw",

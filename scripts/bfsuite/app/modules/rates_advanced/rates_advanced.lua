@@ -1,4 +1,4 @@
-
+ local bfsuite = require("bfsuite")
 local activateWakeup = false
 local extraMsgOnSave = nil
 local resetRates = false
@@ -8,7 +8,7 @@ if bfsuite.session.activeRateTable == nil then
     bfsuite.session.activeRateTable = bfsuite.preferences.defaultRateProfile 
 end
 
-local mspapi = {
+local apidata = {
     api = {
         [1] = 'RC_TUNING',
     },
@@ -16,11 +16,11 @@ local mspapi = {
         labels = {
         },
         fields = {
-            {t = bfsuite.i18n.get("app.modules.rates_advanced.rates_type"),        mspapi = 1, apikey = "rates_type", type = 1, ratetype = 1, postEdit = function(self) self.flagRateChange(self, true) end},
-            {t = bfsuite.i18n.get("app.modules.rates_advanced.throttle_mid"),      mspapi = 1, apikey = "thrMid"},
-            {t = bfsuite.i18n.get("app.modules.rates_advanced.throttle_expo"),     mspapi = 1, apikey = "thrExpo"},
-            {t = bfsuite.i18n.get("app.modules.rates_advanced.throttle_limit_type"),     mspapi = 1, apikey = "throttle_limit_type", type=1},
-            {t = bfsuite.i18n.get("app.modules.rates_advanced.throttle_limit_percentage"),     mspapi = 1, apikey = "throttle_limit_percent"},
+            {t = "@i18n(app.modules.rates_advanced.rates_type)@",        apidata = 1, apikey = "rates_type", type = 1, ratetype = 1, postEdit = function(self) self.flagRateChange(self, true) end},
+            {t = "@i18n(app.modules.rates_advanced.throttle_mid)@",      apidata = 1, apikey = "thrMid"},
+            {t = "@i18n(app.modules.rates_advanced.throttle_expo)@",     apidata = 1, apikey = "thrExpo"},
+            {t = "@i18n(app.modules.rates_advanced.throttle_limit_type)@",     apidata = 1, apikey = "throttle_limit_type", type=1},
+            {t = "@i18n(app.modules.rates_advanced.throttle_limit_percentage)@",     apidata = 1, apikey = "throttle_limit_percent"},
         }
     }                 
 }
@@ -90,7 +90,7 @@ end
 
 local function postLoad(self)
 
-    local v = mspapi.values[mspapi.api[1]].rates_type
+    local v = apidata.values[apidata.api[1]].rates_type
     
     bfsuite.utils.log("Active Rate Table: " .. bfsuite.session.activeRateTable,"info")
 
@@ -131,7 +131,7 @@ local function flagRateChange(self)
         bfsuite.app.ui.enableAllFields()
         resetRates = false
     else
-        self.extraMsgOnSave = bfsuite.i18n.get("app.modules.rates_advanced.msg_reset_to_defaults")
+        self.extraMsgOnSave = "@i18n(app.modules.rates_advanced.msg_reset_to_defaults)@"
         resetRates = true
         bfsuite.app.ui.disableAllFields()
         bfsuite.app.formFields[1]:enable(true)
@@ -147,8 +147,8 @@ local function postEepromWrite(self)
 end
 
 return {
-    mspapi = mspapi,
-    title = bfsuite.i18n.get("app.modules.rates_advanced.name"),
+    apidata = apidata,
+    title = "@i18n(app.modules.rates_advanced.name)@",
     reboot = false,
     eepromWrite = true,
     refreshOnRateChange = true,

@@ -1,4 +1,6 @@
 
+
+ local bfsuite = require("bfsuite")
 local activateWakeup = false
 local extraMsgOnSave = nil
 local resetRates = false
@@ -16,7 +18,7 @@ local mspapi = {
         labels = {
         },
         fields = {
-            {t = bfsuite.i18n.get("app.modules.rates_advanced.rate_table"),        mspapi = 1, apikey = "rates_type", type = 1, ratetype = 1, postEdit = function(self) self.flagRateChange(self, true) end},
+            {t = "@i18n(app.modules.rates_advanced.rate_table)@",        mspapi = 1, apikey = "rates_type", type = 1, ratetype = 1, postEdit = function(self) self.flagRateChange(self, true) end},
         }
     }                 
 }
@@ -128,7 +130,7 @@ local function flagRateChange(self)
         bfsuite.app.ui.enableAllFields()
         resetRates = false
     else
-        self.extraMsgOnSave = bfsuite.i18n.get("app.modules.rates_advanced.msg_reset_to_defaults")
+        self.extraMsgOnSave = "@i18n(app.modules.rates_advanced.msg_reset_to_defaults)@"
         resetRates = true
         bfsuite.app.ui.disableAllFields()
         bfsuite.app.formFields[1]:enable(true)
@@ -145,7 +147,7 @@ end
 
 return {
     mspapi = mspapi,
-    title = bfsuite.i18n.get("app.modules.rates_advanced.rates_type"),
+    title = "@i18n(app.modules.rates_advanced.rates_type)@",
     reboot = false,
     eepromWrite = true,
     refreshOnRateChange = true,

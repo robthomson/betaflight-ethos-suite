@@ -1,5 +1,5 @@
 --[[
-  Copyright (C) 2025 Betaflight Project
+  Copyright (C) 2025 Rob Thomson
   GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
 
@@ -140,7 +140,7 @@ local function armedSaveWarning()
     if not app.dialogs.progressDisplay then
         app.audio.playSaveArmed = true
         app.dialogs.progressCounter = 0
-        local key = (bfsuite.utils.apiVersionCompare(">=", "2.04") and "@i18n(app.msg_please_disarm_to_save_warning)@" or "@i18n(app.msg_please_disarm_to_save)@")
+        local key = (bfsuite.utils.apiVersionCompare(">=", "1.46") and "@i18n(app.msg_please_disarm_to_save_warning)@" or "@i18n(app.msg_please_disarm_to_save)@")
 
         app.ui.progressDisplay("@i18n(app.msg_save_not_commited)@", key)
     end

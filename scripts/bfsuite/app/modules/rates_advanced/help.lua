@@ -17,13 +17,16 @@
  * 
 
 ]] --
+
+
+ local bfsuite = require("bfsuite")
 local data = {}
 
 data['help'] = {}
 
 data['help']['default'] = {
-    bfsuite.i18n.get("app.modules.rates_advanced.help_p1"),
-    bfsuite.i18n.get("app.modules.rates_advanced.help_p2")
+    "@i18n(app.modules.rates_advanced.help_p1)@",
+    "@i18n(app.modules.rates_advanced.help_p2)@"
 }
 
 data['fields'] = {}

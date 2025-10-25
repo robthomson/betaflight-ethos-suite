@@ -1,5 +1,5 @@
 --[[
-  Copyright (C) 2025 Betaflight Project
+  Copyright (C) 2025 Rob Thomson
   GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
 
@@ -7,27 +7,37 @@ local bfsuite = require("bfsuite")
 local core = assert(loadfile("SCRIPTS:/" .. bfsuite.config.baseDir .. "/tasks/msp/api_core.lua"))()
 
 local API_NAME = "PID"
-local MSP_API_CMD_READ = 0x1001
-local MSP_API_CMD_WRITE = 0x2031
+local MSP_API_CMD_READ = 122
+local MSP_API_CMD_WRITE = 202
 local MSP_REBUILD_ON_WRITE = false
 
 -- LuaFormatter off
 local MSP_API_STRUCTURE_READ_DATA = {
-    {field = "pid_0_P", type = "U8", apiVersion = 2.04, simResponse = {50}, min = 0, max = 1000, default = 50, help = "@i18n(api.PID_TUNING.pid_0_P)@"},
-    {field = "pid_0_I", type = "U8", apiVersion = 2.04, simResponse = {100}, min = 0, max = 1000, default = 100, help = "@i18n(api.PID_TUNING.pid_0_I)@"},
-    {field = "pid_0_D", type = "U8", apiVersion = 2.04, simResponse = {20}, min = 0, max = 1000, default = 0, help = "@i18n(api.PID_TUNING.pid_0_D)@"},
-    {field = "pid_0_FF", type = "U8", apiVersion = 2.04, simResponse = {100}, min = 0, max = 1000, default = 100, help = "@i18n(api.PID_TUNING.pid_0_F)@"},
+    -- roll
+    {field = "pid_0_P", type = "U8", apiVersion = 1.45, simResponse = {45},  min = 0, max = 1000, default = 45},
+    {field = "pid_0_I", type = "U8", apiVersion = 1.45, simResponse = {80}, min = 0, max = 1000, default = 80},
+    {field = "pid_0_D", type = "U8", apiVersion = 1.45, simResponse = {40},  min = 0, max = 1000, default = 40},
 
-    {field = "pid_1_P", type = "U8", apiVersion = 2.04, simResponse = {50}, min = 0, max = 1000, default = 50, help = "@i18n(api.PID_TUNING.pid_1_P)@"},
-    {field = "pid_1_I", type = "U8", apiVersion = 2.04, simResponse = {100}, min = 0, max = 1000, default = 100, help = "@i18n(api.PID_TUNING.pid_1_I)@"},
-    {field = "pid_1_D", type = "U8", apiVersion = 2.04, simResponse = {50}, min = 0, max = 1000, default = 40, help = "@i18n(api.PID_TUNING.pid_1_D)@"},
-    {field = "pid_1_FF", type = "U8", apiVersion = 2.04, simResponse = {100}, min = 0, max = 1000, default = 100, help = "@i18n(api.PID_TUNING.pid_1_F)@"},
+    -- pitch
+    {field = "pid_1_P", type = "U8", apiVersion = 1.45, simResponse = {47},  min = 0, max = 1000, default = 47},
+    {field = "pid_1_I", type = "U8", apiVersion = 1.45, simResponse = {84}, min = 0, max = 1000, default = 84},
+    {field = "pid_1_D", type = "U8", apiVersion = 1.45, simResponse = {46},  min = 0, max = 1000, default = 46},
 
-    {field = "pid_2_P", type = "U8", apiVersion = 2.04, simResponse = {80}, min = 0, max = 1000, default = 80, help = "@i18n(api.PID_TUNING.pid_2_P)@"},
-    {field = "pid_2_I", type = "U8", apiVersion = 2.04, simResponse = {120}, min = 0, max = 1000, default = 120, help = "@i18n(api.PID_TUNING.pid_2_I)@"},
-    {field = "pid_2_D", type = "U8", apiVersion = 2.04, simResponse = {40}, min = 0, max = 1000, default = 10, help = "@i18n(api.PID_TUNING.pid_2_D)@"},
-    {field = "pid_2_FF", type = "U8", apiVersion = 2.04, simResponse = {0}, min = 0, max = 1000, default = 0, help = "@i18n(api.PID_TUNING.pid_2_F)@"},
+    -- yaw
+    {field = "pid_2_P", type = "U8", apiVersion = 1.45, simResponse = {45},  min = 0, max = 1000, default = 45},
+    {field = "pid_2_I", type = "U8", apiVersion = 1.45, simResponse = {80}, min = 0, max = 1000, default = 80},
+    {field = "pid_2_D", type = "U8", apiVersion = 1.45, simResponse = {0},  min = 0, max = 1000, default = 0},
+ 
+    -- no idea what this is yet?
+    {field = "pid_3_P", type = "U8", apiVersion = 1.45, simResponse = {50},  min = 0, max = 1000, default = 50},
+    {field = "pid_3_I", type = "U8", apiVersion = 1.45, simResponse = {75}, min = 0, max = 1000, default = 75},
+    {field = "pid_3_D", type = "U8", apiVersion = 1.45, simResponse = {75},  min = 0, max = 1000, default = 75},
 
+     -- no idea what this is yet?
+    {field = "pid_4_P", type = "U8", apiVersion = 1.45, simResponse = {40},  min = 0, max = 1000, default = 40},
+    {field = "pid_4_I", type = "U8", apiVersion = 1.45, simResponse = {0}, min = 0, max = 1000, default = 0},
+    {field = "pid_4_D", type = "U8", apiVersion = 1.45, simResponse = {0},  min = 0, max = 1000, default = 0},
+ 
 }
 -- LuaFormatter on
 

@@ -1,5 +1,5 @@
 --[[
-  Copyright (C) 2025 Betaflight Project
+  Copyright (C) 2025 Rob Thomson
   GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
 
@@ -204,7 +204,7 @@ local function wakeup()
     end
 
     if bfsuite.app.formNavigationFields['tool'] then
-        if bfsuite.session and bfsuite.session.apiVersion and bfsuite.utils.apiVersionCompare("<", "2.04") then
+        if bfsuite.session and bfsuite.session.apiVersion and bfsuite.utils.apiVersionCompare("<", "1.46") then
             bfsuite.app.formNavigationFields['tool']:enable(false)
         else
             bfsuite.app.formNavigationFields['tool']:enable(true)

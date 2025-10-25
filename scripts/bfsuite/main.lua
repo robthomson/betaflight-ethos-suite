@@ -1,5 +1,5 @@
 --[[
-  Copyright (C) 2025 Betaflight Project
+  Copyright (C) 2025 Rob Thomson
   GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
 
@@ -7,8 +7,6 @@ local bfsuite = {session = {}}
 package.loaded.bfsuite = bfsuite
 
 local _ENV = setmetatable({bfsuite = bfsuite}, {__index = _G, __newindex = function(_, k) print("attempt to create global '" .. tostring(k) .. "'", 2) end})
-
-if not FONT_STD then FONT_STD = FONT_STD end
 
 -- LuaFormatter off
 local config = {
@@ -18,7 +16,7 @@ local config = {
     icon_unsupported = lcd.loadMask("app/gfx/unsupported.png"),
     version = {major = 0, minor = 0, revision = 0, suffix = "20251010"},
     ethosVersion = {1, 6, 2},
-    supportedMspApiVersion = {"2.04", "2.05"},
+    supportedMspApiVersion = {"1.46"},
     baseDir = "bfsuite",
     preferences = "bfsuite.user",
     defaultRateProfile = 4,

@@ -1,5 +1,5 @@
 --[[
-  Copyright (C) 2025 Betaflight Project
+  Copyright (C) 2025 Rob Thomson
   GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
 
@@ -17,7 +17,7 @@ local MSP_API_STRUCTURE_READ = {}
 
 -- LuaFormatter off
 local MSP_API_STRUCTURE_WRITE = {
-    {field = "rebootMode", type = "U8", apiVersion = 2.04, simResponse = {0}}
+    {field = "rebootMode", type = "U8", apiVersion = 1.46, simResponse = {0}}
 }
 -- LuaFormatter on
 

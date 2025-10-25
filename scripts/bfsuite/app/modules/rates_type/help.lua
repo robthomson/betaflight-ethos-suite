@@ -1,5 +1,5 @@
 --[[
- * Copyright (C) Rotorflight Project
+ * Copyright (C) Rob Thomson
  *
  *
  * License GPLv3: https://www.gnu.org/licenses/gpl-3.0.en.html
@@ -17,12 +17,14 @@
  * 
 
 ]] --
+
+ local bfsuite = require("bfsuite")
 local data = {}
 
 data['help'] = {}
 
 data['help']['default'] = {
-    bfsuite.i18n.get("app.modules.rates_advanced.help_rate_table"),
+    "@i18n(app.modules.rates_advanced.help_rate_table)@",
 }
 
 data['fields'] = {}

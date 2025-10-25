@@ -1,5 +1,5 @@
 --[[
-  Copyright (C) 2025 Betaflight Project
+  Copyright (C) 2025 Rob Thomson
   GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
 
@@ -13,11 +13,11 @@ local MSP_REBUILD_ON_WRITE = false
 
 -- LuaFormatter off
 local MSP_API_STRUCTURE_READ_DATA = {
-    { field = "a_value_1", type = "U8", apiVersion = 2.04, simResponse = {20}, help = "@i18n(api.API_TEMPLATE.a_value_1)@" },
-    { field = "a_value_2", type = "U8", apiVersion = 2.04, simResponse = {5}, help = "@i18n(api.API_TEMPLATE.a_value_2)@" },
-    { field = "a_value_3", type = "U8", apiVersion = 2.04, simResponse = {10}, help = "@i18n(api.API_TEMPLATE.a_value_3)@" },
-    { field = "a_value_4", type = "U8", apiVersion = 2.04, simResponse = {20}, help = "@i18n(api.API_TEMPLATE.a_value_4)@" },
-    { field = "a_value_5", type = "U6", apiVersion = 2.04, simResponse = {20, 30}, help = "@i18n(api.API_TEMPLATE.a_value_5)@" },
+    { field = "a_value_1", type = "U8", apiVersion = 1.46, simResponse = {20}, help = "@i18n(api.API_TEMPLATE.a_value_1)@" },
+    { field = "a_value_2", type = "U8", apiVersion = 1.46, simResponse = {5}, help = "@i18n(api.API_TEMPLATE.a_value_2)@" },
+    { field = "a_value_3", type = "U8", apiVersion = 1.46, simResponse = {10}, help = "@i18n(api.API_TEMPLATE.a_value_3)@" },
+    { field = "a_value_4", type = "U8", apiVersion = 1.46, simResponse = {20}, help = "@i18n(api.API_TEMPLATE.a_value_4)@" },
+    { field = "a_value_5", type = "U6", apiVersion = 1.46, simResponse = {20, 30}, help = "@i18n(api.API_TEMPLATE.a_value_5)@" },
 }
 -- LuaFormatter on
 

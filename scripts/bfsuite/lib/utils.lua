@@ -1,5 +1,5 @@
 --[[
-  Copyright (C) 2025 Betaflight Project
+  Copyright (C) 2025 Rob Thomson
   GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
 
@@ -87,7 +87,7 @@ end
 
 function utils.msp_version_array_to_indexed()
     local arr = {}
-    local tbl = bfsuite.config.supportedMspApiVersion or {"2.04", "2.05"}
+    local tbl = bfsuite.config.supportedMspApiVersion or {"1.46"}
     for i, v in ipairs(tbl) do arr[#arr + 1] = {v, i} end
     return arr
 end
@@ -157,7 +157,7 @@ function utils.getGovernorState(value)
         [101] = "@i18n(widgets.governor.DISARMED):upper()@"
     }
 
-    if bfsuite.session and bfsuite.session.apiVersion and bfsuite.utils.apiVersionCompare(">", "12.07") then
+    if bfsuite.session and bfsuite.session.apiVersion and bfsuite.utils.apiVersionCompare(">", "1.46") then
         local armflags = bfsuite.tasks.telemetry.getSensor("armflags")
         if armflags == 0 or armflags == 2 then value = 101 end
     end
@@ -564,7 +564,7 @@ function utils.apiVersionCompare(op, req)
         return t
     end
 
-    local a, b = parts(bfsuite.session.apiVersion or 2.04), parts(req)
+    local a, b = parts(bfsuite.session.apiVersion or 1.46), parts(req)
     if #a == 0 or #b == 0 then return false end
 
     local len = math.max(#a, #b)
