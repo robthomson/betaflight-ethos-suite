@@ -78,7 +78,7 @@ jobs:
       - name: Create snapshot ZIP (locale=${{ matrix.lang }})
         shell: bash
         run: |
-          ART="Rob Thomson-lua-ethos-suite-${{ env.GIT_VER }}-${{ matrix.lang }}.zip"
+          ART="betaflight-lua-ethos-suite-${{ env.GIT_VER }}-${{ matrix.lang }}.zip"
           (cd "build/${{ matrix.lang }}" && zip -q -r -9 "../$ART" scripts)
           mv "build/${{ matrix.lang }}/../$ART" .
           echo "ARTIFACT=$ART" >> $GITHUB_ENV
@@ -86,7 +86,7 @@ jobs:
       - name: Upload per-locale artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Rob Thomson-lua-ethos-suite-${{ env.GIT_VER }}-${{ matrix.lang }}
+          name: betaflight-lua-ethos-suite-${{ env.GIT_VER }}-${{ matrix.lang }}
           path: ${{ env.ARTIFACT }}
           if-no-files-found: error
 

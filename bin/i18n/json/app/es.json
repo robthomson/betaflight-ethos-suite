@@ -3452,7 +3452,7 @@
         "needs_translation": false
       },
       "help_default_p2": {
-        "english": "Primary flight controls that use the Rob Thomson mixer will display in the section called 'mixer'.",
+        "english": "Primary flight controls that use the betaflight mixer will display in the section called 'mixer'.",
         "translation": "Los controles primarios que utilizan el mezclador de Betaflight aparecen en la sección llamada 'mezclador'.",
         "needs_translation": false
       },

@@ -74,10 +74,10 @@ jobs:
           echo "[AUDIO] Copied $SRC -> $DEST"
 
       # Zip only the staged scripts folder for this locale
-      - name: Create Rob Thomson-lua-ethos-suite-<lang>-commit-<sha7>.zip
+      - name: Create betaflight-lua-ethos-suite-<lang>-commit-<sha7>.zip
         shell: bash
         run: |
-          ART="Rob Thomson-lua-ethos-suite-${{ matrix.lang }}-${{ env.GIT_VER }}.zip"
+          ART="betaflight-lua-ethos-suite-${{ matrix.lang }}-${{ env.GIT_VER }}.zip"
           (cd build/${{ matrix.lang }} && zip -q -r -9 "../$ART" scripts)
           mv "build/${{ matrix.lang }}/../$ART" .
           echo "ARTIFACT=$ART" >> $GITHUB_ENV
@@ -85,7 +85,7 @@ jobs:
       - name: Upload per-locale artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Rob Thomson-lua-ethos-suite-${{ matrix.lang }}-${{ env.GIT_VER }}
+          name: betaflight-lua-ethos-suite-${{ matrix.lang }}-${{ env.GIT_VER }}
           path: ${{ env.ARTIFACT }}
           if-no-files-found: error
 

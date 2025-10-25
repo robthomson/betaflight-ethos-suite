@@ -42,8 +42,8 @@ Before running the app or building, set the following environment variables:
 
 **Example:**
 ```bat
-set FRSKY_bfsuite_GIT_SRC=C:\GitHub\Rob Thomson-lua-ethos-suite
-set FRSKY_SIM_SRC=C:\GitHub\Rob Thomson-lua-ethos-suite\output
+set FRSKY_bfsuite_GIT_SRC=C:\GitHub\betaflight-lua-ethos-suite
+set FRSKY_SIM_SRC=C:\GitHub\betaflight-lua-ethos-suite\output
 ```
 
 ---

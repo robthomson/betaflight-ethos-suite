@@ -5007,9 +5007,9 @@
           "translation": "Selecteer de servo die u wilt configureren uit de onderstaande lijst."
         },
         "help_default_p2": {
-          "english": "Primary flight controls that use the Rob Thomson mixer will display in the section called 'mixer'.",
+          "english": "Primary flight controls that use the betaflight mixer will display in the section called 'mixer'.",
           "needs_translation": false,
-          "translation": "Primaire vluchtbesturingen die gebruikmaken van de Rob Thomson-mixer worden weergegeven in het gedeelte 'mixer'."
+          "translation": "Primaire vluchtbesturingen die gebruikmaken van de betaflight-mixer worden weergegeven in het gedeelte 'mixer'."
         },
         "help_default_p3": {
           "english": "Any other servos that are not controlled by the primary flight mixer will be displayed in the section called 'Other servos'.",
@@ -6881,9 +6881,9 @@
         "translation": "Link min"
       },
       "loading": {
-        "english": "Rob Thomson",
+        "english": "betaflight",
         "needs_translation": false,
-        "translation": "Rob Thomson"
+        "translation": "betaflight"
       },
       "lq": {
         "english": "LQ",
