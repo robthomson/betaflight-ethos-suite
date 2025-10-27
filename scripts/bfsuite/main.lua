@@ -138,6 +138,7 @@ local function build_widget_cache(widgetList, cacheFile)
     bfsuite.utils.log("[cache] Created new widgets cache file", "info")
 end
 
+--[[
 local function register_widgets(widgetList)
     bfsuite.widgets = {}
     local dupCount = {}
@@ -158,6 +159,7 @@ local function register_widgets(widgetList)
         end
     end
 end
+]]--
 
 local function init()
     local cfg = bfsuite.config
@@ -176,6 +178,7 @@ local function init()
 
     register_bg_task()
 
+    --[[
     local cacheFile = "widgets.lua"
     local cachePath = "cache/" .. cacheFile
     local widgetList = load_widget_cache(cachePath)
@@ -186,6 +189,7 @@ local function init()
     end
 
     register_widgets(widgetList)
+    ]]
 end
 
 return {init = init}
