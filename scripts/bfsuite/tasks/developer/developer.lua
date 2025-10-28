@@ -38,6 +38,7 @@ function developer.wakeup()
         -- Enable log to file in developer options and turn on msp data logging
         -- Outcome is this byte string is logged to the bfsuite log file
         -- {250, 75 , 0  , 100, 0  , 0  , 0  , 0  , 0  , 0  , 0  , 0  , 0  , 0  , 0  , 0  , 0  , 0  , 0  , 0  , 250, 0  , 244, 1  , 0  , 0  , 150, 0  , 0  , 250, 0  , 244, 1  , 75 , 0  , 150, 0  , 0  , 0  , 44 , 1  , 100, 0  , 3  , 100, 88 , 2  , 5  , 0  }
+        --[[
         local API = bfsuite.tasks.msp.api.load("FILTER_CONFIG")
         API.setCompleteHandler(function(self, buf)
             local gyro_lpf1_static_hz = API.readValue("gyro_lpf1_static_hz")
@@ -46,7 +47,8 @@ function developer.wakeup()
 
         end)
         API.setUUID("uid-filter_config-example-001")
-        API.read()    
+        API.read()
+        ]]--
 
 end
 
