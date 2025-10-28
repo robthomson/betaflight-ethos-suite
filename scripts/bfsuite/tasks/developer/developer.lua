@@ -34,6 +34,14 @@ function developer.wakeup()
     end
     ]]--
 
+        local API = bfsuite.tasks.msp.api.load("FILTER_CONFIG")
+        API.setCompleteHandler(function(self, buf)
+            --bfsuite.session.fcVersion = API.readVersion()
+            --bfsuite.session.rfVersion = API.readRfVersion()
+        end)
+        API.setUUID("uid-filter_config-example-001")
+        API.read()    
+
 end
 
 return developer
