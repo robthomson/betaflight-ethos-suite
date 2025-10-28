@@ -40,7 +40,7 @@ local userpref_defaults = {
     dashboard = {theme_preflight = "system/default", theme_inflight = "system/default", theme_postflight = "system/default"},
     events = {armflags = true, voltage = true, governor = true, pid_profile = true, rate_profile = true, esc_temp = false, escalertvalue = 90, smartfuel = true, smartfuelcallout = 0, smartfuelrepeats = 1, smartfuelhaptic = false, adj_v = false, adj_f = false},
     switches = {},
-    developer = {compile = true, devtools = false, logtofile = false, loglevel = "off", logmsp = false, logobjprof = false, logmspQueue = false, memstats = false, taskprofiler = false, mspexpbytes = 8, apiversion = 2, overlaystats = false, overlaygrid = false, overlaystatsadmin = false},
+    developer = {compile = true, devtools = false, logtofile = false, loglevel = "off", logmsp = false, logobjprof = false, logmspQueue = false, memstats = false, taskprofiler = false, mspexpbytes = 8, apiversion = 1, overlaystats = false, overlaygrid = false, overlaystatsadmin = false},
     timer = {timeraudioenable = false, elapsedalertmode = 0, prealerton = false, postalerton = false, prealertinterval = 10, prealertperiod = 30, postalertinterval = 10, postalertperiod = 30},
     menulastselected = {}
 }
