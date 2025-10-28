@@ -244,7 +244,9 @@ function app.close()
     app.triggers.invalidConnectionSetup = false
     app.triggers.profileswitchLast = nil
 
-    bfsuite.tasks.msp.api.resetApidata()
+    if bfsuite.tasks and bfsuite.tasks.msp then
+        bfsuite.tasks.msp.api.resetApidata()
+    end
 
     bfsuite.utils.reportMemoryUsage("app.close", "end")
 
