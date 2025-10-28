@@ -34,6 +34,10 @@ function developer.wakeup()
     end
     ]]--
 
+
+        -- Enable log to file in developer options and turn on msp data logging
+        -- Outcome is this byte string is logged to the bfsuite log file
+        -- {250, 75 , 0  , 100, 0  , 0  , 0  , 0  , 0  , 0  , 0  , 0  , 0  , 0  , 0  , 0  , 0  , 0  , 0  , 0  , 250, 0  , 244, 1  , 0  , 0  , 150, 0  , 0  , 250, 0  , 244, 1  , 75 , 0  , 150, 0  , 0  , 0  , 44 , 1  , 100, 0  , 3  , 100, 88 , 2  , 5  , 0  }
         local API = bfsuite.tasks.msp.api.load("FILTER_CONFIG")
         API.setCompleteHandler(function(self, buf)
             --bfsuite.session.fcVersion = API.readVersion()
