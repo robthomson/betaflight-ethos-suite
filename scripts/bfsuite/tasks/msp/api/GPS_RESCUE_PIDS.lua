@@ -6,59 +6,20 @@
 local bfsuite = require("bfsuite")
 local core = assert(loadfile("SCRIPTS:/" .. bfsuite.config.baseDir .. "/tasks/msp/api_core.lua"))()
 
-local API_NAME = "FILTER_CONFIG"
-local MSP_API_CMD_READ = 92
-local MSP_API_CMD_WRITE = 93
+local API_NAME = "GPS_RESCUE_PIDS"
+local MSP_API_CMD_READ = 136
+local MSP_API_CMD_WRITE = 226
 local MSP_REBUILD_ON_WRITE = false
 
 -- LuaFormatter off
 local MSP_API_STRUCTURE_READ_DATA = {
-    -- pre-1.41 block (baseline 1.40)
-    { field = "gyro_lpf1_static_hz_legacy", type = "U8",  apiVersion = 1.40, simResponse = {250} },      -- first U8 legacy encoding
-    { field = "dterm_lpf1_static_hz",       type = "U16", apiVersion = 1.40, simResponse = {75, 0} },
-    { field = "yaw_lowpass_hz",             type = "U16", apiVersion = 1.40, simResponse = {100, 0} },
-    { field = "gyro_soft_notch_hz_1",       type = "U16", apiVersion = 1.40, simResponse = {0, 0} },
-    { field = "gyro_soft_notch_cutoff_1",   type = "U16", apiVersion = 1.40, simResponse = {0, 0} },
-    { field = "dterm_notch_hz",             type = "U16", apiVersion = 1.40, simResponse = {0, 0} },
-    { field = "dterm_notch_cutoff",         type = "U16", apiVersion = 1.40, simResponse = {0, 0} },
-    { field = "gyro_soft_notch_hz_2",       type = "U16", apiVersion = 1.40, simResponse = {0, 0} },
-    { field = "gyro_soft_notch_cutoff_2",   type = "U16", apiVersion = 1.40, simResponse = {0, 0} },
-    { field = "dterm_lpf1_type",            type = "U8",  apiVersion = 1.40, simResponse = {0} },
-    { field = "gyro_hardware_lpf",          type = "U8",  apiVersion = 1.40, simResponse = {0} },
-    { field = "gyro_32khz_hardware_lpf",    type = "U8",  apiVersion = 1.40, simResponse = {0} },        -- deprecated
-    { field = "gyro_lpf1_static_hz",        type = "U16", apiVersion = 1.40, simResponse = {250, 0} },   -- new 16-bit encoding
-    { field = "gyro_lpf2_static_hz",        type = "U16", apiVersion = 1.40, simResponse = {244, 1} },
-    { field = "gyro_lpf1_type",             type = "U8",  apiVersion = 1.40, simResponse = {0} },
-    { field = "gyro_lpf2_type",             type = "U8",  apiVersion = 1.40, simResponse = {0} },
-    { field = "dterm_lpf2_static_hz",       type = "U16", apiVersion = 1.40, simResponse = {150, 0} },
-
-    -- Added in MSP API 1.41
-    { field = "dterm_lpf2_type",            type = "U8",  apiVersion = 1.41, simResponse = {0} },
-
-    -- USE_DYN_LPF (exists irrespective of compile flags in this API layout)
-    { field = "gyro_lpf1_dyn_min_hz",       type = "U16", apiVersion = 1.40, simResponse = {250, 0} },
-    { field = "gyro_lpf1_dyn_max_hz",       type = "U16", apiVersion = 1.40, simResponse = {244, 1} },
-    { field = "dterm_lpf1_dyn_min_hz",      type = "U16", apiVersion = 1.40, simResponse = {75, 0} },
-    { field = "dterm_lpf1_dyn_max_hz",      type = "U16", apiVersion = 1.40, simResponse = {150, 0} },
-
-    -- Added in MSP API 1.42 (dyn notch)
-    { field = "dyn_notch_range",            type = "U8",  apiVersion = 1.42, simResponse = {0} },        -- deprecated in 1.43
-    { field = "dyn_notch_width_percent",    type = "U8",  apiVersion = 1.42, simResponse = {0} },        -- deprecated in 1.44
-    { field = "dyn_notch_q",                type = "U16", apiVersion = 1.42, simResponse = {44, 1} },
-    { field = "dyn_notch_min_hz",           type = "U16", apiVersion = 1.42, simResponse = {100, 0} },
-
-    -- RPM filter (present in this layout; baseline kept at 1.42 since it follows the 1.42 block)
-    { field = "rpm_filter_harmonics",       type = "U8",  apiVersion = 1.42, simResponse = {3} },
-    { field = "rpm_filter_min_hz",          type = "U8",  apiVersion = 1.42, simResponse = {100} },
-
-    -- Added in MSP API 1.43
-    { field = "dyn_notch_max_hz",           type = "U16", apiVersion = 1.43, simResponse = {88, 2} },
-
-    -- Added in MSP API 1.44
-    { field = "dterm_lpf1_dyn_expo",        type = "U8",  apiVersion = 1.44, simResponse = {5} },
-
-    -- dyn notch count (in same final block; keep baseline at 1.44 here)
-    { field = "dyn_notch_count",            type = "U8",  apiVersion = 1.44, simResponse = {0} },
+  { field = "altitudeP", type = "U16", apiVersion = 1.44, simResponse = {15, 0} },
+  { field = "altitudeI", type = "U16", apiVersion = 1.44, simResponse = {15, 0} },
+  { field = "altitudeD", type = "U16", apiVersion = 1.44, simResponse = {20, 0} },
+  { field = "velP",      type = "U16", apiVersion = 1.44, simResponse = {8, 0} },
+  { field = "velI",      type = "U16", apiVersion = 1.44, simResponse = {40, 0} },
+  { field = "velD",      type = "U16", apiVersion = 1.44, simResponse = {12, 0} },
+  { field = "yawP",      type = "U16", apiVersion = 1.44, simResponse = {20, 0} },
 }
 
 -- LuaFormatter on

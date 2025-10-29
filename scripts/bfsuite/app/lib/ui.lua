@@ -283,7 +283,9 @@ function ui.resetPageState(activesection)
         app.Page.apidata = nil
     end
 
-    bfsuite.tasks.msp.api.resetApidata()
+    if bfsuite.tasks and bfsuite.tasks.msp then
+        bfsuite.tasks.msp.api.resetApidata()
+    end
 
     app.formFieldsOffline = {}
     app.formFieldsBGTask = {}
