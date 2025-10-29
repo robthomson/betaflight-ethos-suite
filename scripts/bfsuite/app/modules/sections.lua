@@ -13,7 +13,7 @@ sections[#sections + 1] = {title = "@i18n(app.modules.rates.name)@", module = "r
 --sections[#sections + 1] = {title = "@i18n(app.modules.profile_governor.name)@", module = "profile_governor", script = "select.lua", image = "app/modules/profile_governor/governor.png", offline = false, bgtask = false}
 --sections[#sections + 1] = {title = "@i18n(app.modules.profile_tailrotor.name)@", module = "tailrotor", script = "tailrotor.lua", image = "app/modules/tailrotor/tailrotor.png", offline = false, bgtask = false}
 sections[#sections + 1] = {title = "@i18n(app.menu_section_advanced)@", id = "advanced", image = "app/gfx/advanced.png", loaderspeed = true, offline = false, bgtask = false}
---sections[#sections + 1] = {title = "@i18n(app.menu_section_hardware)@", id = "hardware", image = "app/gfx/hardware.png", loaderspeed = true, offline = false, bgtask = false}
+sections[#sections + 1] = {title = "@i18n(app.menu_section_hardware)@", id = "hardware", image = "app/gfx/hardware.png", loaderspeed = true, offline = false, bgtask = false}
 sections[#sections + 1] = {title = "@i18n(app.menu_section_tools)@", id = "tools", image = "app/gfx/tools.png", newline = true, offline = false, bgtask = false}
 --sections[#sections + 1] = {title = "@i18n(app.modules.logs.name)@", module = "logs", script = "logs_dir.lua", image = "app/modules/logs/gfx/logs.png", loaderspeed = true, offline = true, bgtask = false}
 sections[#sections + 1] = {title = "@i18n(app.modules.settings.name)@", module = "settings", script = "settings.lua", image = "app/modules/settings/settings.png", loaderspeed = true, offline = true, bgtask = false}
