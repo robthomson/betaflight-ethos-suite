@@ -11,6 +11,8 @@ local MSP_API_CMD_READ = 92
 local MSP_API_CMD_WRITE = 93
 local MSP_REBUILD_ON_WRITE = false
 
+local gyroFilterType = {[0] = "PT1", [1] = "BIQUAD", [2] = "PT2", [3] = "PT3"}
+
 -- LuaFormatter off
 local MSP_API_STRUCTURE_READ_DATA = {
     -- pre-1.41 block (baseline 1.40)
@@ -28,8 +30,8 @@ local MSP_API_STRUCTURE_READ_DATA = {
     { field = "gyro_32khz_hardware_lpf",    type = "U8",  apiVersion = 1.40, simResponse = {0} },        -- deprecated
     { field = "gyro_lpf1_static_hz",        type = "U16", apiVersion = 1.40, simResponse = {250, 0} },   -- new 16-bit encoding
     { field = "gyro_lpf2_static_hz",        type = "U16", apiVersion = 1.40, simResponse = {244, 1} },
-    { field = "gyro_lpf1_type",             type = "U8",  apiVersion = 1.40, simResponse = {0} },
-    { field = "gyro_lpf2_type",             type = "U8",  apiVersion = 1.40, simResponse = {0} },
+    { field = "gyro_lpf1_type",             type = "U8",  apiVersion = 1.40, simResponse = {0}, min = 0,  max = #gyroFilterType, table = gyroFilterType },
+    { field = "gyro_lpf2_type",             type = "U8",  apiVersion = 1.40, simResponse = {0}, min = 0,  max = #gyroFilterType, table = gyroFilterType },
     { field = "dterm_lpf2_static_hz",       type = "U16", apiVersion = 1.40, simResponse = {150, 0} },
 
     -- Added in MSP API 1.41
