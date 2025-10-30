@@ -1,6 +1,6 @@
 --[[
 
- * Copyright (C) Rob Thomson
+ * Copyright (C) Inav Project
  *
  *
  * License GPLv3: https://www.gnu.org/licenses/gpl-3.0.en.html
@@ -25,11 +25,11 @@ if you do not have an external simtelemetry folder
 If you want the ability to dynamically change sensors - you can copy the
 contents of this folder to:
 
-/scripts/bfsuite.sim/sensors/
+/scripts/dashx.sim/sensors/
 
 you would expect for example to see:
 
-/scripts/bfsuite.sim/sensors/voltage.lua
+/scripts/dashx.sim/sensors/voltage.lua
 etc..
 
 If the file does not load.. you get the one in this folder instead!
