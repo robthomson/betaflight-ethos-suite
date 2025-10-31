@@ -5338,6 +5338,21 @@
           "needs_translation": false,
           "translation": "Meters"
         },
+        "model_armswitch": {
+          "english": "rm Switch",
+          "needs_translation": false,
+          "translation": " Arm Switch"
+        },
+        "model_inflightswitch": {
+          "english": "Inflight Switch",
+          "needs_translation": false,
+          "translation": "Inflight Switch"
+        },
+        "model_inflightswitch_delay": {
+          "english": "Inflight Delay",
+          "needs_translation": false,
+          "translation": "Inflight Delay"
+        },
         "name": {
           "english": "Settings",
           "needs_translation": false,
@@ -5412,6 +5427,11 @@
           "english": "Pre-timer Alert Options",
           "needs_translation": false,
           "translation": "Pre-timer Alert Options"
+        },
+        "triggers": {
+          "english": "Triggers",
+          "needs_translation": false,
+          "translation": "Triggers"
         },
         "txt_apiversion": {
           "english": "SIM API Version",

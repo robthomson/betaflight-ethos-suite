@@ -1,0 +1,58 @@
+--[[
+  Copyright (C) 2025 Rob Thomson
+  GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
+]] --
+
+local bfsuite = require("bfsuite")
+local wrapper = {}
+
+local renders = bfsuite.widgets.dashboard.renders
+local folder = "SCRIPTS:/" .. bfsuite.config.baseDir .. "/widgets/dashboard/objects/image/"
+local utils = bfsuite.widgets.dashboard.utils
+
+function wrapper.paint(x, y, w, h, box)
+    local subtype = box.subtype or "model"
+    local render = renders[subtype]
+    if not render then return end
+    render.paint(x, y, w, h, box)
+end
+
+function wrapper.wakeup(box)
+
+    if not utils.isModelPrefsReady() then utils.resetBoxCache(box) end
+
+    if box.wakeupinterval ~= nil then
+        local now = os.clock()
+
+        box._wakeupInterval = box._wakeupInterval or interval
+        box._lastWakeup = box._lastWakeup or 0
+
+        if now - box._lastWakeup < box._wakeupInterval then return end
+
+        box._lastWakeup = now
+    end
+
+    local subtype = box.subtype or "model"
+
+    if not renders[subtype] then
+        local path = folder .. subtype .. ".lua"
+        local loader = loadfile(path)
+        if loader then
+            renders[subtype] = loader()
+        else
+            return
+        end
+    end
+
+    local render = renders[subtype]
+    render.wakeup(box)
+end
+
+function wrapper.dirty(box)
+    if not utils.isModelPrefsReady() then return false end
+    local subtype = box.subtype or "flight"
+    local render = renders[subtype]
+    return render and render.dirty and render.dirty(box) or false
+end
+
+return wrapper
