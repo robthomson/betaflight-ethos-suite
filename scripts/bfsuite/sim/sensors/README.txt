@@ -25,11 +25,11 @@ if you do not have an external simtelemetry folder
 If you want the ability to dynamically change sensors - you can copy the
 contents of this folder to:
 
-/scripts/dashx.sim/sensors/
+/scripts/bfsuite.sim/sensors/
 
 you would expect for example to see:
 
-/scripts/dashx.sim/sensors/voltage.lua
+/scripts/bfsuite.sim/sensors/voltage.lua
 etc..
 
 If the file does not load.. you get the one in this folder instead!

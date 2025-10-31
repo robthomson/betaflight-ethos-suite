@@ -3,5 +3,5 @@
   GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
 
-local dashx = require("dashx")
+local bfsuite = require("bfsuite")
 return math.random(57, 63)

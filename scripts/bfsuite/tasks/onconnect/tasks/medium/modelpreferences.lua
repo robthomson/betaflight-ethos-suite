@@ -7,21 +7,21 @@ local bfsuite = require("bfsuite")
 
 local modelpreferences = {}
 
-local modelpref_defaults = {dashboard = {theme_preflight = "nil", theme_inflight = "nil", theme_postflight = "nil"}, general = {flightcount = 0, totalflighttime = 0, lastflighttime = 0, batterylocalcalculation = 1}, battery = {sag_multiplier = 0.5, calc_local = 0, alert_type = 0, becalertvalue = 6.5, rxalertvalue = 7.5, flighttime = 300}}
+local modelpref_defaults = {
+    dashboard = {theme_preflight = "nil", theme_inflight = "nil", theme_postflight = "nil"},
+    general = {flightcount = 0, totalflighttime = 0, lastflighttime = 0},
+    model = {armswitch = false, inflightswitch = false, inflightswitch_delay = 10, rateswitch = false},
+    battery = {calc_local = 0, batteryCapacity = 2200, batteryCellCount = 3, vbatwarningcellvoltage = 35, vbatmincellvoltage = 33, vbatmaxcellvoltage = 43, vbatfullcellvoltage = 41, lvcPercentage = 30, consumptionWarningPercentage = 30}
+}
 
 function modelpreferences.wakeup()
 
-    if bfsuite.session.apiVersion == nil then
-        bfsuite.session.modelPreferences = nil
-        return
-    end
 
-    if bfsuite.session.mspBusy then return end
+    if bfsuite.session.apiVersion == nil then return end
 
-    if not bfsuite.session.mcu_id then
-        bfsuite.session.modelPreferences = nil
-        return
-    end
+    if not bfsuite.session.mcu_id then return end
+
+
 
     if (bfsuite.session.modelPreferences == nil) then
 
@@ -47,10 +47,7 @@ function modelpreferences.wakeup()
 
 end
 
-function modelpreferences.reset()
-    bfsuite.session.modelPreferences = nil
-    bfsuite.session.modelPreferencesFile = nil
-end
+function modelpreferences.reset() bfsuite.session.modelPreferences = nil end
 
 function modelpreferences.isComplete() if bfsuite.session.modelPreferences ~= nil then return true end end
 
