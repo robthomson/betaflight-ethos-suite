@@ -370,6 +370,26 @@
         "translation": "Localización",
         "needs_translation": false
       },
+      "triggers": {
+        "english": "Triggers",
+        "translation": "Triggers",
+        "needs_translation": true
+      },
+      "model_armswitch": {
+        "english": "rm Switch",
+        "translation": "rm Switch",
+        "needs_translation": true
+      },
+      "model_inflightswitch": {
+        "english": "Inflight Switch",
+        "translation": "Inflight Switch",
+        "needs_translation": true
+      },
+      "model_inflightswitch_delay": {
+        "english": "Inflight Delay",
+        "translation": "Inflight Delay",
+        "needs_translation": true
+      },
       "txt_development": {
         "english": "Development",
         "translation": "Desarrollo",
