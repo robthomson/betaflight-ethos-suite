@@ -1,5 +1,5 @@
 --[[
-  Copyright (C) 2025 Rob Thomson Project
+  Copyright (C) 2025 Rob Thomson
   GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
 
@@ -15,10 +15,16 @@ local REPLY_FRAME_ID = 0x32
 
 local lastSensorId, lastFrameId, lastDataId, lastValue
 
-function transport.sportTelemetryPush(sensorId, frameId, dataId, value) return bfsuite.tasks.msp.sensor:pushFrame({physId = sensorId, primId = frameId, appId = dataId, value = value}) end
+local sensor
+
+function transport.sportTelemetryPush(sensorId, frameId, dataId, value) 
+    if not sensor then sensor = sport.getSensor({primId = 0x32}) end
+    return sensor:pushFrame({physId = sensorId, primId = frameId, appId = dataId, value = value}) 
+end
 
 function transport.sportTelemetryPop()
-    local frame = bfsuite.tasks.msp.sensor:popFrame()
+    if not sensor then sensor = sport.getSensor({primId = 0x32}) end
+    local frame = sensor:popFrame()
     if frame == nil then return nil, nil, nil, nil end
     return frame:physId(), frame:primId(), frame:appId(), frame:value()
 end

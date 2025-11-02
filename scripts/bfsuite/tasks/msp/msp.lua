@@ -1,5 +1,5 @@
 --[[
-  Copyright (C) 2025 Rob Thomson Project
+  Copyright (C) 2025 Rob Thomson
   GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
 
@@ -47,16 +47,6 @@ local delayPending = false
 function msp.wakeup()
 
     if bfsuite.session.telemetrySensor == nil then return end
-
-    if not msp.sensor then
-        msp.sensor = sport.getSensor({primId = 0x32})
-        msp.sensor:module(bfsuite.session.telemetrySensor:module())
-    end
-
-    if not msp.sensorTlm then
-        msp.sensorTlm = sport.getSensor()
-        msp.sensorTlm:module(bfsuite.session.telemetrySensor:module())
-    end
 
     if bfsuite.session.resetMSP and not delayPending then
         delayStartTime = os.clock()
@@ -107,10 +97,7 @@ function msp.wakeup()
     end
 
     if state == true then
-
         msp.mspQueue:processQueue()
-
-        if msp.onConnectChecksInit == true then if bfsuite.session.telemetrySensor then msp.sensor:module(bfsuite.session.telemetrySensor:module()) end end
     else
         msp.mspQueue:clear()
     end
@@ -121,11 +108,9 @@ function msp.setTelemetryTypeChanged() telemetryTypeChanged = true end
 
 function msp.reset()
     bfsuite.tasks.msp.mspQueue:clear()
-    msp.sensor = nil
     msp.activeProtocol = nil
     msp.onConnectChecksInit = true
     delayStartTime = nil
-    msp.sensorTlm = nil
     delayPending = false
 end
 

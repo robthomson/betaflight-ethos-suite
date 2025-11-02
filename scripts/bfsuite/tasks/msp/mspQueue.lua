@@ -1,5 +1,5 @@
 --[[
-  Copyright (C) 2025 Rob Thomson Project
+  Copyright (C) 2025 Rob Thomson
   GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
 
@@ -145,7 +145,7 @@ function MspQueueController:processQueue()
                 self.currentMessageStartTime = self.lastTimeCommandSent
                 self.retryCount = self.retryCount + 1
                 if bfsuite.app.Page and bfsuite.app.Page.mspRetry then bfsuite.app.Page.mspRetry(self) end
-            end    
+            end
         end
 
         bfsuite.tasks.msp.common.mspProcessTxQ()
