@@ -11,6 +11,8 @@ local MSP_API_CMD_READ = 44
 local MSP_API_CMD_WRITE = 45
 local MSP_REBUILD_ON_WRITE = false
 
+local rcSmoothingState = {"@i18n(api.RX_CONFIG.tbl_disabled)@", "@i18n(api.RX_CONFIG.tbl_enabled)@"}
+
 -- LuaFormatter off
 local MSP_API_STRUCTURE_READ_DATA = {
   { field = "serialrx_provider",                 type = "U8",  apiVersion = 1.41, simResponse = {9} },
@@ -38,7 +40,7 @@ local MSP_API_STRUCTURE_READ_DATA = {
   { field = "usb_hid_type",                      type = "U8",  apiVersion = 1.41, simResponse = {0} },
 
   { field = "rc_smoothing_auto_factor_rpy",      type = "U8",  apiVersion = 1.42, simResponse = {30} },
-  { field = "rc_smoothing_enable",               type = "U8",  apiVersion = 1.44, simResponse = {1} },
+  { field = "rc_smoothing_enable",               type = "U8",  apiVersion = 1.44, simResponse = {1}, table = rcSmoothingState },
 
   -- ELRS UID (added in 1.45)
   { field = "elrs_uid_0",                        type = "U8",  apiVersion = 1.45, simResponse = {0} },

@@ -1303,6 +1303,18 @@
       "needs_translation": false
     }
   },
+  "RX_CONFIG": {
+    "tbl_disabled": {
+      "english": "Disabled",
+      "translation": "Disabled",
+      "needs_translation": true
+    },
+    "tbl_enabled": {
+      "english": "Enabled",
+      "translation": "Enabled",
+      "needs_translation": true
+    }
+  },
   "FILTER_CONFIG": {
     "gyro_soft_notch_cutoff_2": {
       "english": "Width of the notch filter in Hz.",

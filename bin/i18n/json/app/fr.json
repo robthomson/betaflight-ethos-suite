@@ -3589,6 +3589,18 @@
         "needs_translation": false
       }
     },
+    "rxconfig": {
+      "name": {
+        "english": "Receiver",
+        "translation": "Receiver",
+        "needs_translation": true
+      },
+      "help_p1": {
+        "english": "Configure your receiver settings here. Make sure to select the correct receiver type and protocol for your setup.",
+        "translation": "Configure your receiver settings here. Make sure to select the correct receiver type and protocol for your setup.",
+        "needs_translation": true
+      }
+    },
     "filters": {
       "filter_type": {
         "english": "Filter type",
