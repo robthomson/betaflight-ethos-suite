@@ -13,13 +13,23 @@ local FPORT_REMOTE_SENSOR_ID = 0x00
 local REQUEST_FRAME_ID = 0x30
 local REPLY_FRAME_ID = 0x32
 
+local v2_inflight = false
+local v2_remaining = 0
+local v2_req = nil
+local v2_seq = nil
+local function v2_get_seq(st) return st & 0x0F end
+
 local lastSensorId, lastFrameId, lastDataId, lastValue
 
 local sensor
 
-function transport.sportTelemetryPush(sensorId, frameId, dataId, value) 
+local function _isInboundReply(sensorId, frameId) return (sensorId == SPORT_REMOTE_SENSOR_ID or sensorId == FPORT_REMOTE_SENSOR_ID) and frameId == REPLY_FRAME_ID end
+
+local function _map_subframe(dataId, value) return {dataId & 0xFF, (dataId >> 8) & 0xFF, value & 0xFF, (value >> 8) & 0xFF, (value >> 16) & 0xFF, (value >> 24) & 0xFF} end
+
+function transport.sportTelemetryPush(sensorId, frameId, dataId, value)
     if not sensor then sensor = sport.getSensor({primId = 0x32}) end
-    return sensor:pushFrame({physId = sensorId, primId = frameId, appId = dataId, value = value}) 
+    return sensor:pushFrame({physId = sensorId, primId = frameId, appId = dataId, value = value})
 end
 
 function transport.sportTelemetryPop()
@@ -30,14 +40,10 @@ function transport.sportTelemetryPop()
 end
 
 transport.mspSend = function(payload)
-    local dataId = (payload[1] or 0) | ((payload[2] or 0) << 8)
-    local v3 = payload[3] or 0
-    local v4 = payload[4] or 0
-    local v5 = payload[5] or 0
-    local v6 = payload[6] or 0
-    local value = v3 | (v4 << 8) | (v5 << 16) | (v6 << 24)
-
-    return transport.sportTelemetryPush(LOCAL_SENSOR_ID, REQUEST_FRAME_ID, dataId, value)
+  local dataId = (payload[1] or 0) | ((payload[2] or 0) << 8)
+  local v3, v4, v5, v6 = payload[3] or 0, payload[4] or 0, payload[5] or 0, payload[6] or 0
+  local value = v3 | (v4 << 8) | (v5 << 16) | (v6 << 24)
+  return transport.sportTelemetryPush(LOCAL_SENSOR_ID, REQUEST_FRAME_ID, dataId, value)
 end
 
 transport.mspRead = function(cmd) return bfsuite.tasks.msp.common.mspSendRequest(cmd, {}) end
@@ -48,23 +54,29 @@ local lastSensorId, lastFrameId, lastDataId, lastValue = nil, nil, nil, nil
 
 local function sportTelemetryPop()
     local sensorId, frameId, dataId, value = transport.sportTelemetryPop()
-
-    if sensorId and not (sensorId == lastSensorId and frameId == lastFrameId and dataId == lastDataId and value == lastValue) then
-        lastSensorId, lastFrameId, lastDataId, lastValue = sensorId, frameId, dataId, value
-        return sensorId, frameId, dataId, value
-    end
-
-    return nil
+    return sensorId, frameId, dataId, value
 end
 
 transport.mspPoll = function()
+  while true do
     local sensorId, frameId, dataId, value = sportTelemetryPop()
-
-    if not sensorId then return nil end
-
-    if (sensorId == SPORT_REMOTE_SENSOR_ID or sensorId == FPORT_REMOTE_SENSOR_ID) and frameId == REPLY_FRAME_ID then return {dataId & 0xFF, (dataId >> 8) & 0xFF, value & 0xFF, (value >> 8) & 0xFF, (value >> 16) & 0xFF, (value >> 24) & 0xFF} end
-
-    return nil
-end
+    if not sensorId then
+      return nil
+    end
+    -- Accept any physId; reply frames are identified by primId==REPLY_FRAME_ID (0x32)
+    if frameId == REPLY_FRAME_ID then
+      local bytes = {
+        dataId & 0xFF,
+        (dataId >> 8) & 0xFF,
+        value & 0xFF,
+        (value >> 8) & 0xFF,
+        (value >> 16) & 0xFF,
+        (value >> 24) & 0xFF
+      }
+      return bytes
+    end
+    -- otherwise keep looping until the batch is empty
+  end
+end  
 
 return transport
