@@ -20,12 +20,12 @@ local apidata = {
             {t = "", label = 4, inline_size = 15},
 
             -- Advanced Settings Section
-            {t = "Advanced Settings", label = 5, inline_size = 18},
-            {t = "", label = 6, inline_size = 15},
-            {t = "", label = 7, inline_size = 15},
+            {t = "Advanced Settings", label = 5, inline_size = 15},
+            {t = "", label = 6, inline_size = 18},
+            {t = "Cutoffs", label = 7, inline_size = 15},
 
             -- RC Smoothing Section
-            {t = "RC Smoothing Auto", label = 8, inline_size = 15},
+            {t = "RC Smoothing", label = 8, inline_size = 15},
             {t = "", label = 9, inline_size = 15},
             {t = "", label = 10, inline_size = 15},
 
@@ -48,7 +48,7 @@ local apidata = {
             --{t = "FPV Cam Angle", label = 2, inline = 2, mspapi = 1, apikey = "fpvCamAngleDegrees", unit = "°"},
             
             -- Channel Limits Section
-            {t = "Channel Limits", label = 1, inline = 1, type = 4}, -- blank line
+            {t = "", label = 1, inline = 1, type = 0, value=""}, -- blank line
             {t = "Min Check", label = 2, inline = 1, mspapi = 1, apikey = "mincheck", unit = "us"},
             {t = "Max Check", label = 2, inline = 2, mspapi = 1, apikey = "maxcheck", unit = "us"},
             
@@ -59,13 +59,14 @@ local apidata = {
             {t = "RX Max", label = 4, inline = 2, mspapi = 1, apikey = "rx_max_usec", unit = "us"},
             
             -- RC Smoothing Section
-            {t = "Smoothing", label = 5, inline = 1, mspapi = 1, apikey = "rc_smoothing_enable", type = 1},
+            {t = "", label = 5, inline = 1, type = 0, value=""}, -- blank line
+            {t = "RC Smoothing", label = 6, inline = 1, mspapi = 1, apikey = "rc_smoothing_enable", type = 1},
             
-            {t = "Setpoint Cutoff", label = 6, inline = 1, mspapi = 1, apikey = "rc_smoothing_setpoint_cutoff", unit = "Hz"},
-            {t = "Throttle Cutoff", label = 6, inline = 2, mspapi = 1, apikey = "rc_smoothing_throttle_cutoff", unit = "Hz"},
+            {t = "Setpoint", label = 7, inline = 1, mspapi = 1, apikey = "rc_smoothing_setpoint_cutoff", unit = "Hz"},
+            {t = "Throttle", label = 7, inline = 2, mspapi = 1, apikey = "rc_smoothing_throttle_cutoff", unit = "Hz"},
             
-            {t = "RPY", label = 7, inline = 1, mspapi = 1, apikey = "rc_smoothing_auto_factor_rpy"},
-            {t = "Throttle", label = 7, inline = 2, mspapi = 1, apikey = "rc_smoothing_auto_factor_throttle"},
+            {t = "RPY", label = 8, inline = 1, mspapi = 1, apikey = "rc_smoothing_auto_factor_rpy"},
+            {t = "Throttle", label = 8, inline = 2, mspapi = 1, apikey = "rc_smoothing_auto_factor_throttle"},
             
 
             -- Below Sections Removed Due to not being needed for on-radio configuration.  Left in here just in case....
