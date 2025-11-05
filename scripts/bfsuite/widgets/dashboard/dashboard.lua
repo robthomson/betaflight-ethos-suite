@@ -294,7 +294,7 @@ function dashboard.computeOverlayMessage()
         if system.getVersion().simulation == true then
             return pad .. "SIM " .. bfsuite.session.apiVersion .. pad
         else
-            return pad .. "RF" .. bfsuite.session.rfVersion .. pad
+            return pad .. "BF" .. bfsuite.session.fcVersion .. pad
         end
     end
 

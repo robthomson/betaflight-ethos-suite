@@ -36,22 +36,16 @@ resetStats()
 local RateLimit = os.clock()
 local Rate = 0.25
 
-local function getMSPBattery()
-    local API = bfsuite.tasks.msp.api.load("BATTERY_CONFIG")
+local function getMSPFCVERSION()
+    local API = bfsuite.tasks.msp.api.load("FC_VERSION")
     API.setCompleteHandler(function(self, buf) doNextMsp = true end)
     API.setUUID("a3f9c2b4-5d7e-4e8a-9c3b-2f6d8e7a1b2d")
     API.read()
 end
 
-local function getMSPGovernor()
-    local API = bfsuite.tasks.msp.api.load("GOVERNOR_CONFIG")
-    API.setCompleteHandler(function(self, buf) doNextMsp = true end)
-    API.setUUID("e2a1c5b3-7f4a-4c8e-9d2a-3b6f8e2d9a1c")
-    API.read()
-end
 
-local function getMSPMixer()
-    local API = bfsuite.tasks.msp.api.load("MIXER_CONFIG")
+local function getMSPPID()
+    local API = bfsuite.tasks.msp.api.load("PID")
     API.setCompleteHandler(function(self, buf) doNextMsp = true end)
     API.setUUID("fbccd634-c9b7-4b48-8c02-08ef560dc515")
     API.read()
@@ -60,13 +54,10 @@ end
 local function getMSP()
 
     if getMSPCount == 0 then
-        getMSPBattery()
+        getMSPPID()
         getMSPCount = 1
-    elseif getMSPCount == 1 then
-        getMSPGovernor()
-        getMSPCount = 2
-    else
-        getMSPMixer()
+    else     
+        getMSPFCVERSION()
         getMSPCount = 0
     end
 

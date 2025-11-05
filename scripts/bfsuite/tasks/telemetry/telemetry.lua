@@ -208,22 +208,6 @@ local sensorTable = {
         }
     },
 
-    bec_voltage = {
-        name = "@i18n(sensors.bec_voltage)@",
-        mandatory = true,
-        stats = true,
-        set_telemetry_sensors = 43,
-        switch_alerts = true,
-        unit = UNIT_VOLT,
-        unit_string = "V",
-        sensors = {
-            sim = {{uid = 0x5017, unit = UNIT_VOLT, dec = 2, value = function() return bfsuite.utils.simSensors('bec_voltage') end, min = 0, max = 3000}},
-            sport = {{category = CATEGORY_TELEMETRY_SENSOR, appId = 0x0901}, {category = CATEGORY_TELEMETRY_SENSOR, appId = 0x0219}},
-            crsf = {{category = CATEGORY_TELEMETRY_SENSOR, appId = 0x1081}, {category = CATEGORY_TELEMETRY_SENSOR, appId = 0x1049}},
-            crsfLegacy = {nil}
-        }
-    },
-
     accy = {
         name = "@i18n(sensors.accy)@",
         mandatory = false,
