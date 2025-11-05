@@ -58,12 +58,12 @@ local onchangeInitialized = false
 
 local sensorTable = {
 
-    rssi = {name = "@i18n(telemetry.sensors.rssi)@", mandatory = true, stats = true, switch_alerts = true, unit = UNIT_PERCENT, unit_string = "%", sensors = {sim = {{appId = 0xF010, subId = 0}}, sport = {{appId = 0xF010, subId = 0}}, crsf = {"Rx Quality"}}},
+    rssi = {name = "@i18n(sensors.rssi)@", mandatory = true, stats = true, switch_alerts = true, unit = UNIT_PERCENT, unit_string = "%", sensors = {sim = {{appId = 0xF010, subId = 0}}, sport = {{appId = 0xF010, subId = 0}}, crsf = {"Rx Quality"}}},
 
-    link = {name = "@i18n(telemetry.sensors.link)@", mandatory = true, stats = true, switch_alerts = false, unit = UNIT_DB, unit_string = "dB", sensors = {sim = {{appId = 0xF101, subId = 0}}, sport = {{appId = 0xF101, subId = 0}}, crsf = {"Rx RSSI1"}}},
+    link = {name = "@i18n(sensors.link)@", mandatory = true, stats = true, switch_alerts = false, unit = UNIT_DB, unit_string = "dB", sensors = {sim = {{appId = 0xF101, subId = 0}}, sport = {{appId = 0xF101, subId = 0}}, crsf = {"Rx RSSI1"}}},
 
     voltage = {
-        name = "@i18n(telemetry.sensors.voltage)@",
+        name = "@i18n(sensors.voltage)@",
         mandatory = true,
         stats = true,
         set_telemetry_sensors = 3,
@@ -77,19 +77,8 @@ local sensorTable = {
         }
     },
 
-    rpm = {
-        name = "@i18n(telemetry.sensors.headspeed)@",
-        mandatory = true,
-        stats = true,
-        set_telemetry_sensors = 60,
-        switch_alerts = true,
-        unit = UNIT_RPM,
-        unit_string = "rpm",
-        sensors = {sim = {{uid = 0x5003, unit = UNIT_RPM, dec = nil, value = function() return bfsuite.utils.simSensors('rpm') end, min = 0, max = 4000}}, sport = {{appId = 0x0B60, subId = 0}, {appId = 0x0500, subId = 0}}}
-    },
-
     fuel = {
-        name = "@i18n(telemetry.sensors.fuel)@",
+        name = "@i18n(sensors.fuel)@",
         mandatory = false,
         stats = true,
         set_telemetry_sensors = 6,
@@ -100,7 +89,7 @@ local sensorTable = {
     },
 
     smartfuel = {
-        name = "@i18n(telemetry.sensors.smartfuel)@",
+        name = "@i18n(sensors.smartfuel)@",
         mandatory = false,
         stats = true,
         set_telemetry_sensors = nil,
@@ -111,7 +100,7 @@ local sensorTable = {
     },
 
     smartconsumption = {
-        name = "@i18n(telemetry.sensors.smartconsumption)@",
+        name = "@i18n(sensors.smartconsumption)@",
         mandatory = false,
         stats = true,
         switch_alerts = true,
@@ -121,7 +110,7 @@ local sensorTable = {
     },
 
     current = {
-        name = "@i18n(telemetry.sensors.current)@",
+        name = "@i18n(sensors.current)@",
         mandatory = false,
         stats = true,
         set_telemetry_sensors = 18,
@@ -132,7 +121,7 @@ local sensorTable = {
     },
 
     temp_esc = {
-        name = "@i18n(telemetry.sensors.esc_temp)@",
+        name = "@i18n(sensors.esc_temp)@",
         mandatory = false,
         stats = true,
         set_telemetry_sensors = 23,
@@ -153,7 +142,7 @@ local sensorTable = {
     },
 
     altitude = {
-        name = "@i18n(telemetry.sensors.altitude)@",
+        name = "@i18n(sensors.altitude)@",
         mandatory = false,
         stats = true,
         switch_alerts = true,
@@ -175,7 +164,7 @@ local sensorTable = {
     },
 
     consumption = {
-        name = "@i18n(telemetry.sensors.consumption)@",
+        name = "@i18n(sensors.consumption)@",
         mandatory = true,
         stats = true,
         set_telemetry_sensors = 5,
@@ -186,7 +175,7 @@ local sensorTable = {
     },
 
     armed = {
-        name = "@i18n(telemetry.sensors.arming_flags)@",
+        name = "@i18n(sensors.arming_flags)@",
         mandatory = false,
         stats = false,
         set_telemetry_sensors = nil,
@@ -197,7 +186,7 @@ local sensorTable = {
     },
 
     inflight = {
-        name = "@i18n(telemetry.sensors.inflight)@",
+        name = "@i18n(sensors.inflight)@",
         mandatory = false,
         stats = false,
         set_telemetry_sensors = nil,
@@ -220,7 +209,7 @@ local sensorTable = {
     },
 
     bec_voltage = {
-        name = "@i18n(telemetry.sensors.bec_voltage)@",
+        name = "@i18n(sensors.bec_voltage)@",
         mandatory = true,
         stats = true,
         set_telemetry_sensors = 43,
