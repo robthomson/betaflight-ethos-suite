@@ -11,6 +11,7 @@ local tools = {}
 sections[#sections + 1] = {title = "@i18n(app.modules.pids.name)@", module = "pids", script = "pids.lua", image = "app/modules/pids/pids.png", offline = false, bgtask = false}
 sections[#sections + 1] = {title = "@i18n(app.modules.rates.name)@", module = "rates", script = "rates.lua", image = "app/modules/rates/rates.png", offline = false, bgtask = false}
 sections[#sections + 1] = {title = "@i18n(app.modules.filters.name)@", module = "filters", script = "filters.lua", image = "app/modules/filters/filters.png", offline = false, bgtask = false}
+sections[#sections + 1] = {title = "@i18n(app.modules.rxconfig.name)@", module = "rxconfig", script = "rxconfig.lua", image = "app/modules/rxconfig/rxconfig.png", offline = false, bgtask = false}
 sections[#sections + 1] = {title = "@i18n(app.modules.accelerometer.name)@", module = "accelerometer", script = "accelerometer.lua", image = "app/modules/accelerometer/acc.png", offline = false, bgtask = false}
 --sections[#sections + 1] = {title = "@i18n(app.modules.profile_governor.name)@", module = "profile_governor", script = "select.lua", image = "app/modules/profile_governor/governor.png", offline = false, bgtask = false}
 --sections[#sections + 1] = {title = "@i18n(app.modules.profile_tailrotor.name)@", module = "tailrotor", script = "tailrotor.lua", image = "app/modules/tailrotor/tailrotor.png", offline = false, bgtask = false}

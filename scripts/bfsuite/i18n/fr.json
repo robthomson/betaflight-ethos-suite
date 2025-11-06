@@ -1771,6 +1771,18 @@
         "needs_translation": false,
         "translation": "ACTIVER"
       }
+    },
+    "RX_CONFIG": {
+      "tbl_disabled": {
+        "english": "Disabled",
+        "needs_translation": true,
+        "translation": "Disabled"
+      },
+      "tbl_enabled": {
+        "english": "Enabled",
+        "needs_translation": true,
+        "translation": "Enabled"
+      }
     }
   },
   "app": {
@@ -4806,6 +4818,18 @@
           "english": "UNKNOWN",
           "needs_translation": false,
           "translation": "INCONNU"
+        }
+      },
+      "rxconfig": {
+        "help_p1": {
+          "english": "Configure your receiver settings here. Make sure to select the correct receiver type and protocol for your setup.",
+          "needs_translation": true,
+          "translation": "Configure your receiver settings here. Make sure to select the correct receiver type and protocol for your setup."
+        },
+        "name": {
+          "english": "Receiver",
+          "needs_translation": true,
+          "translation": "Receiver"
         }
       },
       "sbusout": {
