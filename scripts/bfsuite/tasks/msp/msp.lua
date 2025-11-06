@@ -1,5 +1,5 @@
 --[[
-  Copyright (C) 2025 Rob Thomson
+  Copyright (C) 2025 betaflight
   GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
 
@@ -41,9 +41,8 @@ msp.mspQueue.timeout = 2.0
 msp.mspHelper = assert(loadfile("SCRIPTS:/" .. bfsuite.config.baseDir .. "/tasks/msp/mspHelper.lua"))()
 msp.api = assert(loadfile("SCRIPTS:/" .. bfsuite.config.baseDir .. "/tasks/msp/api.lua"))()
 msp.common = assert(loadfile("SCRIPTS:/" .. bfsuite.config.baseDir .. "/tasks/msp/common.lua"))()
-msp.common.setProtocolVersion(MSP_PROTOCOL_VERSION or 1)  
+msp.common.setProtocolVersion(MSP_PROTOCOL_VERSION or 1)
 msp.common.setLogging("off", {hexdump = true})
-
 
 local delayDuration = 2
 local delayStartTime = nil

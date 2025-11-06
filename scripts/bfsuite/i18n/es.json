@@ -3065,7 +3065,7 @@
           "translation": "MB"
         },
         "name": {
-          "english": "FBL Status",
+          "english": "FC Status",
           "needs_translation": false,
           "translation": "Estado FBL"
         },
@@ -6044,6 +6044,11 @@
       "needs_translation": false,
       "translation": "Temperatura ESC"
     },
+    "flightmode": {
+      "english": "Flight Mode",
+      "needs_translation": true,
+      "translation": "Flight Mode"
+    },
     "fuel": {
       "english": "Fuel",
       "needs_translation": false,
@@ -6054,6 +6059,11 @@
       "needs_translation": false,
       "translation": "Estado Governor"
     },
+    "gps_sats": {
+      "english": "GPS Sats",
+      "needs_translation": true,
+      "translation": "GPS Sats"
+    },
     "groundspeed": {
       "english": "Ground Speed",
       "needs_translation": false,
@@ -6063,6 +6073,11 @@
       "english": "Headspeed",
       "needs_translation": false,
       "translation": "Veloc. Rotor"
+    },
+    "inflight": {
+      "english": "In Flight",
+      "needs_translation": true,
+      "translation": "In Flight"
     },
     "link": {
       "english": "Link Quality",

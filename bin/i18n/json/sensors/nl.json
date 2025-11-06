@@ -143,5 +143,20 @@
     "english": "Arming Disable",
     "translation": "Arming Disable",
     "needs_translation": false
+  },
+  "flightmode": {
+    "english": "Flight Mode",
+    "translation": "Flight Mode",
+    "needs_translation": true
+  },
+  "gps_sats": {
+    "english": "GPS Sats",
+    "translation": "GPS Sats",
+    "needs_translation": true
+  },
+  "inflight": {
+    "english": "In Flight",
+    "translation": "In Flight",
+    "needs_translation": true
   }
 }
