@@ -3,7 +3,7 @@
   GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
 
-local rfsuite = require("rfsuite")
+local bfsuite = require("bfsuite")
 
 local init = {title = "@i18n(app.modules.accelerometer.name)@", section = "hardware", script = "accelerometer.lua", image = "acc.png", order = 5, ethosversion = {1, 6, 2}}
 
