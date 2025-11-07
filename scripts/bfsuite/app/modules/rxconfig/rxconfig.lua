@@ -21,7 +21,7 @@ local apidata = {
 
             -- Advanced Settings Section
             {t = "Advanced Settings", label = 5, inline_size = 15},
-            {t = "", label = 6, inline_size = 18},
+            {t = "", label = 6, inline_size = 15},
             {t = "Cutoffs", label = 7, inline_size = 15},
 
             -- RC Smoothing Section
@@ -49,25 +49,24 @@ local apidata = {
             
             -- Channel Limits Section
             {t = "", label = 1, inline = 1, type = 0, value=""}, -- blank line
-            {t = "Min Check", label = 2, inline = 1, mspapi = 1, apikey = "mincheck", unit = "us"},
-            {t = "Max Check", label = 2, inline = 2, mspapi = 1, apikey = "maxcheck", unit = "us"},
+            {t = "Min Check", label = 2, inline = 1, mspapi = 1, apikey = "mincheck", unit = "us", min = 750, max = 2250, default = 1050},
+            {t = "Max Check", label = 2, inline = 2, mspapi = 1, apikey = "maxcheck", unit = "us", min = 750, max = 2250, default = 1900},
             
-            {t = "Mid RC", label = 3, inline = 1, mspapi = 1, apikey = "midrc", unit = "us"},
-            {t = "Air Mode Threshold", label = 3, inline = 2, mspapi = 1, apikey = "airModeActivateThresholdX10p1000", unit="us"},
+            {t = "Mid RC", label = 3, inline = 1, mspapi = 1, apikey = "midrc", unit = "us", min = 1200, max = 1700, default = 1500},
+            {t = "Air Mode Threshold", label = 3, inline = 2, mspapi = 1, apikey = "airModeActivateThresholdX10p1000", unit="us", min = 0, max = 300, default = 25},
             
-            {t = "RX Min", label = 4, inline = 1, mspapi = 1, apikey = "rx_min_usec", unit = "us"},
-            {t = "RX Max", label = 4, inline = 2, mspapi = 1, apikey = "rx_max_usec", unit = "us"},
-            
+            {t = "RX Min", label = 4, inline = 1, mspapi = 1, apikey = "rx_min_usec", unit = "us", min = 750, max = 2250, default = 885},
+            {t = "RX Max", label = 4, inline = 2, mspapi = 1, apikey = "rx_max_usec", unit = "us", min = 750, max = 2250, default = 2115},
+
             -- RC Smoothing Section
             {t = "", label = 5, inline = 1, type = 0, value=""}, -- blank line
-            {t = "RC Smoothing", label = 6, inline = 1, mspapi = 1, apikey = "rc_smoothing_enable", type = 1},
+            {t = "RC Smoothing", label = 6, inline = 1, mspapi = 1, apikey = "rc_smoothing_enable", type = 1, min = 0, max = 1, default = 1},
             
-            {t = "Setpoint", label = 7, inline = 1, mspapi = 1, apikey = "rc_smoothing_setpoint_cutoff", unit = "Hz"},
-            {t = "Throttle", label = 7, inline = 2, mspapi = 1, apikey = "rc_smoothing_throttle_cutoff", unit = "Hz"},
+            {t = "Setpoint", label = 7, inline = 1, mspapi = 1, apikey = "rc_smoothing_setpoint_cutoff", unit = "Hz", min = 0, max = 255, default = 0},
+            {t = "Throttle", label = 7, inline = 2, mspapi = 1, apikey = "rc_smoothing_throttle_cutoff", unit = "Hz", min = 0, max = 255, default = 0},
             
-            {t = "RPY", label = 8, inline = 1, mspapi = 1, apikey = "rc_smoothing_auto_factor_rpy"},
-            {t = "Throttle", label = 8, inline = 2, mspapi = 1, apikey = "rc_smoothing_auto_factor_throttle"},
-            
+            {t = "RPY", label = 8, inline = 1, mspapi = 1, apikey = "rc_smoothing_auto_factor_rpy", min = 0, max = 250, default = 30},
+            {t = "Throttle", label = 8, inline = 2, mspapi = 1, apikey = "rc_smoothing_auto_factor_throttle", min = 0, max = 250, default = 30},
 
             -- Below Sections Removed Due to not being needed for on-radio configuration.  Left in here just in case....
             -- SPI RX Section

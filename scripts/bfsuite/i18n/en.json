@@ -1774,14 +1774,14 @@
     },
     "RX_CONFIG": {
       "tbl_disabled": {
-        "english": "Disabled",
+        "english": "Off",
         "needs_translation": false,
-        "translation": "Disabled"
+        "translation": "Off"
       },
       "tbl_enabled": {
-        "english": "Enabled",
+        "english": "On",
         "needs_translation": false,
-        "translation": "Enabled"
+        "translation": "On"
       }
     }
   },
