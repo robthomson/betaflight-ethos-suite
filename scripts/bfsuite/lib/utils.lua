@@ -330,7 +330,14 @@ function utils.joinTableItems(tbl, delimiter)
     return table.concat(padded, delimiter, sIdx, #tbl)
 end
 
-function utils.log(msg, level) if bfsuite.tasks and bfsuite.tasks.logger then bfsuite.tasks.logger.add(msg, level or "debug") end end
+function utils.log(msg, level) 
+    if bfsuite.tasks and bfsuite.tasks.logger then 
+        if bfsuite.preferences.developer.loglevel == "off" then 
+            return 
+        end
+        bfsuite.tasks.logger.add(msg, level or "debug") 
+    end 
+end
 
 function utils.print_r(node, maxDepth, currentDepth)
     maxDepth = maxDepth or 5
