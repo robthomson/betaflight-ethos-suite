@@ -27,4 +27,4 @@ local apidata = {
     }
 }
 
-return {apidata = apidata, eepromWrite = true, reboot = true, API = {}}
+return {apidata = apidata, eepromWrite = true, reboot = false, API = {}}
