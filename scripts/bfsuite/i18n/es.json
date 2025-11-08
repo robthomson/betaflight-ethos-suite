@@ -836,105 +836,140 @@
       }
     },
     "FILTER_CONFIG": {
+      "dterm_lpf1_dyn_max_hz": {
+        "english": "D-Term LPF1 Dynamic Max Hz",
+        "needs_translation": true,
+        "translation": "D-Term LPF1 Dynamic Max Hz"
+      },
+      "dterm_lpf1_dyn_min_hz": {
+        "english": "D-Term LPF1 Dynamic Min Hz",
+        "needs_translation": true,
+        "translation": "D-Term LPF1 Dynamic Min Hz"
+      },
+      "dterm_lpf1_static_hz": {
+        "english": "D-Term LPF1 Static Hz",
+        "needs_translation": true,
+        "translation": "D-Term LPF1 Static Hz"
+      },
+      "dterm_lpf1_type": {
+        "english": "D-Term LPF1 Type",
+        "needs_translation": true,
+        "translation": "D-Term LPF1 Type"
+      },
+      "dterm_lpf2_static_hz": {
+        "english": "D-Term LPF2 Static Hz",
+        "needs_translation": true,
+        "translation": "D-Term LPF2 Static Hz"
+      },
+      "dterm_lpf2_type": {
+        "english": "D-Term LPF2 Type",
+        "needs_translation": true,
+        "translation": "D-Term LPF2 Type"
+      },
+      "dterm_notch_cutoff": {
+        "english": "D-Term Notch Cutoff",
+        "needs_translation": true,
+        "translation": "D-Term Notch Cutoff"
+      },
+      "dterm_notch_hz": {
+        "english": "D-Term Notch Hz",
+        "needs_translation": true,
+        "translation": "D-Term Notch Hz"
+      },
       "dyn_notch_count": {
-        "english": "Number of notches to apply.",
+        "english": "Dynamic Notch Count",
         "needs_translation": false,
         "translation": "Numero de Puntos a aplicar."
       },
       "dyn_notch_max_hz": {
-        "english": "Maximum frequency to which the notch is applied.",
+        "english": "Dynamic Notch Max Hz",
         "needs_translation": false,
         "translation": "Frecuencia Maxima a la que el Punto es aplicado."
       },
       "dyn_notch_min_hz": {
-        "english": "Minimum frequency to which the notch is applied.",
+        "english": "Dynamic Notch Min Hz",
         "needs_translation": false,
         "translation": "Frecuencia Minima a la que el Punto es aplicado."
       },
       "dyn_notch_q": {
-        "english": "Quality factor of the notch filter.",
+        "english": "Dynamic Notch Q Factor",
         "needs_translation": false,
         "translation": "Factor de Calidad del Filtro de Puntos."
       },
       "gyro_lpf1_dyn_max_hz": {
-        "english": "Dynamic filter max cutoff in Hz.",
+        "english": "Gyro LPF1 Dynamic Max Hz",
         "needs_translation": false,
         "translation": "Corte max del filtro dinamico en Hz."
       },
       "gyro_lpf1_dyn_min_hz": {
-        "english": "Dynamic filter min cutoff in Hz.",
+        "english": "Gyro LPF1 Dynamic Min Hz",
         "needs_translation": false,
         "translation": "Corte min del filtro dinamico en Hz."
       },
       "gyro_lpf1_static_hz": {
-        "english": "Lowpass filter cutoff frequency in Hz.",
+        "english": "Gyro LPF1 Static Hz",
         "needs_translation": false,
         "translation": "Frecuencia de corte del filtro pasabajos en Hz."
+      },
+      "gyro_lpf1_type": {
+        "english": "Gyro LPF1 Type",
+        "needs_translation": true,
+        "translation": "Gyro LPF1 Type"
       },
       "gyro_lpf2_static_hz": {
-        "english": "Lowpass filter cutoff frequency in Hz.",
+        "english": "Gyro LPF2 Static Hz",
         "needs_translation": false,
         "translation": "Frecuencia de corte del filtro pasabajos en Hz."
       },
+      "gyro_lpf2_type": {
+        "english": "Gyro LPF2 Type",
+        "needs_translation": true,
+        "translation": "Gyro LPF2 Type"
+      },
       "gyro_soft_notch_cutoff_1": {
-        "english": "Width of the notch filter in Hz.",
+        "english": "Gyro Soft Notch Cutoff 1",
         "needs_translation": false,
         "translation": "Ancho del filtro para el Punto en Hz."
       },
       "gyro_soft_notch_cutoff_2": {
-        "english": "Width of the notch filter in Hz.",
+        "english": "Gyro Soft Notch Cutoff 2",
         "needs_translation": false,
         "translation": "Ancho del filtro para el Punto en Hz."
       },
       "gyro_soft_notch_hz_1": {
-        "english": "Center frequency to which the notch is applied.",
+        "english": "Gyro Soft Notch Hz 1",
         "needs_translation": false,
         "translation": "Frecuencia central aplicada al Punto."
       },
       "gyro_soft_notch_hz_2": {
-        "english": "Center frequency to which the notch is applied.",
+        "english": "Gyro Soft Notch Hz 2",
         "needs_translation": false,
         "translation": "Frecuencia central aplicada al punto."
       },
-      "rpm_min_hz": {
-        "english": "Minimum frequency for the RPM filter.",
-        "needs_translation": false,
-        "translation": "Frecuencia Minima para el filtro de RPM."
+      "tbl_dynamic": {
+        "english": "Dynamic",
+        "needs_translation": true,
+        "translation": "Dynamic"
       },
-      "tbl_1st": {
-        "english": "1ST",
-        "needs_translation": false,
-        "translation": "1RO"
+      "tbl_off": {
+        "english": "Off",
+        "needs_translation": true,
+        "translation": "Off"
       },
-      "tbl_2nd": {
-        "english": "2ND",
-        "needs_translation": false,
-        "translation": "2DO"
+      "tbl_on": {
+        "english": "On",
+        "needs_translation": true,
+        "translation": "On"
       },
-      "tbl_custom": {
-        "english": "CUSTOM",
-        "needs_translation": false,
-        "translation": "PERSONALIZADA"
+      "tbl_static": {
+        "english": "Static",
+        "needs_translation": true,
+        "translation": "Static"
       },
-      "tbl_high": {
-        "english": "HIGH",
-        "needs_translation": false,
-        "translation": "ALTA"
-      },
-      "tbl_low": {
-        "english": "LOW",
-        "needs_translation": false,
-        "translation": "BAJA"
-      },
-      "tbl_medium": {
-        "english": "MEDIUM",
-        "needs_translation": false,
-        "translation": "MEDIA"
-      },
-      "tbl_none": {
-        "english": "NONE",
-        "needs_translation": false,
-        "translation": "NINGUNO"
+      "yaw_lowpass_hz": {
+        "english": "Yaw Lowpass Hz",
+        "needs_translation": true,
+        "translation": "Yaw Lowpass Hz"
       }
     },
     "GOVERNOR_CONFIG": {
@@ -1773,15 +1808,15 @@
       }
     },
     "RX_CONFIG": {
-      "tbl_disabled": {
+      "tbl_off": {
         "english": "Off",
         "needs_translation": true,
-        "translation": "Disabled"
+        "translation": "Off"
       },
-      "tbl_enabled": {
+      "tbl_on": {
         "english": "On",
         "needs_translation": true,
-        "translation": "Enabled"
+        "translation": "On"
       }
     }
   },
