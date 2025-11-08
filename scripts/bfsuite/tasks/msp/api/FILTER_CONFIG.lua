@@ -19,12 +19,12 @@ local MSP_API_STRUCTURE_READ_DATA = {
     { field = "gyro_lpf1_static_hz_legacy", type = "U8",  apiVersion = 1.40, simResponse = {250}, min = 0, max = 1000, default = 0 },      -- first U8 legacy encoding
     { field = "dterm_lpf1_static_hz",       type = "U16", apiVersion = 1.40, simResponse = {75, 0}, min = 0, max = 1000, default = 75 },
     { field = "yaw_lowpass_hz",             type = "U16", apiVersion = 1.40, simResponse = {100, 0}, min = 0, max = 500, default = 100 },
-    { field = "gyro_soft_notch_hz_1",       type = "U16", apiVersion = 1.40, simResponse = {0, 0}, min = nil, max = nil, default = nil },
-    { field = "gyro_soft_notch_cutoff_1",   type = "U16", apiVersion = 1.40, simResponse = {0, 0}, min = nil, max = nil, default = nil },
-    { field = "dterm_notch_hz",             type = "U16", apiVersion = 1.40, simResponse = {0, 0}, min = 0, max = 1000, default = 0 },
+    { field = "gyro_soft_notch_hz_1",       type = "U16", apiVersion = 1.40, simResponse = {0, 0}, min = 0, max = 1000, default = 400 },
+    { field = "gyro_soft_notch_cutoff_1",   type = "U16", apiVersion = 1.40, simResponse = {0, 0}, min = 0, max = 1000, default = 0 },
+    { field = "dterm_notch_hz",             type = "U16", apiVersion = 1.40, simResponse = {0, 0}, min = 0, max = 1000, default = 250 },
     { field = "dterm_notch_cutoff",         type = "U16", apiVersion = 1.40, simResponse = {0, 0}, min = 0, max = 1000, default = 0 },
-    { field = "gyro_soft_notch_hz_2",       type = "U16", apiVersion = 1.40, simResponse = {0, 0}, min = nil, max = nil, default = nil },
-    { field = "gyro_soft_notch_cutoff_2",   type = "U16", apiVersion = 1.40, simResponse = {0, 0}, min = nil, max = nil, default = nil },
+    { field = "gyro_soft_notch_hz_2",       type = "U16", apiVersion = 1.40, simResponse = {0, 0}, min = 0, max = 1000, default = 200 },
+    { field = "gyro_soft_notch_cutoff_2",   type = "U16", apiVersion = 1.40, simResponse = {0, 0}, min = 0, max = 1000, default = 0 },
     { field = "dterm_lpf1_type",            type = "U8",  apiVersion = 1.40, simResponse = {0}, min = 0, max = 3, default = 0, table = gyroFilterType },
     { field = "gyro_hardware_lpf",          type = "U8",  apiVersion = 1.40, simResponse = {0}, min = 0, max = 3, default = 0, table = gyroFilterType },
     { field = "gyro_32khz_hardware_lpf",    type = "U8",  apiVersion = 1.40, simResponse = {0}, min = nil, max = nil, default = nil },        -- deprecated
@@ -32,7 +32,7 @@ local MSP_API_STRUCTURE_READ_DATA = {
     { field = "gyro_lpf2_static_hz",        type = "U16", apiVersion = 1.40, simResponse = {244, 1}, min = 0, max = 1000, default = 500 },
     { field = "gyro_lpf1_type",             type = "U8",  apiVersion = 1.40, simResponse = {0}, min = 0, max = 3, default = 0, table = gyroFilterType },
     { field = "gyro_lpf2_type",             type = "U8",  apiVersion = 1.40, simResponse = {0}, min = 0, max = 3, default = 0, table = gyroFilterType },
-    { field = "dterm_lpf2_static_hz",       type = "U16", apiVersion = 1.40, simResponse = {150, 0}, min = 0, max = 1000, default = 75 },
+    { field = "dterm_lpf2_static_hz",       type = "U16", apiVersion = 1.40, simResponse = {150, 0}, min = 0, max = 1000, default = 150 },
 
     -- Added in MSP API 1.41
     { field = "dterm_lpf2_type",            type = "U8",  apiVersion = 1.41, simResponse = {0}, min = 0, max = 3, default = 0, table = gyroFilterType },

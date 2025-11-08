@@ -7,165 +7,295 @@ local bfsuite = require("bfsuite")
 
 local filterModes = {[0] = "@i18n(api.FILTER_CONFIG.tbl_static)@", [1] = "@i18n(api.FILTER_CONFIG.tbl_dynamic)@"}
 
-local loaded = false
-
 local apidata = {
     api = {[1] = 'FILTER_CONFIG'},
     formdata = {
         labels = {
             -- Gyro Lowpass Filters Section
-            {t = "Gyro Lowpass 1", label = 1, inline_size = 20},
-            {t = "    Static Cutoff", label = 2, inline_size = 14},
-            {t = "    Dynamic Cutoff", label = 3, inline_size = 14},
-            {t = "    Filter Type", label = 4, inline_size = 14},
-            {t = "Gyro Lowpass 2", label = 5, inline_size = 14},
+            {t = "Gyro Lowpass 1", label = 1, inline_size = 50},
+            {t = "    Mode", label = 2, inline_size = 50},
+            {t = "    Static Cutoff", label = 3, inline_size = 50},
+            {t = "    Dynamic Cutoff Max", label = 4, inline_size = 50},
+            {t = "    Dynamic Cutoff Min", label = 5, inline_size = 50},
+            {t = "    Filter Type", label = 6, inline_size = 50},
+            {t = "Gyro Lowpass 2", label = 7, inline_size = 50},
+            {t = "    Cutoff", label = 8, inline_size = 50},
+            {t = "    Filter Type", label = 9, inline_size = 50},
 
-            {t = "D Term Lowpass 1", label = 6, inline_size = 20},
-            {t = "    Static Cutoff", label = 7, inline_size = 14},
-            {t = "    Dynamic Cutoff", label = 8, inline_size = 14},
-            {t = "    Filter Type", label = 9, inline_size = 14},
-            {t = "D Term Lowpass 2", label = 10, inline_size = 14},
+            -- D Term Lowpass Filters Section
+            {t = "D-Term Lowpass 1", label = 10, inline_size = 50},
+            {t = "    Mode", label = 11, inline_size = 50},
+            {t = "    Static Cutoff", label = 12, inline_size = 50},
+            {t = "    Dynamic Cutoff Max", label = 13, inline_size = 50},
+            {t = "    Dynamic Cutoff Min", label = 14, inline_size = 50},
+            {t = "    Filter Type", label = 15, inline_size = 50},
+            {t = "D-Term Lowpass 2", label = 16, inline_size = 50},
+            {t = "    Cutoff", label = 17, inline_size = 50},
+            {t = "    Filter Type", label = 18, inline_size = 50},
 
             -- Gyro Notch Filters Section
-            {t = "Gyro Notch 1", label = 11, inline_size = 14},
-            {t = "Gyro Notch 2", label = 12, inline_size = 14},
+            {t = "Gyro Notch 1", label = 19, inline_size = 50},
+            {t = "    Center Freq", label = 20, inline_size = 50},
+            {t = "    Cutoff", label = 21, inline_size = 50},
+            {t = "Gyro Notch 2", label = 22, inline_size = 50},
+            {t = "    Center Freq", label = 23, inline_size = 50},
+            {t = "    Cutoff", label = 24, inline_size = 50},
 
             -- D-Term Notch Filter Section
-            {t = "D-Term Notch", label = 13, inline_size = 14},
-            {t = "", label = 14, inline_size = 14},
+            {t = "D-Term Notch", label = 25, inline_size = 50},
+            {t = "    Center Freq", label = 26, inline_size = 50},
+            {t = "    Cutoff", label = 27, inline_size = 50},
 
             -- Dynamic Notch Filter Section
-            {t = "Dynamic Notch", label = 15, inline_size = 14},
-            {t = "Dynamic Notch Range", label = 16, inline_size = 14},
+            {t = "Dynamic Notch", label = 28, inline_size = 50},
+            {t = "    Notch Count", label = 29, inline_size = 50},
+            {t = "    Q Factor", label = 30, inline_size = 50},
+            {t = "    Min Freq", label = 31, inline_size = 50},
+            {t = "    Max Freq", label = 32, inline_size = 50},
 
             -- Yaw Lowpass Filter Section
-            {t = "Yaw Lowpass", label = 17, inline_size = 14},
-            {t = "", label = 18, inline_size = 14}
+            {t = "Yaw Lowpass", label = 33, inline_size = 50},
+            {t = "    Static Cutoff", label = 34, inline_size = 50}
         },
         fields = {
             -- Gyro Lowpass Filters Section
             -- LPF1 
-            {t = "Mode", label = 1, inline = 1, table = filterModes, type = 1},
-            {t = "", label = 2, inline = 1, unit = "Hz", mspapi = 1, apikey = "gyro_lpf1_static_hz"},
-            {t = "Min", label = 3, inline = 1, mspapi = 1, unit = "Hz", apikey = "gyro_lpf1_dyn_min_hz"},
-            {t = "Max", label = 3, inline = 2, mspapi = 1, unit = "Hz", apikey = "gyro_lpf1_dyn_max_hz"},
-            {t = "", label = 4, inline = 1, mspapi = 1, apikey = "gyro_lpf1_type", type = 1},
+            {t = "", label = 1, inline = 1, type = 4}, -- Boolean to enable/disable Gyro LPF1
+            {t = "", label = 2, inline = 1, table = filterModes, type = 1},
+            {t = "", label = 3, inline = 1, unit = "Hz", mspapi = 1, apikey = "gyro_lpf1_static_hz"},
+            {t = "", label = 4, inline = 1, mspapi = 1, unit = "Hz", apikey = "gyro_lpf1_dyn_min_hz"},
+            {t = "", label = 5, inline = 1, mspapi = 1, unit = "Hz", apikey = "gyro_lpf1_dyn_max_hz"},
+            {t = "", label = 6, inline = 1, mspapi = 1, apikey = "gyro_lpf1_type", type = 1},
 
             -- LPF2
-            {t = "Type", label = 5, inline = 1, mspapi = 1, apikey = "gyro_lpf2_type", type = 1},
-            {t = "Cutoff", label = 5, inline = 2, mspapi = 1, unit = "Hz", apikey = "gyro_lpf2_static_hz"},
+            {t = "", label = 7, inline = 1, type = 4}, -- Boolean to enable/disable Gyro LPF2
+            {t = "", label = 8, inline = 1, mspapi = 1, unit = "Hz", apikey = "gyro_lpf2_static_hz"},
+            {t = "", label = 9, inline = 1, mspapi = 1, apikey = "gyro_lpf2_type", type = 1},
             
 
             -- D Term Lowpass Filters Section
             -- LPF1
-            {t = "Mode", label = 6, inline = 1, table = filterModes, type = 1},
-            {t = "", label = 7, inline = 1, unit = "Hz", mspapi = 1, apikey = "dterm_lpf1_static_hz"},
-            {t = "Min", label = 8, inline = 1, mspapi = 1, unit = "Hz", apikey = "dterm_lpf1_dyn_min_hz"},
-            {t = "Max", label = 8, inline = 2, mspapi = 1, unit = "Hz", apikey = "dterm_lpf1_dyn_max_hz"},
-            {t = "", label = 9, inline = 1, mspapi = 1, apikey = "dterm_lpf1_type", type = 1},
+            {t = "", label = 10, inline = 1, type = 4}, -- Boolean to enable/disable D Term LPF1
+            {t = "", label = 11, inline = 1, table = filterModes, type = 1},
+            {t = "", label = 12, inline = 1, unit = "Hz", mspapi = 1, apikey = "dterm_lpf1_static_hz"},
+            {t = "", label = 13, inline = 1, mspapi = 1, unit = "Hz", apikey = "dterm_lpf1_dyn_min_hz"},
+            {t = "", label = 14, inline = 1, mspapi = 1, unit = "Hz", apikey = "dterm_lpf1_dyn_max_hz"},
+            {t = "", label = 15, inline = 1, mspapi = 1, apikey = "dterm_lpf1_type", type = 1},
 
             -- LPF2
-            {t = "Type", label = 10, inline = 1, mspapi = 1, apikey = "dterm_lpf2_type", type = 1},
-            {t = "Cutoff", label = 10, inline = 2, mspapi = 1, unit = "Hz", apikey = "dterm_lpf2_static_hz"},
+            {t = "", label = 16, inline = 1, type = 4}, -- Boolean to enable/disable D Term LPF2
+            {t = "", label = 17, inline = 1, mspapi = 1, unit = "Hz", apikey = "dterm_lpf2_static_hz"},
+            {t = "", label = 18, inline = 1, mspapi = 1, apikey = "dterm_lpf2_type", type = 1},
             
 
             -- Gyro Notch Filters Section
-            {t = "Center", label = 11, inline = 1, unit = "Hz", mspapi = 1, apikey = "gyro_soft_notch_hz_1"},
-            {t = "Cutoff", label = 11, inline = 2, unit = "Hz", mspapi = 1, apikey = "gyro_soft_notch_cutoff_1"},
+            -- Notch 1
+            {t = "", label = 19, inline = 1, type = 4}, -- Boolean to enable/disable Gyro Notch 1
+            {t = "", label = 20, inline = 1, unit = "Hz", mspapi = 1, apikey = "gyro_soft_notch_hz_1"},
+            {t = "", label = 21, inline = 1, unit = "Hz", mspapi = 1, apikey = "gyro_soft_notch_cutoff_1"},
 
-            {t = "Center", label = 12, inline = 1, unit = "Hz", mspapi = 1, apikey = "gyro_soft_notch_hz_2"},
-            {t = "Cutoff", label = 12, inline = 2, unit = "Hz", mspapi = 1, apikey = "gyro_soft_notch_cutoff_2"},
+            -- Notch 2
+            {t = "", label = 22, inline = 1, type = 4}, -- Boolean to enable/disable Gyro Notch 2
+            {t = "", label = 23, inline = 1, unit = "Hz", mspapi = 1, apikey = "gyro_soft_notch_hz_2"},
+            {t = "", label = 24, inline = 1, unit = "Hz", mspapi = 1, apikey = "gyro_soft_notch_cutoff_2"},
 
-            
+
             -- D-Term Notch Filter Section
-            {t = "Center", label = 13, inline = 1, unit = "Hz", mspapi = 1, apikey = "dterm_notch_hz"},
-            {t = "Cutoff", label = 13, inline = 2, unit = "Hz", mspapi = 1, apikey = "dterm_notch_cutoff"},
+            {t = "", label = 25, inline = 1, type = 4}, -- Boolean to enable/disable D-Term Notch
+            {t = "", label = 26, inline = 1, unit = "Hz", mspapi = 1, apikey = "dterm_notch_hz"},
+            {t = "", label = 27, inline = 1, unit = "Hz", mspapi = 1, apikey = "dterm_notch_cutoff"},
 
 
             -- Dynamic Notch Filter Section
-            {t = "Count", label = 14, inline = 1, mspapi = 1, apikey = "dyn_notch_count"},
-            {t = "Q Factor", label = 14, inline = 2, unit = "Hz", mspapi = 1, apikey = "dyn_notch_q"},
-
-            {t = "Min", label = 15, inline = 1, unit = "Hz", mspapi = 1, apikey = "dyn_notch_min_hz"},
-            {t = "Max", label = 15, inline = 2, unit = "Hz", mspapi = 1, apikey = "dyn_notch_max_hz"},
+            {t = "", label = 28, inline = 1, type = 4}, -- Boolean to enable/disable Dynamic Notch
+            {t = "", label = 29, inline = 1, mspapi = 1, apikey = "dyn_notch_count"},
+            {t = "", label = 30, inline = 1, unit = "Hz", mspapi = 1, apikey = "dyn_notch_q"},
+            {t = "", label = 31, inline = 1, unit = "Hz", mspapi = 1, apikey = "dyn_notch_min_hz"},
+            {t = "", label = 32, inline = 1, unit = "Hz", mspapi = 1, apikey = "dyn_notch_max_hz"},
 
 
             -- Yaw Lowpass Filter Section
-            {t = "Cutoff", label = 16, inline = 1, unit = "Hz", mspapi = 1, apikey = "yaw_lowpass_hz"}
+            {t = "", label = 33, inline = 1, type = 4}, -- Boolean to enable/disable Yaw Lowpass
+            {t = "", label = 34, inline = 1, unit = "Hz", mspapi = 1, apikey = "yaw_lowpass_hz"}
         }
     }
 }
 
-local function updateFilterFieldStates()
-    -- START GYRO_LPF1 --
-    -- MSP does not set the gyro filter mode field value on load, so we have to infer its value from the other fields and set it explicitly
-    if bfsuite.app.Page.apidata.formdata.fields[1].value == nil then 
-        if bfsuite.app.Page.apidata.formdata.fields[3].value == 0 and bfsuite.app.Page.apidata.formdata.fields[4].value == 0 then -- dynamic min and max both 0, so static mode is in use
-            bfsuite.app.Page.apidata.formdata.fields[1].value = 0 -- set to static mode
-        else
-            bfsuite.app.Page.apidata.formdata.fields[1].value = 1 -- set to dynamic mode
+
+local function zeroOutFieldRange(startField, endField)
+    for i = startField, endField do
+        bfsuite.app.Page.apidata.formdata.fields[i].value = 0
+    end
+end
+
+local function rangeHasNonZeroValue(startField, endField)
+    for i = startField, endField do
+        if bfsuite.app.Page.apidata.formdata.fields[i].value ~= 0 then
+            return 1
         end
     end
+    return 0
+end
 
-    -- Set field states after selecting a filter mode (dyn or sta)
-    if bfsuite.app.Page.apidata.formdata.fields[1].value == 0 then -- static mode
-        bfsuite.app.Page.apidata.formdata.fields[2].value = bfsuite.app.Page.apidata.formdata.fields[2].default -- set static hz to default when in static mode
-        bfsuite.app.Page.apidata.formdata.fields[3].value = 0 -- set dynamic min to 0 when in static mode
-        bfsuite.app.Page.apidata.formdata.fields[4].value = 0 -- set dynamic max to 0 when in static mode
-        bfsuite.app.formFields[2]:enable(true) -- enable static cutoff field
-        bfsuite.app.formFields[3]:enable(false) -- disable dynamic min field
-        bfsuite.app.formFields[4]:enable(false) -- disable dynamic max field
-    elseif bfsuite.app.Page.apidata.formdata.fields[1].value == 1 then -- dynamic mode
-        bfsuite.app.Page.apidata.formdata.fields[2].value = 0 -- set static hz to 0 when in dynamic mode
-        bfsuite.app.Page.apidata.formdata.fields[3].value = bfsuite.app.Page.apidata.formdata.fields[3].default -- set dynamic min to default value when in dynamic mode
-        bfsuite.app.Page.apidata.formdata.fields[4].value = bfsuite.app.Page.apidata.formdata.fields[4].default -- set dynamic max to default value when in dynamic mode
-        bfsuite.app.formFields[2]:enable(false)
-        bfsuite.app.formFields[3]:enable(true)
-        bfsuite.app.formFields[4]:enable(true)
-    end
-    -- END GYRO_LPF1 --
+-- Configuration for filters: their boolean field, fields to check for non-zero values, and fields to enable/disable based on states and settings
+local filterConfig = {
+    {
+        name = "gyro_lpf1",    -- Filter identifier
+        state = nil,           -- Will hold the enabled/disabled state
+        booleanField = 1,      -- Field index for the enable/disable checkbox
+        modeField = 2,         -- Mode dropdown field (static=0, dynamic=1)
+        checkFields = {3, 5},  -- Fields to check for non-zero values
+        staticFields = {3, 3}, -- Field(s) shown in static mode
+        dynamicFields = {4, 5}, -- Field(s) shown in dynamic mode
+        uiFields = {2, 6}      -- All fields to enable/disable
+    },
+    {
+        name = "gyro_lpf2",
+        state = nil,
+        booleanField = 7,
+        checkFields = {8, 8},
+        uiFields = {8, 9}
+    },
+    {
+        name = "dterm_lpf1",
+        state = nil,
+        booleanField = 10,
+        modeField = 11,
+        checkFields = {12, 14},
+        staticFields = {12, 12},
+        dynamicFields = {13, 14},
+        uiFields = {11, 15}
+    },
+    {
+        name = "dterm_lpf2",
+        state = nil,
+        booleanField = 16,
+        checkFields = {17, 17},
+        uiFields = {17, 18}
+    },
+    {
+        name = "gyro_notch1",
+        state = nil,
+        booleanField = 19,
+        checkFields = {20, 21},
+        uiFields = {20, 21}
+    },
+    {
+        name = "gyro_notch2",
+        state = nil,
+        booleanField = 22,
+        checkFields = {23, 24},
+        uiFields = {23, 24}
+    },
+    {
+        name = "dterm_notch",
+        state = nil,
+        booleanField = 25,
+        checkFields = {26, 27},
+        uiFields = {26, 27}
+    },
+    {
+        name = "dynamic_notch",
+        state = nil,
+        booleanField = 28,
+        checkFields = {29, 32},
+        uiFields = {29, 32}
+    },
+    {
+        name = "yaw_lowpass",
+        state = nil,
+        booleanField = 33,
+        checkFields = {34, 34},
+        uiFields = {34, 34}
+    }
+}
 
-    -- START DTERM_LPF1 --
-    -- MSP does not set the dterm filter mode field value on load, so we have to infer its value from the other fields and set it explicitly
-    if bfsuite.app.Page.apidata.formdata.fields[8].value == nil then 
-        if bfsuite.app.Page.apidata.formdata.fields[10].value == 0 and bfsuite.app.Page.apidata.formdata.fields[11].value == 0 then -- dynamic min and max both 0, so static mode is in use
-            bfsuite.app.Page.apidata.formdata.fields[8].value = 0 -- set to static mode
-        else
-            bfsuite.app.Page.apidata.formdata.fields[8].value = 1 -- set to dynamic mode
+-- Helper function to get the initial states of the boolean or dropdown fields based on a range of value fields 
+local function getInitialFieldStates()
+    for _, filter in ipairs(filterConfig) do
+        local hasNonZero = rangeHasNonZeroValue(filter.checkFields[1], filter.checkFields[2])
+        filter.state = hasNonZero
+        bfsuite.app.Page.apidata.formdata.fields[filter.booleanField].value = hasNonZero
+        
+        -- For filters with mode field, set initial mode based on which fields have values
+        if filter.modeField and hasNonZero == 1 then
+            local staticHasValue = rangeHasNonZeroValue(filter.staticFields[1], filter.staticFields[2])
+            local dynamicHasValue = rangeHasNonZeroValue(filter.dynamicFields[1], filter.dynamicFields[2])
+            
+            if dynamicHasValue == 1 then
+                bfsuite.app.Page.apidata.formdata.fields[filter.modeField].value = 1 -- Dynamic mode
+            else
+                bfsuite.app.Page.apidata.formdata.fields[filter.modeField].value = 0 -- Static mode
+            end
         end
     end
+end
 
-    -- Set field states after selecting a filter mode (dyn or sta)
-    if bfsuite.app.Page.apidata.formdata.fields[8].value == 0 then -- static mode
-        bfsuite.app.Page.apidata.formdata.fields[9].value = bfsuite.app.Page.apidata.formdata.fields[9].default -- set static hz to default when in static mode
-        bfsuite.app.Page.apidata.formdata.fields[10].value = 0 -- set dynamic min to 0 when in static mode
-        bfsuite.app.Page.apidata.formdata.fields[11].value = 0 -- set dynamic max to 0 when in static mode
-        bfsuite.app.formFields[9]:enable(true) -- enable static cutoff field
-        bfsuite.app.formFields[10]:enable(false) -- disable dynamic min field
-        bfsuite.app.formFields[11]:enable(false) -- disable dynamic max field
-    elseif bfsuite.app.Page.apidata.formdata.fields[8].value == 1 then -- dynamic mode
-        bfsuite.app.Page.apidata.formdata.fields[9].value = 0 -- set static hz to 0 when in dynamic mode
-        bfsuite.app.Page.apidata.formdata.fields[10].value = bfsuite.app.Page.apidata.formdata.fields[10].default -- set dynamic min to default value when in dynamic mode
-        bfsuite.app.Page.apidata.formdata.fields[11].value = bfsuite.app.Page.apidata.formdata.fields[11].default -- set dynamic max to default value when in dynamic mode
-        bfsuite.app.formFields[9]:enable(false)
-        bfsuite.app.formFields[10]:enable(true)
-        bfsuite.app.formFields[11]:enable(true)
+local function updateFieldStates()
+    for _, filter in ipairs(filterConfig) do
+        local oldState = filter.state
+        filter.state = bfsuite.app.Page.apidata.formdata.fields[filter.booleanField].value
+        
+        if filter.state == 0 then
+            -- User disabled: zero out values
+            zeroOutFieldRange(filter.checkFields[1], filter.checkFields[2])
+        elseif oldState == 0 and filter.state == 1 then
+            -- User re-enabled: set to defaults
+            for i = filter.checkFields[1], filter.checkFields[2] do
+                bfsuite.app.Page.apidata.formdata.fields[i].value = bfsuite.app.Page.apidata.formdata.fields[i].default
+            end
+        end
+        
+        -- Enable/disable all UI fields based on main state
+        for i = filter.uiFields[1], filter.uiFields[2] do
+            bfsuite.app.formFields[i]:enable(filter.state == 1)
+        end
+        
+        -- Handle mode-based field visibility (only for filters with modeField)
+        if filter.modeField and filter.state == 1 then
+            local mode = bfsuite.app.Page.apidata.formdata.fields[filter.modeField].value
+            if mode == 0 then
+                -- Static mode: show static fields with defaults, hide and zero dynamic fields
+                for i = filter.staticFields[1], filter.staticFields[2] do
+                    bfsuite.app.formFields[i]:enable(true)
+                    if bfsuite.app.Page.apidata.formdata.fields[i].value == 0 then
+                        bfsuite.app.Page.apidata.formdata.fields[i].value = bfsuite.app.Page.apidata.formdata.fields[i].default
+                    end
+                end
+                for i = filter.dynamicFields[1], filter.dynamicFields[2] do
+                    bfsuite.app.formFields[i]:enable(false)
+                    bfsuite.app.Page.apidata.formdata.fields[i].value = 0
+                end
+            else
+                -- Dynamic mode: hide and zero static fields, show dynamic fields with defaults
+                for i = filter.staticFields[1], filter.staticFields[2] do
+                    bfsuite.app.formFields[i]:enable(false)
+                    bfsuite.app.Page.apidata.formdata.fields[i].value = 0
+                end
+                for i = filter.dynamicFields[1], filter.dynamicFields[2] do
+                    bfsuite.app.formFields[i]:enable(true)
+                    if bfsuite.app.Page.apidata.formdata.fields[i].value == 0 then
+                        bfsuite.app.Page.apidata.formdata.fields[i].value = bfsuite.app.Page.apidata.formdata.fields[i].default
+                    end
+                end
+            end
+        end
     end
-    -- END DTERM_LPF1 --
 end
 
 local activateWakeup = false
 
 local function wakeup()
     if activateWakeup then
-        updateFilterFieldStates()    
+        updateFieldStates()    
     end
 end
 
 local function postLoad()
+    getInitialFieldStates()
+    activateWakeup = true
     bfsuite.app.triggers.isReady = true
     bfsuite.app.triggers.closeProgressLoader = true
-    activateWakeup = true
 end
 
 return {wakeup = wakeup, postLoad = postLoad, apidata = apidata, eepromWrite = true, reboot = true, API = {}}
