@@ -19,7 +19,7 @@ local config = {
     supportedMspApiVersion = {"1.46"},
     baseDir = "bfsuite",
     preferences = "bfsuite.user",
-    defaultRateProfile = 4,
+    defaultRateProfile = 3,
     watchdogParam = 10,
     mspProtocolVersion = 1
 }

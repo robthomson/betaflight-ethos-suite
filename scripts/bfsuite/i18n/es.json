@@ -5648,6 +5648,95 @@
           "translation": "Advertencia"
         }
       },
+      "simplified_tuning_filters": {
+        "help_p1": {
+          "english": "Tuning settings allow you to adjust the PID controller parameters to optimize flight performance. Make sure to test fly after making changes.",
+          "needs_translation": true,
+          "translation": "Tuning settings allow you to adjust the PID controller parameters to optimize flight performance. Make sure to test fly after making changes."
+        },
+        "name": {
+          "english": "Filters",
+          "needs_translation": true,
+          "translation": "Filters"
+        },
+        "simplified_dterm_filter": {
+          "english": "D-Term Filter",
+          "needs_translation": true,
+          "translation": "D-Term Filter"
+        },
+        "simplified_dterm_filter_multiplier": {
+          "english": "Multiplier",
+          "needs_translation": true,
+          "translation": "Multiplier"
+        },
+        "simplified_gyro_filter": {
+          "english": "Gyro Filter",
+          "needs_translation": true,
+          "translation": "Gyro Filter"
+        },
+        "simplified_gyro_filter_multiplier": {
+          "english": "Multiplier",
+          "needs_translation": true,
+          "translation": "Multiplier"
+        }
+      },
+      "simplified_tuning_pids": {
+        "help_p1": {
+          "english": "Tuning settings allow you to adjust the PID controller parameters to optimize flight performance. Make sure to test fly after making changes.",
+          "needs_translation": true,
+          "translation": "Tuning settings allow you to adjust the PID controller parameters to optimize flight performance. Make sure to test fly after making changes."
+        },
+        "name": {
+          "english": "PIDS",
+          "needs_translation": true,
+          "translation": "Tuning"
+        },
+        "simplified_d_gain": {
+          "english": "D Gain",
+          "needs_translation": true,
+          "translation": "D Gain"
+        },
+        "simplified_d_max_gain": {
+          "english": "D Max Gain",
+          "needs_translation": true,
+          "translation": "D Max Gain"
+        },
+        "simplified_feedforward_gain": {
+          "english": "Feedforward Gain",
+          "needs_translation": true,
+          "translation": "Feedforward Gain"
+        },
+        "simplified_i_gain": {
+          "english": "I Gain",
+          "needs_translation": true,
+          "translation": "I Gain"
+        },
+        "simplified_master_multiplier": {
+          "english": "Master Multiplier",
+          "needs_translation": true,
+          "translation": "Master Multiplier"
+        },
+        "simplified_pi_gain": {
+          "english": "PI Gain",
+          "needs_translation": true,
+          "translation": "PI Gain"
+        },
+        "simplified_pids_mode": {
+          "english": "Mode",
+          "needs_translation": true,
+          "translation": "Mode"
+        },
+        "simplified_pitch_pi_gain": {
+          "english": "P,I,FF Roll/Pitch Ratio",
+          "needs_translation": true,
+          "translation": "P,I,FF Roll/Pitch Ratio"
+        },
+        "simplified_roll_pitch_ratio": {
+          "english": "D Roll/Pitch Ratio",
+          "needs_translation": true,
+          "translation": "D Roll/Pitch Ratio"
+        }
+      },
       "stats": {
         "flightcount": {
           "english": "Flight Count",

@@ -14,21 +14,21 @@ local MSP_REBUILD_ON_WRITE = false
 -- LuaFormatter off
 local MSP_API_STRUCTURE_READ_DATA = {
    -- Simplified PIDs
-  { field = "simplified_pids_mode",           type = "U8",  apiVersion = 1.44, simResponse = {2} },
-  { field = "simplified_master_multiplier",   type = "U8",  apiVersion = 1.44, simResponse = {100} },
-  { field = "simplified_roll_pitch_ratio",    type = "U8",  apiVersion = 1.44, simResponse = {100} },
-  { field = "simplified_i_gain",              type = "U8",  apiVersion = 1.44, simResponse = {100} },
-  { field = "simplified_d_gain",              type = "U8",  apiVersion = 1.44, simResponse = {100} },
-  { field = "simplified_pi_gain",             type = "U8",  apiVersion = 1.44, simResponse = {100} },
-  { field = "simplified_d_max_gain",          type = "U8",  apiVersion = 1.44, simResponse = {100} },
-  { field = "simplified_feedforward_gain",    type = "U8",  apiVersion = 1.44, simResponse = {100} },
-  { field = "simplified_pitch_pi_gain",       type = "U8",  apiVersion = 1.44, simResponse = {100} },
+  { field = "simplified_pids_mode",           type = "U8",  apiVersion = 1.44, simResponse = {2}, min = 0, max = 2, tblIdxInc = -1, table = { [0] = "OFF", "RP", "RPY" }},
+  { field = "simplified_master_multiplier",   type = "U8",  apiVersion = 1.44, simResponse = {100} ,min = 0, max = 200, scale = 100, mult = 5},
+  { field = "simplified_roll_pitch_ratio",    type = "U8",  apiVersion = 1.44, simResponse = {100} ,min = 0, max = 200, scale = 100, mult = 5},
+  { field = "simplified_i_gain",              type = "U8",  apiVersion = 1.44, simResponse = {100} ,min = 0, max = 200, scale = 100, mult = 5},
+  { field = "simplified_d_gain",              type = "U8",  apiVersion = 1.44, simResponse = {100} , min = 0, max = 200, scale = 100, mult = 5},
+  { field = "simplified_pi_gain",             type = "U8",  apiVersion = 1.44, simResponse = {100} ,min = 0, max = 200, scale = 100, mult = 5},
+  { field = "simplified_d_max_gain",          type = "U8",  apiVersion = 1.44, simResponse = {100}, min = 0, max = 200, scale = 100, mult = 5},
+  { field = "simplified_feedforward_gain",    type = "U8",  apiVersion = 1.44, simResponse = {100} ,min = 0, max = 200, scale = 100, mult = 5},
+  { field = "simplified_pitch_pi_gain",       type = "U8",  apiVersion = 1.44, simResponse = {100} ,min = 0, max = 200, scale = 100, mult = 5},
   { field = "reserved1",                      type = "U32", apiVersion = 1.44, simResponse = {0,0,0,0} },
   { field = "reserved2",                      type = "U32", apiVersion = 1.44, simResponse = {0,0,0,0} },
 
   -- Simplified D-term Filters
-  { field = "simplified_dterm_filter",               type = "U8",  apiVersion = 1.44, simResponse = {1} },
-  { field = "simplified_dterm_filter_multiplier",    type = "U8",  apiVersion = 1.44, simResponse = {100} },
+  { field = "simplified_dterm_filter",               type = "U8",  apiVersion = 1.44, simResponse = {1} , min = 0, max = 1, table = { [0] = "OFF", "ON" }},
+  { field = "simplified_dterm_filter_multiplier",    type = "U8",  apiVersion = 1.44, simResponse = {100} ,min = 10, max = 200, scale = 100, mult = 5},
   { field = "dterm_lpf1_static_hz",                  type = "U16", apiVersion = 1.44, simResponse = {75,0} },
   { field = "dterm_lpf2_static_hz",                  type = "U16", apiVersion = 1.44, simResponse = {150,0} },
   { field = "dterm_lpf1_dyn_min_hz",                 type = "U16", apiVersion = 1.44, simResponse = {75,0} },
@@ -37,8 +37,8 @@ local MSP_API_STRUCTURE_READ_DATA = {
   { field = "reserved4",                              type = "U32", apiVersion = 1.44, simResponse = {0,0,0,0} },
 
   -- Simplified Gyro Filters
-  { field = "simplified_gyro_filter",                type = "U8",  apiVersion = 1.44, simResponse = {1} },
-  { field = "simplified_gyro_filter_multiplier",     type = "U8",  apiVersion = 1.44, simResponse = {100} },
+  { field = "simplified_gyro_filter",                type = "U8",  apiVersion = 1.44, simResponse = {1} ,min = 0, max = 1, table = { [0] = "OFF", "ON" }},
+  { field = "simplified_gyro_filter_multiplier",     type = "U8",  apiVersion = 1.44, simResponse = {100}, min = 10, max = 200, scale = 100, mult = 5 },
   { field = "gyro_lpf1_static_hz",                   type = "U16", apiVersion = 1.44, simResponse = {250,0} },
   { field = "gyro_lpf2_static_hz",                   type = "U16", apiVersion = 1.44, simResponse = {244,1} },
   { field = "gyro_lpf1_dyn_min_hz",                  type = "U16", apiVersion = 1.44, simResponse = {250,0} },

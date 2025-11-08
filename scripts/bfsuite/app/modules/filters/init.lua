@@ -5,6 +5,6 @@
 
 local bfsuite = require("bfsuite")
 
-local init = {title = "@i18n(app.modules.filters.name)@", section = "hardware", script = "filters.lua", image = "filters.png", order = 9, ethosversion = {1, 6, 2}}
+local init = {title = "@i18n(app.modules.filters.name)@", section = "advanced", script = "filters.lua", image = "filters.png", order = 9, ethosversion = {1, 6, 2}}
 
 return init
