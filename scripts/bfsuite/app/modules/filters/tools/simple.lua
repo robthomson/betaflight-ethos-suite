@@ -26,4 +26,4 @@ local function onNavMenu()
     bfsuite.app.ui.openPage(pageIdx, "@i18n(app.modules.filters.name)@", "filters/filters.lua")
 end
 
-return {apidata = apidata, eepromWrite = true, reboot = true, API = {}, onNavMenu = onNavMenu}
+return {apidata = apidata, eepromWrite = true, reboot = false, API = {}, onNavMenu = onNavMenu}
