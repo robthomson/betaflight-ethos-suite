@@ -9,6 +9,7 @@ local sections = {}
 local tools = {}
 
 sections[#sections + 1] = {title = "@i18n(app.modules.simplified_tuning_pids.name)@", module = "stuning_pid", script = "tuning.lua", image = "app/modules/stuning_pid/tuning.png", offline = false, bgtask = false}
+sections[#sections + 1] = {title = "@i18n(app.modules.rates.name)@", module = "rates", script = "rates.lua", image = "app/modules/rates/rates.png", offline = false, bgtask = false}
 sections[#sections + 1] = {title = "@i18n(app.modules.simplified_tuning_filters.name)@", module = "stuning_filters", script = "tuning.lua", image = "app/modules/stuning_filters/tuning.png", offline = false, bgtask = false}
 
 sections[#sections + 1] = {title = "@i18n(app.menu_section_advanced)@", id = "advanced", image = "app/gfx/advanced.png", loaderspeed = true, offline = false, bgtask = false}
