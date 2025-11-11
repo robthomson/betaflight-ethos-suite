@@ -3256,6 +3256,16 @@
           "needs_translation": true,
           "translation": "Max Frequency"
         },
+        "menu_advanced": {
+          "english": "Advanced",
+          "needs_translation": true,
+          "translation": "Advanced"
+        },
+        "menu_simple": {
+          "english": "Simple",
+          "needs_translation": true,
+          "translation": "Simple"
+        },
         "min_cutoff": {
           "english": "Min cutoff",
           "needs_translation": false,

@@ -3701,6 +3701,16 @@
       }
     },
     "filters": {
+      "menu_advanced": {
+        "english": "Advanced",
+        "translation": "Advanced",
+        "needs_translation": false
+      },
+      "menu_simple": {
+        "english": "Simple",
+        "translation": "Simple",
+        "needs_translation": false
+      },
       "gyro_lowpass_1": {
         "english": "Gyro Lowpass 1",
         "translation": "Gyro Lowpass 1",

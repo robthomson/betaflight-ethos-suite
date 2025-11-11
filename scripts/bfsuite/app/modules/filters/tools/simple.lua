@@ -21,4 +21,9 @@ local apidata = {
     }
 }
 
-return {apidata = apidata, eepromWrite = true, reboot = true, API = {}}
+local function onNavMenu()
+    bfsuite.app.ui.progressDisplay(nil, nil, true)
+    bfsuite.app.ui.openPage(pageIdx, "@i18n(app.modules.filters.name)@", "filters/filters.lua")
+end
+
+return {apidata = apidata, eepromWrite = true, reboot = true, API = {}, onNavMenu = onNavMenu}
