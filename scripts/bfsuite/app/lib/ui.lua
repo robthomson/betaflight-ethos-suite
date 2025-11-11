@@ -1339,7 +1339,7 @@ function ui.navigationButtons(x, y, w, h)
 
     local navButtons
     if app.Page.navButtons == nil then
-        navButtons = {menu = true, save = true, reload = true, help = true}
+        navButtons = {menu = true, save = true, reload = true, help = false}
     else
         navButtons = app.Page.navButtons
     end
