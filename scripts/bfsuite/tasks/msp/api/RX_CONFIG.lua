@@ -11,36 +11,36 @@ local MSP_API_CMD_READ = 44
 local MSP_API_CMD_WRITE = 45
 local MSP_REBUILD_ON_WRITE = false
 
-local rcSmoothingState = {"@i18n(api.RX_CONFIG.tbl_disabled)@", "@i18n(api.RX_CONFIG.tbl_enabled)@"}
+local rcSmoothingState = { [0] = "@i18n(api.RX_CONFIG.tbl_off)@", [1] = "@i18n(api.RX_CONFIG.tbl_on)@" }
 
 -- LuaFormatter off
 local MSP_API_STRUCTURE_READ_DATA = {
   { field = "serialrx_provider",                 type = "U8",  apiVersion = 1.41, simResponse = {9} },
-  { field = "maxcheck",                          type = "U16", apiVersion = 1.41, simResponse = {108,7} },     -- 1900
-  { field = "midrc",                             type = "U16", apiVersion = 1.41, simResponse = {220,5} },     -- 1500
-  { field = "mincheck",                          type = "U16", apiVersion = 1.41, simResponse = {26,4} },      -- 1050
+  { field = "maxcheck",                          type = "U16", apiVersion = 1.41, simResponse = {108,7}, min = 750, max = 2250, default = 1900 },
+  { field = "midrc",                             type = "U16", apiVersion = 1.41, simResponse = {220,5}, min = 1200, max = 1700, default = 1500 },
+  { field = "mincheck",                          type = "U16", apiVersion = 1.41, simResponse = {26,4}, min = 750, max = 2250, default = 1050 },
   { field = "spektrum_sat_bind",                 type = "U8",  apiVersion = 1.41, simResponse = {0} },
-  { field = "rx_min_usec",                       type = "U16", apiVersion = 1.41, simResponse = {117,3} },     -- 885
-  { field = "rx_max_usec",                       type = "U16", apiVersion = 1.41, simResponse = {67,8} },      -- 2115
+  { field = "rx_min_usec",                       type = "U16", apiVersion = 1.41, simResponse = {117,3} },
+  { field = "rx_max_usec",                       type = "U16", apiVersion = 1.41, simResponse = {67,8} },
 
   { field = "rcInterpolation_deprecated",        type = "U8",  apiVersion = 1.41, simResponse = {0} },
   { field = "rcInterpolationInterval_deprecated",type = "U8",  apiVersion = 1.41, simResponse = {0} },
-  { field = "airModeActivateThresholdX10p1000",  type = "U16", apiVersion = 1.41, simResponse = {226,4} },     -- 1250 (threshold ≈ 25)
+  { field = "airModeActivateThresholdX10p1000",  type = "U16", apiVersion = 1.41, simResponse = {226,4}, min = 0, max = 300, default = 25 },
 
   { field = "rx_spi_protocol",                   type = "U8",  apiVersion = 1.41, simResponse = {0} },
   { field = "rx_spi_id",                         type = "U32", apiVersion = 1.41, simResponse = {0,0,0,0} },
   { field = "rx_spi_rf_channel_count",           type = "U8",  apiVersion = 1.41, simResponse = {0} },
   { field = "fpvCamAngleDegrees",                type = "U8",  apiVersion = 1.41, simResponse = {0} },
   { field = "rcSmoothingChannels_deprecated",    type = "U8",  apiVersion = 1.41, simResponse = {0} },
-  { field = "rc_smoothing_type_deprecated",      type = "U8",  apiVersion = 1.41, simResponse = {0} },
+  { field = "rc_smoothing_enable",               type = "U8",  apiVersion = 1.41, simResponse = {1}, table = rcSmoothingState, min = 0, max = 1, default = 1 },
   { field = "rc_smoothing_setpoint_cutoff",      type = "U8",  apiVersion = 1.41, simResponse = {0} },
   { field = "rc_smoothing_throttle_cutoff",      type = "U8",  apiVersion = 1.41, simResponse = {0} },
   { field = "rc_smoothing_auto_factor_throttle", type = "U8",  apiVersion = 1.41, simResponse = {0} },
   { field = "rc_smoothing_derivative_type_depr", type = "U8",  apiVersion = 1.41, simResponse = {0} },
   { field = "usb_hid_type",                      type = "U8",  apiVersion = 1.41, simResponse = {0} },
 
-  { field = "rc_smoothing_auto_factor_rpy",      type = "U8",  apiVersion = 1.42, simResponse = {30} },
-  { field = "rc_smoothing_enable",               type = "U8",  apiVersion = 1.44, simResponse = {1}, table = rcSmoothingState },
+  { field = "rc_smoothing_auto_factor_rpy",      type = "U8",  apiVersion = 1.42, simResponse = {30}, min = 0, max = 250, default = 30 },
+  { field = "rc_smoothing_enable_donotuse",      type = "U8",  apiVersion = 1.44, simResponse = {1} },
 
   -- ELRS UID (added in 1.45)
   { field = "elrs_uid_0",                        type = "U8",  apiVersion = 1.45, simResponse = {0} },
