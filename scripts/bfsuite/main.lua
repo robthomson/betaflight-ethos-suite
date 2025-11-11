@@ -16,7 +16,7 @@ local config = {
     icon_unsupported = lcd.loadMask("app/gfx/unsupported.png"),
     version = {major = 0, minor = 0, revision = 0, suffix = "20251010"},
     ethosVersion = {1, 6, 2},
-    supportedMspApiVersion = {"1.46"},
+    supportedMspApiVersion = {"1.45", "1.46"},
     baseDir = "bfsuite",
     preferences = "bfsuite.user",
     defaultRateProfile = 3,
