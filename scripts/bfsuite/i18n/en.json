@@ -3790,6 +3790,16 @@
           "needs_translation": false,
           "translation": "I"
         },
+        "menu_advanced": {
+          "english": "Advanced",
+          "needs_translation": false,
+          "translation": "Advanced"
+        },
+        "menu_simple": {
+          "english": "Simple",
+          "needs_translation": false,
+          "translation": "Simple"
+        },
         "name": {
           "english": "PIDs",
           "needs_translation": false,

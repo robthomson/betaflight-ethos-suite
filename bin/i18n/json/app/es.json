@@ -1429,6 +1429,16 @@
         "translation": "Ganancia F (Alabeo/Cabeceo): Comience en 70, aumente hasta que las paradas sean en seco sin derivas. Mantenga alabeo y cabeceo en rangos similares.",
         "needs_translation": false
       },
+      "menu_advanced": {
+        "english": "Advanced",
+        "translation": "Advanced",
+        "needs_translation": true
+      },
+      "menu_simple": {
+        "english": "Simple",
+        "translation": "Simple",
+        "needs_translation": true
+      },
       "o": {
         "english": "O",
         "translation": "O",

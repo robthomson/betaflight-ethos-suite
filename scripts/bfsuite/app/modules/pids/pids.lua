@@ -1,141 +1,167 @@
+--[[
+  Copyright (C) 2025 Rotorflight Project
+  GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
+]] --
+
 local bfsuite = require("bfsuite")
-local activateWakeup = false
 
-local apidata = {
-    api = {
-        [1] = 'PID',
-        [2] = 'PID_ADVANCED',
-    },
-    formdata = {
-        labels = {
-        },
-        rows = {
-            "@i18n(app.modules.pids.roll)@",
-            "@i18n(app.modules.pids.pitch)@",
-            "@i18n(app.modules.pids.yaw)@"
-        },
-        cols = {
-            "@i18n(app.modules.pids.p)@",
-            "@i18n(app.modules.pids.i)@",
-            "@i18n(app.modules.pids.dmax)@",
-            "@i18n(app.modules.pids.d)@",
-            "@i18n(app.modules.pids.f)@",
-        },
-        fields = {
-            -- P
-            {row = 1, col = 1, mspapi = 1, apikey = "pid_0_P"},
-            {row = 2, col = 1, mspapi = 1, apikey = "pid_1_P"},
-            {row = 3, col = 1, mspapi = 1, apikey = "pid_2_P"},
-
-            {row = 1, col = 2, mspapi = 1, apikey = "pid_0_I"},
-            {row = 2, col = 2, mspapi = 1, apikey = "pid_1_I"},
-            {row = 3, col = 2, mspapi = 1, apikey = "pid_2_I"},
-
-            {row = 1, col = 3, mspapi = 1, apikey = "d_max_roll"},
-            {row = 2, col = 3, mspapi = 1, apikey = "d_max_pitch"},
-            {row = 3, col = 3, mspapi = 1, apikey = "d_max_yaw"},
-
-            {row = 1, col = 4, mspapi = 1, apikey = "pid_0_D"},
-            {row = 2, col = 4, mspapi = 1, apikey = "pid_1_D"},
-            {row = 3, col = 4, mspapi = 1, apikey = "pid_2_D"},
-            
-            {row = 1, col = 5, mspapi = 2, apikey = "pid_roll_F"},
-            {row = 2, col = 5, mspapi = 2, apikey = "pid_pitch_F"},
-            {row = 3, col = 5, mspapi = 2, apikey = "pid_yaw_F"},
-        }
-    }                 
+local S_PAGES = {[1] = {name = "@i18n(app.modules.pids.menu_simple)@", script = "simple.lua", image = "simple.png"}, 
+                 [2] = {name = "@i18n(app.modules.pids.menu_advanced)@", script = "advanced.lua", image = "advanced.png"}, 
 }
 
+local enableWakeup = false
+local prevConnectedState = nil
+local initTime = os.clock()
 
-local function postLoad(self)
-    bfsuite.app.triggers.closeProgressLoader = true
-    activateWakeup = true
-end
+local function openPage(pidx, title, script)
 
-local function openPage(idx, title, script)
+    bfsuite.tasks.msp.protocol.mspIntervalOveride = nil
 
-    bfsuite.app.uiState = bfsuite.app.uiStatus.pages
     bfsuite.app.triggers.isReady = false
+    bfsuite.app.uiState = bfsuite.app.uiStatus.mainMenu
 
-    bfsuite.app.Page = assert(loadfile("app/modules/" .. script))()
+    form.clear()
 
     bfsuite.app.lastIdx = idx
     bfsuite.app.lastTitle = title
     bfsuite.app.lastScript = script
-    bfsuite.session.lastPage = script
 
-    bfsuite.app.uiState = bfsuite.app.uiStatus.pages
+    for i in pairs(bfsuite.app.gfx_buttons) do if i ~= "pids" then bfsuite.app.gfx_buttons[i] = nil end end
 
-    local longPage = false
-
-    form.clear()
-
-    bfsuite.app.ui.fieldHeader(title)
-    local numCols
-    if bfsuite.app.Page.apidata.formdata.cols ~= nil then
-        numCols = #bfsuite.app.Page.apidata.formdata.cols
+    if bfsuite.preferences.general.iconsize == nil or bfsuite.preferences.general.iconsize == "" then
+        bfsuite.preferences.general.iconsize = 1
     else
-        numCols = 6
-    end
-    local screenWidth = bfsuite.app.lcdWidth - 10
-    local padding = 10
-    local paddingTop = bfsuite.app.radio.linePaddingTop
-    local h = bfsuite.app.radio.navbuttonHeight
-    local w = ((screenWidth * 70 / 100) / numCols)
-    local paddingRight = 20
-    local positions = {}
-    local positions_r = {}
-    local pos
-
-    local line = form.addLine("")
-
-    local loc = numCols
-    local posX = screenWidth - paddingRight
-    local posY = paddingTop
-
-    local c = 1
-    while loc > 0 do
-        local colLabel = bfsuite.app.Page.apidata.formdata.cols[loc]
-        pos = {x = posX, y = posY, w = w, h = h}
-        form.addStaticText(line, pos, colLabel)
-        positions[loc] = posX - w + paddingRight
-        positions_r[c] = posX - w + paddingRight
-        posX = math.floor(posX - w)
-        loc = loc - 1
-        c = c + 1
+        bfsuite.preferences.general.iconsize = tonumber(bfsuite.preferences.general.iconsize)
     end
 
-    local pidRows = {}
-    for ri, rv in ipairs(bfsuite.app.Page.apidata.formdata.rows) do pidRows[ri] = form.addLine(rv) end
+    local w, h = lcd.getWindowSize()
+    local windowWidth = w
+    local windowHeight = h
+    local padding = bfsuite.app.radio.buttonPadding
 
-    for i = 1, #bfsuite.app.Page.apidata.formdata.fields do
-        local f = bfsuite.app.Page.apidata.formdata.fields[i]
-        local l = bfsuite.app.Page.apidata.formdata.labels
-        local pageIdx = i
-        local currentField = i
+    local sc
+    local panel
 
-        posX = positions[f.col]
+    local buttonW = 100
+    local x = windowWidth - buttonW - 10
 
-        pos = {x = posX + padding, y = posY, w = w - padding, h = h}
+    bfsuite.app.ui.fieldHeader("@i18n(app.modules.pids.name)@")
 
-        bfsuite.app.formFields[i] = form.addNumberField(pidRows[f.row], pos, 0, 0, function()
-            if bfsuite.app.Page.apidata.formdata.fields == nil or bfsuite.app.Page.apidata.formdata.fields[i] == nil then
-                ui.disableAllFields()
-                ui.disableAllNavigationFields()
-                ui.enableNavigationField('menu')
-                return nil
+    local buttonW
+    local buttonH
+    local padding
+    local numPerRow
+
+    if bfsuite.preferences.general.iconsize == 0 then
+        padding = bfsuite.app.radio.buttonPaddingSmall
+        buttonW = (bfsuite.app.lcdWidth - padding) / bfsuite.app.radio.buttonsPerRow - padding
+        buttonH = bfsuite.app.radio.navbuttonHeight
+        numPerRow = bfsuite.app.radio.buttonsPerRow
+    end
+
+    if bfsuite.preferences.general.iconsize == 1 then
+
+        padding = bfsuite.app.radio.buttonPaddingSmall
+        buttonW = bfsuite.app.radio.buttonWidthSmall
+        buttonH = bfsuite.app.radio.buttonHeightSmall
+        numPerRow = bfsuite.app.radio.buttonsPerRowSmall
+    end
+
+    if bfsuite.preferences.general.iconsize == 2 then
+
+        padding = bfsuite.app.radio.buttonPadding
+        buttonW = bfsuite.app.radio.buttonWidth
+        buttonH = bfsuite.app.radio.buttonHeight
+        numPerRow = bfsuite.app.radio.buttonsPerRow
+    end
+
+    if bfsuite.app.gfx_buttons["pids"] == nil then bfsuite.app.gfx_buttons["pids"] = {} end
+    if bfsuite.preferences.menulastselected["pids"] == nil then bfsuite.preferences.menulastselected["pids"] = 1 end
+
+    local Menu = assert(loadfile("app/modules/" .. script))()
+    local pages = S_PAGES
+    local lc = 0
+    local bx = 0
+    local y = 0
+
+    for pidx, pvalue in ipairs(S_PAGES) do
+
+        if lc == 0 then
+            if bfsuite.preferences.general.iconsize == 0 then y = form.height() + bfsuite.app.radio.buttonPaddingSmall end
+            if bfsuite.preferences.general.iconsize == 1 then y = form.height() + bfsuite.app.radio.buttonPaddingSmall end
+            if bfsuite.preferences.general.iconsize == 2 then y = form.height() + bfsuite.app.radio.buttonPadding end
+        end
+
+        if lc >= 0 then bx = (buttonW + padding) * lc end
+
+        if bfsuite.preferences.general.iconsize ~= 0 then
+            if bfsuite.app.gfx_buttons["pids"][pidx] == nil then bfsuite.app.gfx_buttons["pids"][pidx] = lcd.loadMask("app/modules/pids/gfx/" .. pvalue.image) end
+        else
+            bfsuite.app.gfx_buttons["pids"][pidx] = nil
+        end
+
+        bfsuite.app.formFields[pidx] = form.addButton(line, {x = bx, y = y, w = buttonW, h = buttonH}, {
+            text = pvalue.name,
+            icon = bfsuite.app.gfx_buttons["pids"][pidx],
+            options = FONT_S,
+            paint = function() end,
+            press = function()
+                bfsuite.preferences.menulastselected["pids"] = pidx
+                bfsuite.app.ui.progressDisplay()
+                local name = "@i18n(app.modules.pids.name)@" .. " / " .. pvalue.name
+                bfsuite.app.ui.openPage(pidx, name, "pids/tools/" .. pvalue.script)
             end
-            return bfsuite.app.utils.getFieldValue(bfsuite.app.Page.apidata.formdata.fields[i])
-        end, function(value)
-            if f.postEdit then f.postEdit(bfsuite.app.Page) end
-            if f.onChange then f.onChange(bfsuite.app.Page) end
+        })
 
-            f.value = bfsuite.app.utils.saveFieldValue(bfsuite.app.Page.apidata.formdata.fields[i], value)
-        end)
+        if pvalue.disabled == true then bfsuite.app.formFields[pidx]:enable(false) end
+
+        local currState = (bfsuite.session.isConnected and bfsuite.session.mcu_id) and true or false
+
+        if bfsuite.preferences.menulastselected["pids"] == pidx then bfsuite.app.formFields[pidx]:focus() end
+
+        lc = lc + 1
+
+        if lc == numPerRow then lc = 0 end
+
     end
 
+    bfsuite.app.triggers.closeProgressLoader = true
+
+    enableWakeup = true
+    return
 end
 
-local function wakeup() if activateWakeup == true and bfsuite.tasks.msp.mspQueue:isProcessed() then if bfsuite.session.activeProfile ~= nil then bfsuite.app.formFields['title']:value(bfsuite.app.Page.title .. " #" .. bfsuite.session.activeProfile) end end end
+local function event(widget, category, value, x, y)
 
-return {apidata = apidata, title = "@i18n(app.modules.pids.name)@", reboot = false, eepromWrite = true, refreshOnProfileChange = true, postLoad = postLoad, openPage = openPage, wakeup = wakeup, API = {}}
+    if category == EVT_CLOSE and value == 0 or value == 35 then
+        bfsuite.app.ui.openMainMenuSub(bfsuite.app.lastMenu)
+        return true
+    end
+end
+
+local function onNavMenu()
+    bfsuite.app.ui.progressDisplay()
+    bfsuite.app.ui.openMainMenu()
+    return true
+end
+
+local function wakeup()
+    if not enableWakeup then return end
+
+    if os.clock() - initTime < 0.25 then return end
+
+    local currState = (bfsuite.session.isConnected and bfsuite.session.mcu_id) and true or false
+
+    if currState ~= prevConnectedState then
+
+        bfsuite.app.formFields[2]:enable(currState)
+
+        if not currState then bfsuite.app.formNavigationFields['menu']:focus() end
+
+        prevConnectedState = currState
+    end
+end
+
+bfsuite.app.uiState = bfsuite.app.uiStatus.pages
+
+return {pages = pages, openPage = openPage, onNavMenu = onNavMenu, event = event, wakeup = wakeup, API = {}, navButtons = {menu = true, save = false, reload = false, tool = false, help = false}}

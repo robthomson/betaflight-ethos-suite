@@ -1429,6 +1429,16 @@
         "translation": "FeedForward (Roll/Nick): Beginnen Sie bei 70, erhoehen Sie den Wert, bis Stopps scharf sind und kein Driften auftritt. Halten Sie Roll und Nick gleich.",
         "needs_translation": false
       },
+      "menu_advanced": {
+        "english": "Advanced",
+        "translation": "Advanced",
+        "needs_translation": true
+      },
+      "menu_simple": {
+        "english": "Simple",
+        "translation": "Simple",
+        "needs_translation": true
+      },
       "o": {
         "english": "O",
         "translation": "O",
