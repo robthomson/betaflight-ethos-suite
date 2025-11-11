@@ -12,50 +12,48 @@ local apidata = {
     formdata = {
         labels = {
             -- Gyro Lowpass Filters Section
-            {t = "Gyro Lowpass 1", label = 1, inline_size = 50},
-            {t = "    Mode", label = 2, inline_size = 50},
-            {t = "    Static Cutoff", label = 3, inline_size = 50},
-            {t = "    Dynamic Cutoff Max", label = 4, inline_size = 50},
-            {t = "    Dynamic Cutoff Min", label = 5, inline_size = 50},
-            {t = "    Filter Type", label = 6, inline_size = 50},
-            {t = "Gyro Lowpass 2", label = 7, inline_size = 50},
-            {t = "    Cutoff", label = 8, inline_size = 50},
-            {t = "    Filter Type", label = 9, inline_size = 50},
+            {t = "@i18n(app.modules.filters.gyro_lowpass_1)@", label = 1, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.mode)@", label = 2, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.static_cutoff)@", label = 3, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.dynamic_cutoff_max)@", label = 4, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.dynamic_cutoff_min)@", label = 5, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.filter_type)@", label = 6, inline_size = 50},
+            {t = "@i18n(app.modules.filters.gyro_lowpass_2)@", label = 7, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.cutoff)@", label = 8, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.filter_type)@", label = 9, inline_size = 50},
 
             -- D Term Lowpass Filters Section
-            {t = "D-Term Lowpass 1", label = 10, inline_size = 50},
-            {t = "    Mode", label = 11, inline_size = 50},
-            {t = "    Static Cutoff", label = 12, inline_size = 50},
-            {t = "    Dynamic Cutoff Max", label = 13, inline_size = 50},
-            {t = "    Dynamic Cutoff Min", label = 14, inline_size = 50},
-            {t = "    Filter Type", label = 15, inline_size = 50},
-            {t = "D-Term Lowpass 2", label = 16, inline_size = 50},
-            {t = "    Cutoff", label = 17, inline_size = 50},
-            {t = "    Filter Type", label = 18, inline_size = 50},
+            {t = "@i18n(app.modules.filters.d_term_lowpass_1)@", label = 10, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.mode)@", label = 11, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.static_cutoff)@", label = 12, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.dynamic_cutoff_max)@", label = 13, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.dynamic_cutoff_min)@", label = 14, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.filter_type)@", label = 15, inline_size = 50},
+            {t = "@i18n(app.modules.filters.d_term_lowpass_2)@", label = 16, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.cutoff)@", label = 17, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.filter_type)@", label = 18, inline_size = 50},
 
             -- Gyro Notch Filters Section
-            {t = "Gyro Notch 1", label = 19, inline_size = 50},
-            {t = "    Center Freq", label = 20, inline_size = 50},
-            {t = "    Cutoff", label = 21, inline_size = 50},
-            {t = "Gyro Notch 2", label = 22, inline_size = 50},
-            {t = "    Center Freq", label = 23, inline_size = 50},
-            {t = "    Cutoff", label = 24, inline_size = 50},
-
+            {t = "@i18n(app.modules.filters.gyro_notch_1)@", label = 19, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.gyro_notch_center_freq)@", label = 20, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.gyro_notch_cutoff)@", label = 21, inline_size = 50},
+            {t = "@i18n(app.modules.filters.gyro_notch_2)@", label = 22, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.gyro_notch_center_freq)@", label = 23, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.gyro_notch_cutoff)@", label = 24, inline_size = 50},
             -- D-Term Notch Filter Section
-            {t = "D-Term Notch", label = 25, inline_size = 50},
-            {t = "    Center Freq", label = 26, inline_size = 50},
-            {t = "    Cutoff", label = 27, inline_size = 50},
-
+            {t = "@i18n(app.modules.filters.d_term_notch)@", label = 25, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.center_freq)@", label = 26, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.cutoff)@", label = 27, inline_size = 50},
             -- Dynamic Notch Filter Section
-            {t = "Dynamic Notch", label = 28, inline_size = 50},
-            {t = "    Notch Count", label = 29, inline_size = 50},
-            {t = "    Q Factor", label = 30, inline_size = 50},
-            {t = "    Min Freq", label = 31, inline_size = 50},
-            {t = "    Max Freq", label = 32, inline_size = 50},
+            {t = "@i18n(app.modules.filters.dynamic_notch)@", label = 28, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.notch_count)@", label = 29, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.q_factor)@", label = 30, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.min_freq)@", label = 31, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.max_freq)@", label = 32, inline_size = 50},
 
             -- Yaw Lowpass Filter Section
-            {t = "Yaw Lowpass", label = 33, inline_size = 50},
-            {t = "    Static Cutoff", label = 34, inline_size = 50}
+            {t = "@i18n(app.modules.filters.yaw_lowpass)@", label = 33, inline_size = 50},
+            {t = "    @i18n(app.modules.filters.static_cutoff)@", label = 34, inline_size = 50}
         },
         fields = {
             -- Gyro Lowpass Filters Section

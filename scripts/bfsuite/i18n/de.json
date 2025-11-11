@@ -3126,20 +3126,90 @@
           "needs_translation": false,
           "translation": "Mitte"
         },
+        "center_freq": {
+          "english": "Center Frequency",
+          "needs_translation": true,
+          "translation": "Center Frequency"
+        },
         "cutoff": {
           "english": "Cutoff",
           "needs_translation": false,
           "translation": "G-freq."
+        },
+        "cutoff_freq": {
+          "english": "Cutoff Freq",
+          "needs_translation": true,
+          "translation": "Cutoff Freq"
+        },
+        "d_term_lowpass_1": {
+          "english": "D-Term Lowpass 1",
+          "needs_translation": true,
+          "translation": "D-Term Lowpass 1"
+        },
+        "d_term_lowpass_2": {
+          "english": "D-Term Lowpass 2",
+          "needs_translation": true,
+          "translation": "D-Term Lowpass 2"
+        },
+        "d_term_notch": {
+          "english": "D-Term Notch",
+          "needs_translation": true,
+          "translation": "D-Term Notch"
         },
         "dyn_notch": {
           "english": "Dynamic Filters",
           "needs_translation": false,
           "translation": "Dynamische Filter"
         },
+        "dynamic_cutoff_max": {
+          "english": "Dynamic Cutoff Max",
+          "needs_translation": true,
+          "translation": "Dynamic Cutoff Max"
+        },
+        "dynamic_cutoff_min": {
+          "english": "Dynamic Cutoff Min",
+          "needs_translation": true,
+          "translation": "Dynamic Cutoff Min"
+        },
+        "dynamic_notch": {
+          "english": "Dynamic Notch",
+          "needs_translation": true,
+          "translation": "Dynamic Notch"
+        },
         "filter_type": {
           "english": "Filter type",
           "needs_translation": false,
           "translation": "Filtertyp"
+        },
+        "gyro_lowpass_1": {
+          "english": "Gyro Lowpass 1",
+          "needs_translation": true,
+          "translation": "Gyro Lowpass 1"
+        },
+        "gyro_lowpass_2": {
+          "english": "Gyro Lowpass 2",
+          "needs_translation": true,
+          "translation": "Gyro Lowpass 2"
+        },
+        "gyro_notch_1": {
+          "english": "Gyro Notch 1",
+          "needs_translation": true,
+          "translation": "Gyro Notch 1"
+        },
+        "gyro_notch_2": {
+          "english": "Gyro Notch 2",
+          "needs_translation": true,
+          "translation": "Gyro Notch 2"
+        },
+        "gyro_notch_center_freq": {
+          "english": "Center Freq",
+          "needs_translation": true,
+          "translation": "Center Freq"
+        },
+        "gyro_notch_cutoff": {
+          "english": "Cutoff",
+          "needs_translation": true,
+          "translation": "Cutoff"
         },
         "help_p1": {
           "english": "Typically you would not edit this page without checking your Blackbox logs!",
@@ -3181,10 +3251,30 @@
           "needs_translation": false,
           "translation": "Max. Grenzfreq."
         },
+        "max_freq": {
+          "english": "Max Frequency",
+          "needs_translation": true,
+          "translation": "Max Frequency"
+        },
         "min_cutoff": {
           "english": "Min cutoff",
           "needs_translation": false,
           "translation": "Min. Grenzfreq."
+        },
+        "min_freq": {
+          "english": "Min Frequency",
+          "needs_translation": true,
+          "translation": "Min Frequency"
+        },
+        "mode": {
+          "english": "Mode",
+          "needs_translation": true,
+          "translation": "Mode"
+        },
+        "mode_dyn": {
+          "english": "Mode Dyn.",
+          "needs_translation": true,
+          "translation": "Mode Dyn."
         },
         "name": {
           "english": "Filters",
@@ -3206,6 +3296,11 @@
           "needs_translation": false,
           "translation": "Notch Anzahl"
         },
+        "notch_count": {
+          "english": "Notch Count",
+          "needs_translation": true,
+          "translation": "Notch Count"
+        },
         "notch_max_hz": {
           "english": "Max",
           "needs_translation": false,
@@ -3221,6 +3316,11 @@
           "needs_translation": false,
           "translation": "Notch Q"
         },
+        "q_factor": {
+          "english": "Q Factor",
+          "needs_translation": true,
+          "translation": "Q Factor"
+        },
         "rpm_filter": {
           "english": "RPM filter",
           "needs_translation": false,
@@ -3235,6 +3335,21 @@
           "english": "Type",
           "needs_translation": false,
           "translation": "Typ"
+        },
+        "static_cutoff": {
+          "english": "Static Cutoff",
+          "needs_translation": true,
+          "translation": "Static Cutoff"
+        },
+        "static_cutoff_dyn": {
+          "english": "Static Cutoff Dyn.",
+          "needs_translation": true,
+          "translation": "Static Cutoff Dyn."
+        },
+        "yaw_lowpass": {
+          "english": "Yaw Lowpass",
+          "needs_translation": true,
+          "translation": "Yaw Lowpass"
         }
       },
       "governor": {

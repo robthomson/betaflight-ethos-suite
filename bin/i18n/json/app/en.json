@@ -3691,9 +3691,69 @@
       }
     },
     "filters": {
+      "gyro_lowpass_1": {
+        "english": "Gyro Lowpass 1",
+        "translation": "Gyro Lowpass 1",
+        "needs_translation": false
+      },
+      "mode": {
+        "english": "Mode",
+        "translation": "Mode",
+        "needs_translation": false
+      },
+      "static_cutoff": {
+        "english": "Static Cutoff",
+        "translation": "Static Cutoff",
+        "needs_translation": false
+      },
+      "dynamic_cutoff_max": {
+        "english": "Dynamic Cutoff Max",
+        "translation": "Dynamic Cutoff Max",
+        "needs_translation": false
+      },
+      "dynamic_cutoff_min": {
+        "english": "Dynamic Cutoff Min",
+        "translation": "Dynamic Cutoff Min",
+        "needs_translation": false
+      },
       "filter_type": {
         "english": "Filter type",
         "translation": "Filter type",
+        "needs_translation": false
+      },
+      "gyro_lowpass_2": {
+        "english": "Gyro Lowpass 2",
+        "translation": "Gyro Lowpass 2",
+        "needs_translation": false
+      },
+      "cutoff_freq": {
+        "english": "Cutoff Freq",
+        "translation": "Cutoff Freq",
+        "needs_translation": false
+      },
+      "d_term_lowpass_1": {
+        "english": "D-Term Lowpass 1",
+        "translation": "D-Term Lowpass 1",
+        "needs_translation": false
+      },
+      "mode_dyn": {
+        "english": "Mode Dyn.",
+        "translation": "Mode Dyn.",
+        "needs_translation": false
+      },
+      "static_cutoff_dyn": {
+        "english": "Static Cutoff Dyn.",
+        "translation": "Static Cutoff Dyn.",
+        "needs_translation": false
+      },
+      "d_term_lowpass_2": {
+        "english": "D-Term Lowpass 2",
+        "translation": "D-Term Lowpass 2",
+        "needs_translation": false
+      },
+      "cutoff": {
+        "english": "Cutoff",
+        "translation": "Cutoff",
         "needs_translation": false
       },
       "help_p4": {
@@ -3702,6 +3762,66 @@
         "needs_translation": false
       },
       "notch_c": {
+        "english": "Notch Count",
+        "translation": "Notch Count",
+        "needs_translation": false
+      },
+      "gyro_notch_1": {
+        "english": "Gyro Notch 1",
+        "translation": "Gyro Notch 1",
+        "needs_translation": false
+      },
+      "gyro_notch_2": {
+        "english": "Gyro Notch 2",
+        "translation": "Gyro Notch 2",
+        "needs_translation": false
+      },
+      "gyro_notch_center_freq": {
+        "english": "Center Freq",
+        "translation": "Center Freq",
+        "needs_translation": false
+      },
+      "gyro_notch_cutoff": {
+        "english": "Cutoff",
+        "translation": "Cutoff",
+        "needs_translation": false
+      },
+      "d_term_notch": {
+        "english": "D-Term Notch",
+        "translation": "D-Term Notch",
+        "needs_translation": false
+      },
+      "dynamic_notch": {
+        "english": "Dynamic Notch",
+        "translation": "Dynamic Notch",
+        "needs_translation": false
+      },
+      "yaw_lowpass": {
+        "english": "Yaw Lowpass",
+        "translation": "Yaw Lowpass",
+        "needs_translation": false
+      },
+      "center_freq": {
+        "english": "Center Frequency",
+        "translation": "Center Frequency",
+        "needs_translation": false
+      },
+      "q_factor": {
+        "english": "Q Factor",
+        "translation": "Q Factor",
+        "needs_translation": false
+      },
+      "min_freq": {
+        "english": "Min Frequency",
+        "translation": "Min Frequency",
+        "needs_translation": false
+      },
+      "max_freq": {
+        "english": "Max Frequency",
+        "translation": "Max Frequency",
+        "needs_translation": false
+      },
+      "notch_count": {
         "english": "Notch Count",
         "translation": "Notch Count",
         "needs_translation": false
@@ -3724,11 +3844,6 @@
       "help_p2": {
         "english": "Gyro lowpass: Lowpass filters for the gyro signal. Typically left at default.",
         "translation": "Gyro lowpass: Lowpass filters for the gyro signal. Typically left at default.",
-        "needs_translation": false
-      },
-      "cutoff": {
-        "english": "Cutoff",
-        "translation": "Cutoff",
         "needs_translation": false
       },
       "notch_1": {
