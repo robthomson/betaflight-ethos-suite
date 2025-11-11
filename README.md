@@ -10,4 +10,6 @@ Betaflight Suite for Ethos is a combinded dashboard and configuration tool that 
 
 ## Donate
 
-If you find Rotorflight useful, please consider [supporting the development by donating](https://www.paypal.com/donate/?hosted_button_id=LLP4MT8C8TPVJ) to the Rotorflight Project.
+Like what you see.  Consider donating..
+
+[![Donate](https://github.com/robthomson/RF2STATUS/blob/main/git/paypal-donate-button.png?raw=true)](https://www.paypal.com/donate/?hosted_button_id=SJVE2326X5R7A)
