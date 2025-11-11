@@ -66,4 +66,9 @@ local function wakeup()
 
 end
 
-return {apidata = apidata, eepromWrite = true, reboot = false, API = {}, navButtons = {menu = true, save = true, reload = true, tool = true, help = true}, onToolMenu = onToolMenu, wakeup = wakeup}
+local function onNavMenu()
+    bfsuite.app.ui.progressDisplay(nil, nil, true)
+    bfsuite.app.ui.openMainMenuSub('hardware')
+end
+
+return {apidata = apidata, eepromWrite = true, reboot = false, API = {}, navButtons = {menu = true, save = true, reload = true, tool = true, help = true}, onToolMenu = onToolMenu, wakeup = wakeup, onNavMenu = onNavMenu}
