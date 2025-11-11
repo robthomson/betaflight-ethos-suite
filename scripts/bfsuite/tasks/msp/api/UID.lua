@@ -11,7 +11,10 @@ local MSP_API_CMD_READ = 160
 local MSP_API_CMD_WRITE = nil
 local MSP_REBUILD_ON_WRITE = false
 
-local MSP_API_STRUCTURE_READ_DATA = {{field = "U_ID_0", type = "U32", apiVersion = 1.46, simResponse = {43, 0, 34, 0}, help = "@i18n(api.UID.U_ID_0)@"}, {field = "U_ID_1", type = "U32", apiVersion = 1.46, simResponse = {9, 81, 51, 52}, help = "@i18n(api.UID.U_ID_1)@"}, {field = "U_ID_2", type = "U32", apiVersion = 1.46, simResponse = {52, 56, 53, 49}, help = "@i18n(api.UID.U_ID_2)@"}}
+local MSP_API_STRUCTURE_READ_DATA = {
+    {field = "U_ID_0", type = "U32", simResponse = {43, 0, 34, 0}, help = "@i18n(api.UID.U_ID_0)@"}, 
+    {field = "U_ID_1", type = "U32", simResponse = {9, 81, 51, 52}, help = "@i18n(api.UID.U_ID_1)@"}, 
+    {field = "U_ID_2", type = "U32", simResponse = {52, 56, 53, 49}, help = "@i18n(api.UID.U_ID_2)@"}}
 
 local MSP_API_STRUCTURE_READ, MSP_MIN_BYTES, MSP_API_SIMULATOR_RESPONSE = core.prepareStructureData(MSP_API_STRUCTURE_READ_DATA)
 
