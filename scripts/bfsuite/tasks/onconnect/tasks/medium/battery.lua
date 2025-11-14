@@ -50,6 +50,7 @@ function battery.wakeup()
             local vbatmincellvoltage = API.readValue("vbatmincellvoltage") / 100
             local vbatmaxcellvoltage = API.readValue("vbatmaxcellvoltage") / 100
             local voltageMeterSource = API.readValue("voltageMeterSource")
+            local batteryCapacity = API.readValue("batteryCapacity")
             local vbatfullcellvoltage = vbatmaxcellvoltage + 0.4
             local consumptionWarningPercentage = 30
 
@@ -57,6 +58,7 @@ function battery.wakeup()
             bfsuite.session.batteryConfig.vbatwarningcellvoltage = vbatwarningcellvoltage
             bfsuite.session.batteryConfig.vbatmincellvoltage = vbatmincellvoltage
             bfsuite.session.batteryConfig.vbatmaxcellvoltage = vbatmaxcellvoltage
+            bfsuite.session.batteryConfig.batteryCapacity = batteryCapacity
             bfsuite.session.batteryConfig.vbatfullcellvoltage = vbatmaxcellvoltage + 0.4
             bfsuite.session.batteryConfig.consumptionWarningPercentage = consumptionWarningPercentage
 
@@ -65,6 +67,7 @@ function battery.wakeup()
             bfsuite.utils.log("Max Voltage: " .. vbatmaxcellvoltage .. "V", "info")
             bfsuite.utils.log("Full Cell Voltage: " .. vbatfullcellvoltage .. "V", "info")
             bfsuite.utils.log("Consumption Warning Percentage: " .. consumptionWarningPercentage .. "%", "info")
+            bfsuite.utils.log("Battery Capacity: " .. batteryCapacity .. "mAh", "info")
             bfsuite.utils.log("Battery Config Complete", "info")
             mspCall2Complete = true
         end)

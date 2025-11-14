@@ -16,12 +16,12 @@ local MSP_API_STRUCTURE_READ_DATA = {
     {field = "vbatmincellvoltage10", type = "U8", simResponse = {31}},
     {field = "vbatmaxcellvoltage10", type = "U8", simResponse = {43}},
     {field = "vbatwarncellvoltage10", type = "U8", simResponse = {32}},
-    {field = "capacity", type = "U16", simResponse = {0 ,0 }},
+    {field = "batteryCapacity", type = "U16", simResponse = {0 ,0 }, unit="mAh", min=0, max=100000000},
     {field = "voltageMeterSource", type = "U8", simResponse = {1}},
     {field = "currentMeterSource", type = "U8", simResponse = {1}},
-    {field = "vbatmincellvoltage", type = "U16", simResponse = {54,1}},
-    {field = "vbatmaxcellvoltage", type = "U16", simResponse = {174,1}},
-    {field = "vbatwarningcellvoltage", type = "U16", simResponse = {64,1}},    
+    {field = "vbatmincellvoltage", type = "U16", simResponse = {54,1}, scale = 100, decimals = 2, unit = "v", min=0, max=1000},
+    {field = "vbatmaxcellvoltage", type = "U16", simResponse = {174,1}, scale = 100, decimals = 2, unit = "v", min=0, max=1000},
+    {field = "vbatwarningcellvoltage", type = "U16", simResponse = {64,1}, scale = 100, decimals = 2, unit = "v"},    
 
 }
 -- LuaFormatter on
