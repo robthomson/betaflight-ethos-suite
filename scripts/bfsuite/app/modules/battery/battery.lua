@@ -43,46 +43,12 @@ end
 local function wakeup(self)
     if enableWakeup == false then return end
 
-    for _, f in ipairs(self.fields or (self.apidata and self.apidata.formdata.fields) or {}) do
-        if f.apikey == "calc_local" then
-            local v = tonumber(f.value)
-            if v == 1 then
-                disableMultiplier = true
-            else
-                disableMultiplier = false
-            end
-        end
-    end
 
-    if disableMultiplier == true then
-        for i, f in ipairs(self.fields or (self.apidata and self.apidata.formdata.fields) or {}) do if f.apikey == "sag_multiplier" then bfsuite.app.formFields[i]:enable(true) end end
-    else
-        for i, f in ipairs(self.fields or (self.apidata and self.apidata.formdata.fields) or {}) do if f.apikey == "sag_multiplier" then bfsuite.app.formFields[i]:enable(false) end end
-    end
-
-    for _, f in ipairs(self.fields or (self.apidata and self.apidata.formdata.fields) or {}) do
-        if f.apikey == "alert_type" then
-            local b = tonumber(f.value)
-            if b == 1 then
-                becAlert = true
-                rxBattAlert = false
-            elseif b == 2 then
-                becAlert = false
-                rxBattAlert = true
-            else
-                becAlert = false
-                rxBattAlert = false
-            end
-        end
-    end
-
-    for i, f in ipairs(self.fields or (self.apidata and self.apidata.formdata.fields) or {}) do
-        if f.apikey == "becalertvalue" then
-            bfsuite.app.formFields[i]:enable(becAlert)
-        elseif f.apikey == "rxalertvalue" then
-            bfsuite.app.formFields[i]:enable(rxBattAlert)
-        end
-    end
 end
 
-return {wakeup = wakeup, apidata = apidata, eepromWrite = true, reboot = false, API = {}, postLoad = postLoad}
+local function onNavMenu()
+    bfsuite.app.ui.progressDisplay(nil, nil, true)
+    bfsuite.app.ui.openMainMenuSub('hardware')
+end
+
+return {wakeup = wakeup, onNavMenu = onNavMenu, apidata = apidata, eepromWrite = true, reboot = false, API = {}, postLoad = postLoad}
