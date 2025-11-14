@@ -32,18 +32,18 @@ jobs:
           PR_NUMBER='${{ github.event.pull_request.number }}'
           echo "GIT_VER=PR-${PR_NUMBER}" >> $GITHUB_ENV
 
-      # Build merged i18n JSON only for this locale (into scripts/bfsuite/i18n/<lang>.json)
+      # Build merged i18n JSON only for this locale (into src/bfsuite/i18n/<lang>.json)
       - name: Build merged i18n JSON (${{ matrix.lang }})
         run: |
           python bin/i18n/build-single-json.py --only '${{ matrix.lang }}'
-          test -f "scripts/bfsuite/i18n/${{ matrix.lang }}.json"
+          test -f "src/bfsuite/i18n/${{ matrix.lang }}.json"
 
-      # Stage scripts/ into build/<lang>/scripts
+      # Stage src/ into build/<lang>/scripts
       - name: Stage scripts tree
         run: |
           rm -rf "${{ env.STAGE }}"
           mkdir -p "${{ env.STAGE }}"
-          cp -a scripts/. "${{ env.STAGE }}/"
+          cp -a src/. "${{ env.STAGE }}/"
 
       # Resolve @i18n(...)@ tags in the staged tree using the staged locale file
       - name: Resolve i18n tags (locale=${{ matrix.lang }})

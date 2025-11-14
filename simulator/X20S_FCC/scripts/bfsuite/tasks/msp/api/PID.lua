@@ -1,0 +1,140 @@
+--[[
+  Copyright (C) 2025 Rob Thomson
+  GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
+]] --
+
+local bfsuite = require("bfsuite")
+local core = assert(loadfile("SCRIPTS:/" .. bfsuite.config.baseDir .. "/tasks/msp/api_core.lua"))()
+
+local API_NAME = "PID"
+local MSP_API_CMD_READ = 112
+local MSP_API_CMD_WRITE = 202
+local MSP_REBUILD_ON_WRITE = false
+
+-- LuaFormatter off
+local MSP_API_STRUCTURE_READ_DATA = {
+    -- roll
+    {field = "pid_0_P", type = "U8", apiVersion = 1.45, simResponse = {45},  min = 0, max = 1000, default = 45},
+    {field = "pid_0_I", type = "U8", apiVersion = 1.45, simResponse = {80}, min = 0, max = 1000, default = 80},
+    {field = "pid_0_D", type = "U8", apiVersion = 1.45, simResponse = {40},  min = 0, max = 1000, default = 40},
+
+    -- pitch
+    {field = "pid_1_P", type = "U8", apiVersion = 1.45, simResponse = {47},  min = 0, max = 1000, default = 47},
+    {field = "pid_1_I", type = "U8", apiVersion = 1.45, simResponse = {84}, min = 0, max = 1000, default = 84},
+    {field = "pid_1_D", type = "U8", apiVersion = 1.45, simResponse = {46},  min = 0, max = 1000, default = 46},
+
+    -- yaw
+    {field = "pid_2_P", type = "U8", apiVersion = 1.45, simResponse = {45},  min = 0, max = 1000, default = 45},
+    {field = "pid_2_I", type = "U8", apiVersion = 1.45, simResponse = {80}, min = 0, max = 1000, default = 80},
+    {field = "pid_2_D", type = "U8", apiVersion = 1.45, simResponse = {0},  min = 0, max = 1000, default = 0},
+ 
+    -- no idea what this is yet?
+    {field = "pid_3_P", type = "U8", apiVersion = 1.45, simResponse = {50},  min = 0, max = 1000, default = 50},
+    {field = "pid_3_I", type = "U8", apiVersion = 1.45, simResponse = {75}, min = 0, max = 1000, default = 75},
+    {field = "pid_3_D", type = "U8", apiVersion = 1.45, simResponse = {75},  min = 0, max = 1000, default = 75},
+
+     -- no idea what this is yet?
+    {field = "pid_4_P", type = "U8", apiVersion = 1.45, simResponse = {40},  min = 0, max = 1000, default = 40},
+    {field = "pid_4_I", type = "U8", apiVersion = 1.45, simResponse = {0}, min = 0, max = 1000, default = 0},
+    {field = "pid_4_D", type = "U8", apiVersion = 1.45, simResponse = {0},  min = 0, max = 1000, default = 0},
+ 
+}
+-- LuaFormatter on
+
+local MSP_API_STRUCTURE_READ, MSP_MIN_BYTES, MSP_API_SIMULATOR_RESPONSE = core.prepareStructureData(MSP_API_STRUCTURE_READ_DATA)
+
+local MSP_API_STRUCTURE_WRITE = MSP_API_STRUCTURE_READ
+
+local mspData = nil
+local mspWriteComplete = false
+local payloadData = {}
+local defaultData = {}
+
+local handlers = core.createHandlers()
+
+local MSP_API_UUID
+local MSP_API_MSG_TIMEOUT
+
+local lastWriteUUID = nil
+
+local writeDoneRegistry = setmetatable({}, {__mode = "kv"})
+
+local function processReplyStaticRead(self, buf)
+    core.parseMSPData(API_NAME, buf, self.structure, nil, nil, function(result)
+        mspData = result
+        if #buf >= (self.minBytes or 0) then
+            local getComplete = self.getCompleteHandler
+            if getComplete then
+                local complete = getComplete()
+                if complete then complete(self, buf) end
+            end
+        end
+    end)
+end
+
+local function processReplyStaticWrite(self, buf)
+    mspWriteComplete = true
+
+    if self.uuid then writeDoneRegistry[self.uuid] = true end
+
+    local getComplete = self.getCompleteHandler
+    if getComplete then
+        local complete = getComplete()
+        if complete then complete(self, buf) end
+    end
+end
+
+local function errorHandlerStatic(self, buf)
+    local getError = self.getErrorHandler
+    if getError then
+        local err = getError()
+        if err then err(self, buf) end
+    end
+end
+
+local function read()
+    if MSP_API_CMD_READ == nil then
+        bfsuite.utils.log("No value set for MSP_API_CMD_READ", "debug")
+        return
+    end
+
+    local message = {command = MSP_API_CMD_READ, structure = MSP_API_STRUCTURE_READ, minBytes = MSP_MIN_BYTES, processReply = processReplyStaticRead, errorHandler = errorHandlerStatic, simulatorResponse = MSP_API_SIMULATOR_RESPONSE, uuid = MSP_API_UUID, timeout = MSP_API_MSG_TIMEOUT, getCompleteHandler = handlers.getCompleteHandler, getErrorHandler = handlers.getErrorHandler, mspData = nil}
+    bfsuite.tasks.msp.mspQueue:add(message)
+end
+
+local function write(suppliedPayload)
+    if MSP_API_CMD_WRITE == nil then
+        bfsuite.utils.log("No value set for MSP_API_CMD_WRITE", "debug")
+        return
+    end
+
+    local payload = suppliedPayload or core.buildWritePayload(API_NAME, payloadData, MSP_API_STRUCTURE_WRITE, MSP_REBUILD_ON_WRITE)
+
+    local uuid = MSP_API_UUID or bfsuite.utils and bfsuite.utils.uuid and bfsuite.utils.uuid() or tostring(os.clock())
+    lastWriteUUID = uuid
+
+    local message = {command = MSP_API_CMD_WRITE, payload = payload, processReply = processReplyStaticWrite, errorHandler = errorHandlerStatic, simulatorResponse = {}, uuid = uuid, timeout = MSP_API_MSG_TIMEOUT, getCompleteHandler = handlers.getCompleteHandler, getErrorHandler = handlers.getErrorHandler}
+
+    bfsuite.tasks.msp.mspQueue:add(message)
+end
+
+local function readValue(fieldName)
+    if mspData and mspData['parsed'][fieldName] ~= nil then return mspData['parsed'][fieldName] end
+    return nil
+end
+
+local function setValue(fieldName, value) payloadData[fieldName] = value end
+
+local function readComplete() return mspData ~= nil and #mspData['buffer'] >= MSP_MIN_BYTES end
+
+local function writeComplete() return mspWriteComplete end
+
+local function resetWriteStatus() mspWriteComplete = false end
+
+local function data() return mspData end
+
+local function setUUID(uuid) MSP_API_UUID = uuid end
+
+local function setTimeout(timeout) MSP_API_MSG_TIMEOUT = timeout end
+
+return {read = read, write = write, readComplete = readComplete, writeComplete = writeComplete, readValue = readValue, setValue = setValue, resetWriteStatus = resetWriteStatus, setCompleteHandler = handlers.setCompleteHandler, setErrorHandler = handlers.setErrorHandler, data = data, setUUID = setUUID, setTimeout = setTimeout}
