@@ -1,3 +1,7 @@
+#1.0.1
+
+Addition of tool to allow you to manage battery parameters.
+
 #1.0.0
 
 Version 1.0.0 of betaflight suite for ethos.  Enjoy...
