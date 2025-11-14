@@ -1,0 +1,74 @@
+--[[
+  Copyright (C) 2025 Rob Thomson
+  GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
+]] --
+
+local bfsuite = require("bfsuite")
+
+local labels = {}
+local fields = {}
+
+local calibrate = false
+local calibrateComplete = false
+
+local apidata = {api = {[1] = 'ACC_TRIM'}, formdata = {labels = {}, fields = {{t = "Roll", mspapi = 1, apikey = "roll"}, {t = "Pitch", mspapi = 1, apikey = "pitch"}}}}
+
+local function onToolMenu(self)
+
+    local buttons = {
+        {
+            label = "          OK           ",
+            action = function()
+
+                calibrate = true
+                writePayload = nil
+                return true
+            end
+        }, {label = "CANCEL", action = function() return true end}
+    }
+
+    form.openDialog({width = nil, title = "Accelerometer", message = "Calibrate the accelerometer?", buttons = buttons, wakeup = function() end, paint = function() end, options = TEXT_LEFT})
+
+end
+
+local function applySettings()
+    local EAPI = bfsuite.tasks.msp.api.load("EEPROM_WRITE")
+    EAPI.setUUID("550e8400-e29b-41d4-a716-446655440000")
+    EAPI.setCompleteHandler(function(self)
+        bfsuite.utils.log("Writing to EEPROM", "info")
+        calibrateComplete = true
+    end)
+    EAPI.write()
+
+end
+
+local function wakeup()
+
+    if calibrate == true then
+
+        local message = {
+            command = 205,
+            processReply = function(self, buf)
+                bfsuite.utils.log("Accelerometer calibrated.", "info")
+                calibrate = false
+                applySettings()
+            end,
+            simulatorResponse = {}
+        }
+        bfsuite.tasks.msp.mspQueue:add(message)
+
+    end
+
+    if calibrateComplete == true then
+        calibrateComplete = false
+        bfsuite.utils.playFileCommon("beep.wav")
+    end
+
+end
+
+local function onNavMenu()
+    bfsuite.app.ui.progressDisplay(nil, nil, true)
+    bfsuite.app.ui.openMainMenuSub('hardware')
+end
+
+return {apidata = apidata, eepromWrite = true, reboot = false, API = {}, navButtons = {menu = true, save = true, reload = true, tool = true, help = false}, onToolMenu = onToolMenu, wakeup = wakeup, onNavMenu = onNavMenu}
