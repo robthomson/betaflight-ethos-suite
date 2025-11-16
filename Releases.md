@@ -1,3 +1,7 @@
+#1.0.2
+
+Support for twlite pro module running twin protocol
+
 #1.0.1
 
 Addition of tool to allow you to manage battery parameters.
