@@ -17,7 +17,7 @@ local lastSensorName
 local tasks, tasksList = {}, {}
 tasks.heartbeat, tasks.begin = nil, nil
 
-local currentSensor, currentModuleId, currentTelemetryType
+local currentSensor, currentModuleId, currentTelemetryType, currentModuleNumber
 local internalModule, externalModule
 
 local CPU_TICK_HZ = 20
@@ -201,6 +201,7 @@ local function clearSessionAndQueue()
     currentSensor = nil
     currentModuleId = nil
     currentTelemetryType = nil
+    currentModuleNumber = nil
 
 end
 
@@ -227,6 +228,7 @@ function tasks.telemetryCheckScheduler()
         bfsuite.session.telemetrySensor = currentSensor
         bfsuite.session.telemetryModule = currentModuleId
         bfsuite.session.telemetryType = currentTelemetryType
+        bfsuite.session.telemetryModuleNumber = currentModuleNumber
 
         if now - lastNameCheckAt >= NAME_CHECK_INTERVAL then
             lastNameCheckAt = now
@@ -249,10 +251,12 @@ function tasks.telemetryCheckScheduler()
         currentSensor = system.getSource({appId = 0xF101})
         currentModuleId = internalModule
         currentTelemetryType = "sport"
+        currentModuleNumber = 0
     elseif externalModule and externalModule:enable() then
         currentSensor = system.getSource({crsfId = 0x14, subIdStart = 0, subIdEnd = 1})
         currentModuleId = externalModule
         currentTelemetryType = "crsf"
+        currentModuleNumber = 1
         if not currentSensor then
             currentSensor = system.getSource({appId = 0xF101})
             currentTelemetryType = "sport"
@@ -265,6 +269,7 @@ function tasks.telemetryCheckScheduler()
     bfsuite.session.telemetrySensor = currentSensor
     bfsuite.session.telemetryModule = currentModuleId
     bfsuite.session.telemetryType = currentTelemetryType
+    bfsuite.session.telemetryModuleNumber = currentModuleNumber
 
     if currentTelemetryType ~= lastTelemetryType then
         bfsuite.utils.log("Telemetry type changed to " .. tostring(currentTelemetryType), "info")
