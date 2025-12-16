@@ -1,5 +1,5 @@
 --[[
-  Copyright (C) 2025 Rob Thomson
+  Copyright (C) 2025 Rotorflight Project
   GPLv3 — https://www.gnu.org/licenses/gpl-3.0.en.html
 ]] --
 
@@ -160,10 +160,6 @@ function MspQueueController:processQueue()
             return
         end
         cmd, buf, err = self.currentMessage.command, self.currentMessage.simulatorResponse, nil
-        if cmd then
-            local rwState = (self.currentMessage.payload and #self.currentMessage.payload > 0) and "WRITE" or "READ"
-            if LOG_ENABLED_MSP() then bfsuite.utils.logMsp(cmd, rwState, self.currentMessage.payload or buf, err) end
-        end
     end
 
     -- Per-message timeout
