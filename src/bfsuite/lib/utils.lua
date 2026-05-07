@@ -88,7 +88,7 @@ end
 
 function utils.msp_version_array_to_indexed()
     local arr = {}
-    local tbl = bfsuite.config.supportedMspApiVersion or {"1.46"}
+    local tbl = bfsuite.config.supportedMspApiVersion or {"1.48"}
     for i, v in ipairs(tbl) do arr[#arr + 1] = {v, i} end
     return arr
 end
@@ -96,35 +96,35 @@ end
 function utils.armingDisableFlagsToString(flags)
 
     local ARMING_DISABLE_FLAG_TAG = {
-        [0] = "@i18n(app.modules.fblstatus.arming_disable_flag_0):upper()@",
-        [1] = "@i18n(app.modules.fblstatus.arming_disable_flag_1):upper()@",
-        [2] = "@i18n(app.modules.fblstatus.arming_disable_flag_2):upper()@",
-        [3] = "@i18n(app.modules.fblstatus.arming_disable_flag_3):upper()@",
-        [4] = "@i18n(app.modules.fblstatus.arming_disable_flag_4):upper()@",
-        [5] = "@i18n(app.modules.fblstatus.arming_disable_flag_5):upper()@",
-        [6] = "@i18n(app.modules.fblstatus.arming_disable_flag_6):upper()@",
-        [7] = "@i18n(app.modules.fblstatus.arming_disable_flag_7):upper()@",
-        [8] = "@i18n(app.modules.fblstatus.arming_disable_flag_8):upper()@",
-        [9] = "@i18n(app.modules.fblstatus.arming_disable_flag_9):upper()@",
-        [10] = "@i18n(app.modules.fblstatus.arming_disable_flag_10):upper()@",
-        [11] = "@i18n(app.modules.fblstatus.arming_disable_flag_11):upper()@",
-        [12] = "@i18n(app.modules.fblstatus.arming_disable_flag_12):upper()@",
-        [13] = "@i18n(app.modules.fblstatus.arming_disable_flag_13):upper()@",
-        [14] = "@i18n(app.modules.fblstatus.arming_disable_flag_14):upper()@",
-        [15] = "@i18n(app.modules.fblstatus.arming_disable_flag_15):upper()@",
-        [16] = "@i18n(app.modules.fblstatus.arming_disable_flag_16):upper()@",
-        [17] = "@i18n(app.modules.fblstatus.arming_disable_flag_17):upper()@",
-        [18] = "@i18n(app.modules.fblstatus.arming_disable_flag_18):upper()@",
-        [19] = "@i18n(app.modules.fblstatus.arming_disable_flag_19):upper()@",
-        [20] = "@i18n(app.modules.fblstatus.arming_disable_flag_20):upper()@",
-        [21] = "@i18n(app.modules.fblstatus.arming_disable_flag_21):upper()@",
-        [22] = "@i18n(app.modules.fblstatus.arming_disable_flag_22):upper()@",
-        [23] = "@i18n(app.modules.fblstatus.arming_disable_flag_23):upper()@",
-        [24] = "@i18n(app.modules.fblstatus.arming_disable_flag_24):upper()@",
-        [25] = "@i18n(app.modules.fblstatus.arming_disable_flag_25):upper()@"
+        [0] = "NO GYRO",
+        [1] = "FAIL SAFE",
+        [2] = "RX FAIL SAFE",
+        [3] = "BAD RX RECOVERY",
+        [4] = "BOX FAIL SAFE",
+        [5] = "GOVERNOR",
+        [6] = "RPM SIGNAL",
+        [7] = "THROTTLE",
+        [8] = "ANGLE",
+        [9] = "BOOT GRACE TIME",
+        [10] = "NO PRE ARM",
+        [11] = "LOAD",
+        [12] = "CALIBRATING",
+        [13] = "CLI",
+        [14] = "CMS MENU",
+        [15] = "BST",
+        [16] = "MSP",
+        [17] = "PARALYZE",
+        [18] = "GPS",
+        [19] = "RESC",
+        [20] = "RPM FILTER",
+        [21] = "REBOOT REQUIRED",
+        [22] = "DSHOT BITBANG",
+        [23] = "ACC CALIBRATION",
+        [24] = "MOTOR PROTOCOL",
+        [25] = "ARM SWITCH"
     }
 
-    if flags == nil or flags == 0 then return "@i18n(app.modules.fblstatus.ok):upper()@" end
+    if flags == nil or flags == 0 then return "OK" end
 
     local names = {}
     for i = 0, 25 do
@@ -134,7 +134,7 @@ function utils.armingDisableFlagsToString(flags)
         end
     end
 
-    if #names == 0 then return "@i18n(app.modules.fblstatus.ok):upper()@" end
+    if #names == 0 then return "OK" end
 
     return table.concat(names, ", ")
 end
@@ -142,20 +142,20 @@ end
 function utils.getGovernorState(value)
     local returnvalue
 
-    if not bfsuite.tasks.telemetry then return "@i18n(widgets.governor.UNKNOWN)@" end
+    if not bfsuite.tasks.telemetry then return "UNKNOWN" end
 
     local map = {
-        [0] = "@i18n(widgets.governor.OFF):upper()@",
-        [1] = "@i18n(widgets.governor.IDLE):upper()@",
-        [2] = "@i18n(widgets.governor.SPOOLUP):upper()@",
-        [3] = "@i18n(widgets.governor.RECOVERY):upper()@",
-        [4] = "@i18n(widgets.governor.ACTIVE):upper()@",
-        [5] = "@i18n(widgets.governor.THROFF):upper()@",
-        [6] = "@i18n(widgets.governor.LOSTHS):upper()@",
-        [7] = "@i18n(widgets.governor.AUTOROT):upper()@",
-        [8] = "@i18n(widgets.governor.BAILOUT):upper()@",
-        [100] = "@i18n(widgets.governor.DISABLED):upper()@",
-        [101] = "@i18n(widgets.governor.DISARMED):upper()@"
+        [0] = "OFF",
+        [1] = "IDLE",
+        [2] = "SPOOLUP",
+        [3] = "RECOVERY",
+        [4] = "ACTIVE",
+        [5] = "THR-OFF",
+        [6] = "LOST-HS",
+        [7] = "AUTOROT",
+        [8] = "BAILOUT",
+        [100] = "DISABLED",
+        [101] = "DISARMED"
     }
 
     if bfsuite.session and bfsuite.session.apiVersion and bfsuite.utils.apiVersionCompare(">", "1.46") then
@@ -166,7 +166,7 @@ function utils.getGovernorState(value)
     if map[value] then
         returnvalue = map[value]
     else
-        returnvalue = "@i18n(widgets.governor.UNKNOWN):upper()@"
+        returnvalue = "UNKNOWN"
     end
 
     local armdisableflags = bfsuite.tasks.telemetry.getSensor("armdisableflags")
